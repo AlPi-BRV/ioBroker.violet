@@ -1,0 +1,264 @@
+{
+  "common": {
+    "name": "violet",
+    "version": "0.4.1",
+    "news": {
+      "0.4.1": {
+        "en": "Official Violet logo (with permission of PoolDigital)",
+        "de": "Offizielles Violet-Logo (mit Genehmigung von PoolDigital)"
+      },
+      "0.4.0": {
+        "en": "Built-in web server for the pool dashboard (port 8099) – simple-api no longer needed",
+        "de": "Eingebauter Webserver für das Pool-Dashboard (Port 8099) – simple-api nicht mehr nötig"
+      },
+      "0.3.5": {
+        "en": "Temperature sensors 1–6 named after the fixed Violet assignment",
+        "de": "Temperatursensoren 1–6 nach fester Violet-Belegung benannt"
+      },
+      "0.3.4": {
+        "en": "Dashboard: timeout and clear error message if simple-api does not answer",
+        "de": "Dashboard: Zeitlimit und klare Fehlermeldung, wenn die simple-api nicht antwortet"
+      },
+      "0.3.3": {
+        "en": "Dashboard builds itself from the active functions (info.features)",
+        "de": "Dashboard baut sich anhand der aktiven Funktionen selbst auf (info.features)"
+      },
+      "0.3.2": {
+        "en": "Pool dashboard included (http://<ip>:8082/violet/), uses simple-api",
+        "de": "Pool-Dashboard im Adapter enthalten (http://<ip>:8082/violet/), nutzt simple-api"
+      },
+      "0.3.1": {
+        "en": "Unique status texts, status marked as display only",
+        "de": "Eindeutige Status-Texte, Status als „nur Anzeige“ gekennzeichnet"
+      },
+      "0.3.0": {
+        "en": "Switching ON/OFF/AUTO for pump, relays, heater, solar, light etc. (main switch in config, dosing and cover not switchable)",
+        "de": "Schalten EIN/AUS/AUTO für Pumpe, Relais, Heizung, Solar, Licht usw. (Hauptschalter in der Config, Dosierung und Abdeckung nicht schaltbar)"
+      },
+      "0.2.4": {
+        "en": "Analog inputs labelled with the fixed Violet assignment, default units",
+        "de": "Analogeingänge mit fester Violet-Belegung beschriftet, Standard-Einheiten"
+      },
+      "0.2.3": {
+        "en": "Names, units and live values for analog and pulse inputs",
+        "de": "Namen, Einheiten und Live-Werte für Analog- und Impulseingänge"
+      },
+      "0.2.2": {
+        "en": "Show current temperature next to each sensor name in the configuration",
+        "de": "Aktuelle Temperatur neben jedem Sensornamen in der Konfiguration"
+      },
+      "0.2.1": {
+        "en": "Compact configuration layout",
+        "de": "Kompaktere Konfigurationsoberfläche"
+      },
+      "0.2.0": {
+        "en": "Fixed data point structure, selection via questionnaire in the configuration, names for temperature sensors and relays",
+        "de": "Feste Datenpunkt-Struktur, Auswahl per Fragebogen in der Konfiguration, Namen für Temperatursensoren und Relais"
+      },
+      "0.1.0": {
+        "en": "First test version: reads values from the Violet controller (read only), with key filter",
+        "de": "Erste Testversion: liest Werte der Violet-Steuerung (nur lesen), mit Filter für die Datenpunkte"
+      }
+    },
+    "titleLang": {
+      "en": "Violet pool control",
+      "de": "Violet Poolsteuerung"
+    },
+    "desc": {
+      "en": "Adapter for the PoolDigital Violet pool controller",
+      "de": "Adapter für die Violet-Poolsteuerung von PoolDigital"
+    },
+    "authors": [
+      "Line Systems <office@line-systems.de>"
+    ],
+    "keywords": [
+      "violet",
+      "pooldigital",
+      "pool"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "violet.png",
+    "extIcon": "https://raw.githubusercontent.com/AlPi-BRV/ioBroker.violet/main/admin/violet.png",
+    "readme": "https://github.com/AlPi-BRV/ioBroker.violet/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "climate-control",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "enabled": true,
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.0.0"
+      }
+    ],
+    "messagebox": true,
+    "localLinks": {
+      "_default": {
+        "link": "http://%ip%:%port%/",
+        "name": {
+          "en": "Pool dashboard",
+          "de": "Pool-Dashboard"
+        },
+        "color": "#7c3aed"
+      }
+    }
+  },
+  "encryptedNative": [
+    "password"
+  ],
+  "protectedNative": [
+    "password"
+  ],
+  "native": {
+    "host": "",
+    "username": "",
+    "password": "",
+    "interval": 10,
+    "timeout": 5,
+    "use_water": true,
+    "use_pump": true,
+    "use_pump_rpm": false,
+    "use_backwash": false,
+    "use_refill": false,
+    "use_dos_cl": true,
+    "use_dos_elo": false,
+    "use_dos_phm": true,
+    "use_dos_php": false,
+    "use_dos_floc": false,
+    "use_heater": false,
+    "use_solar": false,
+    "use_pv": false,
+    "use_light": false,
+    "use_dmx": false,
+    "use_cover": false,
+    "use_eco": false,
+    "use_ext1": false,
+    "use_ext2": false,
+    "use_temp": true,
+    "use_inputs": false,
+    "use_analog": false,
+    "use_minmax": true,
+    "use_details": false,
+    "use_system": true,
+    "use_diag": false,
+    "temp1_name": "",
+    "temp2_name": "",
+    "temp3_name": "",
+    "temp4_name": "",
+    "temp5_name": "",
+    "temp6_name": "",
+    "temp7_name": "",
+    "temp8_name": "",
+    "temp9_name": "",
+    "temp10_name": "",
+    "temp11_name": "",
+    "temp12_name": "",
+    "ext1_1_name": "",
+    "ext1_2_name": "",
+    "ext1_3_name": "",
+    "ext1_4_name": "",
+    "ext1_5_name": "",
+    "ext1_6_name": "",
+    "ext1_7_name": "",
+    "ext1_8_name": "",
+    "ext2_1_name": "",
+    "ext2_2_name": "",
+    "ext2_3_name": "",
+    "ext2_4_name": "",
+    "ext2_5_name": "",
+    "ext2_6_name": "",
+    "ext2_7_name": "",
+    "ext2_8_name": "",
+    "adc1_name": "",
+    "adc1_unit": "",
+    "adc2_name": "",
+    "adc2_unit": "",
+    "adc3_name": "",
+    "adc3_unit": "",
+    "adc4_name": "",
+    "adc4_unit": "",
+    "adc5_name": "",
+    "adc5_unit": "",
+    "adc6_name": "",
+    "adc6_unit": "",
+    "imp1_name": "",
+    "imp1_unit": "",
+    "imp2_name": "",
+    "imp2_unit": "",
+    "allow_switching": false,
+    "switch_duration": 0,
+    "web_enabled": true,
+    "port": 8099
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Verbindung zur Violet",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastUpdate",
+      "type": "state",
+      "common": {
+        "role": "value.time",
+        "name": "Letzter erfolgreicher Abruf",
+        "type": "number",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.rawJson",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": "Rohdaten von getReadings?ALL",
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.features",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": "Aktive Funktionen (für das Dashboard)",
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    }
+  ]
+}

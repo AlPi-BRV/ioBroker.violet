@@ -1,0 +1,1457 @@
+{
+  "i18n": false,
+  "type": "tabs",
+  "items": {
+    "tabConn": {
+      "type": "panel",
+      "label": "Verbindung",
+      "items": {
+        "host": {
+          "type": "text",
+          "label": "IP-Adresse oder Hostname der Violet",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "z. B. 10.10.3.50 oder 10.10.3.50:8080 (ohne http://)"
+        },
+        "username": {
+          "type": "text",
+          "label": "Benutzername",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Login der Violet-Weboberfläche (für reines Lesen meist nicht nötig)"
+        },
+        "password": {
+          "type": "password",
+          "label": "Passwort",
+          "repeat": false,
+          "visible": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "interval": {
+          "type": "number",
+          "label": "Abfrageintervall (Sekunden)",
+          "min": 5,
+          "max": 3600,
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "timeout": {
+          "type": "number",
+          "label": "Zeitlimit pro Abfrage (Sekunden)",
+          "min": 2,
+          "max": 60,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "hdrSwitch": {
+          "type": "header",
+          "text": "Schalten aus ioBroker",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "allow_switching": {
+          "type": "checkbox",
+          "label": "Schalten erlauben (EIN / AUS / AUTO)",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Legt pro Funktion einen Datenpunkt „schalten“ an. Dosierung, Abdeckung und Einstellungen der Violet sind bewusst nicht schaltbar."
+        },
+        "switch_duration": {
+          "type": "number",
+          "label": "Dauer bei manuell EIN/AUS (Minuten)",
+          "min": 0,
+          "max": 1440,
+          "hidden": "!data.allow_switching",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "0 = dauerhaft, bis wieder auf AUTO geschaltet wird"
+        },
+        "switchNote": {
+          "type": "staticText",
+          "text": "Zum Schalten werden meist Benutzername und Passwort der Violet benötigt. Nicht schaltbar: Dosierung, Abdeckung, Einstellungen.",
+          "hidden": "!data.allow_switching",
+          "newLine": true,
+          "style": {
+            "opacity": 0.75
+          },
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "hdrWeb": {
+          "type": "header",
+          "text": "Pool-Dashboard",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "web_enabled": {
+          "type": "checkbox",
+          "label": "Dashboard bereitstellen",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Eingebauter Webserver: http://<ioBroker-IP>:<Port>/ – nur im eigenen Netz verwenden, nicht ins Internet freigeben"
+        },
+        "port": {
+          "type": "port",
+          "label": "Port",
+          "min": 1024,
+          "max": 65535,
+          "hidden": "!data.web_enabled",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "webNote": {
+          "type": "staticText",
+          "text": "Aufruf: http://<ioBroker-IP>:<Port>/ – Schalter im Dashboard nur, wenn „Schalten erlauben“ aktiv ist. Nur im Heimnetz nutzen.",
+          "hidden": "!data.web_enabled",
+          "newLine": true,
+          "style": {
+            "opacity": 0.75
+          },
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tabFunc": {
+      "type": "panel",
+      "label": "Funktionen",
+      "items": {
+        "intro": {
+          "type": "staticText",
+          "text": "Was nutzen Sie an Ihrer Violet? Nur angehakte Bereiche werden als Datenpunkte angelegt.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "h1": {
+          "type": "header",
+          "text": "Wasser und Filterung",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "use_water": {
+          "type": "checkbox",
+          "label": "Wasserwerte (pH, Redox, Chlor)",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "newLine": true
+        },
+        "use_pump": {
+          "type": "checkbox",
+          "label": "Filterpumpe",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_pump_rpm": {
+          "type": "checkbox",
+          "label": "Pumpe mit Drehzahlstufen",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Nur bei drehzahlgeregelter Pumpe mit Stufen 0–3",
+          "hidden": "!data.use_pump"
+        },
+        "use_backwash": {
+          "type": "checkbox",
+          "label": "Automatische Rückspülung",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_refill": {
+          "type": "checkbox",
+          "label": "Nachspeisung / Füllstand",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "h2": {
+          "type": "header",
+          "text": "Dosierung – welche Kanäle sind in Betrieb?",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "use_dos_cl": {
+          "type": "checkbox",
+          "label": "Chlor (flüssig)",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "newLine": true
+        },
+        "use_dos_elo": {
+          "type": "checkbox",
+          "label": "Elektrolyse (Salz)",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_dos_phm": {
+          "type": "checkbox",
+          "label": "pH-minus",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_dos_php": {
+          "type": "checkbox",
+          "label": "pH-plus",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_dos_floc": {
+          "type": "checkbox",
+          "label": "Flockung",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "h3": {
+          "type": "header",
+          "text": "Heizen, Licht und Zubehör",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "use_heater": {
+          "type": "checkbox",
+          "label": "Heizung / Wärmepumpe",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "newLine": true
+        },
+        "use_solar": {
+          "type": "checkbox",
+          "label": "Solarheizung",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_pv": {
+          "type": "checkbox",
+          "label": "PV-Überschuss-Modus",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_light": {
+          "type": "checkbox",
+          "label": "Poolbeleuchtung",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_dmx": {
+          "type": "checkbox",
+          "label": "DMX-Lichtszenen",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_cover": {
+          "type": "checkbox",
+          "label": "Poolabdeckung",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_eco": {
+          "type": "checkbox",
+          "label": "ECO-Modus",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "h4": {
+          "type": "header",
+          "text": "Erweiterungen und Eingänge",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "use_ext1": {
+          "type": "checkbox",
+          "label": "Relaiserweiterung 1",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "newLine": true,
+          "tooltip": "Namen der Relais im Reiter „Relais“"
+        },
+        "use_ext2": {
+          "type": "checkbox",
+          "label": "Relaiserweiterung 2",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_temp": {
+          "type": "checkbox",
+          "label": "Temperatursensoren",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Nicht angeschlossene Sensoren werden automatisch weggelassen; Namen im Reiter „Temperaturen“"
+        },
+        "use_inputs": {
+          "type": "checkbox",
+          "label": "Digitaleingänge",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_analog": {
+          "type": "checkbox",
+          "label": "Analog-/Impulseingänge",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "z. B. Filterdruck, Luftfeuchte, Sonden-Anströmung – Namen und Einheiten im Reiter „Analog“"
+        },
+        "h5": {
+          "type": "header",
+          "text": "Umfang der Daten",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "use_minmax": {
+          "type": "checkbox",
+          "label": "Tages-Min/Max der Messwerte",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "newLine": true
+        },
+        "use_details": {
+          "type": "checkbox",
+          "label": "Schaltzeiten und Laufzeiten",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Erzeugt pro Funktion 3 zusätzliche Datenpunkte"
+        },
+        "use_system": {
+          "type": "checkbox",
+          "label": "Systeminfos der Violet",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_diag": {
+          "type": "checkbox",
+          "label": "Diagnose (Fehlerzähler)",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "hidden": "!data.use_system && !data.use_temp"
+        }
+      }
+    },
+    "tabTemp": {
+      "type": "panel",
+      "label": "Temperaturen",
+      "hidden": "!data.use_temp",
+      "items": {
+        "ht": {
+          "type": "staticText",
+          "text": "Sensor 1–6 sind in der Violet fest belegt und heißen automatisch wie dort (eigener Name optional). Ab Sensor 7 frei benennbar. Neben jedem Feld steht der aktuelle Messwert.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "temp1_name": {
+          "type": "text",
+          "label": "Sensor 1 – Wassertemperatur",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Wassertemperatur"
+        },
+        "temp1_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 1
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp2_name": {
+          "type": "text",
+          "label": "Sensor 2 – Außentemperatur",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Außentemperatur"
+        },
+        "temp2_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 2
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp3_name": {
+          "type": "text",
+          "label": "Sensor 3 – Absorbertemperatur",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Absorbertemperatur"
+        },
+        "temp3_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 3
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp4_name": {
+          "type": "text",
+          "label": "Sensor 4 – Absorber-Rücklauf",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Absorber-Rücklauf"
+        },
+        "temp4_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 4
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp5_name": {
+          "type": "text",
+          "label": "Sensor 5 – Wärmetauscher",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Wärmetauscher"
+        },
+        "temp5_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 5
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp6_name": {
+          "type": "text",
+          "label": "Sensor 6 – Speichertemperatur",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3,
+          "placeholder": "Speichertemperatur"
+        },
+        "temp6_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 6
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp7_name": {
+          "type": "text",
+          "label": "Sensor 7 (frei)",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp7_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 7
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp8_name": {
+          "type": "text",
+          "label": "Sensor 8 (frei)",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp8_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 8
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp9_name": {
+          "type": "text",
+          "label": "Sensor 9 (frei)",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp9_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 9
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp10_name": {
+          "type": "text",
+          "label": "Sensor 10 (frei)",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp10_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 10
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp11_name": {
+          "type": "text",
+          "label": "Sensor 11 (frei)",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp11_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 11
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp12_name": {
+          "type": "text",
+          "label": "Sensor 12 (frei)",
+          "newLine": false,
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "temp12_value": {
+          "type": "textSendTo",
+          "command": "getTemp",
+          "data": {
+            "sensor": 12
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        }
+      }
+    },
+    "tabAnalog": {
+      "type": "panel",
+      "label": "Analog",
+      "hidden": "!data.use_analog",
+      "items": {
+        "ha": {
+          "type": "staticText",
+          "text": "Die Violet hat feste Eingänge (siehe Beschriftung). Nur Eingänge mit Namen werden als Datenpunkte angelegt; leere Einheit = Vorschlag in grau. Der Live-Wert hilft bei der Zuordnung.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "imp1_name": {
+          "type": "text",
+          "label": "Impuls 1 – Messwasserüberwachung",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4,
+          "placeholder": "Sonden-Anströmung"
+        },
+        "imp1_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2,
+          "placeholder": "cm/s"
+        },
+        "imp1_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "IMP1_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "imp2_name": {
+          "type": "text",
+          "label": "Impuls 2 – Förderleistung",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4,
+          "placeholder": "Förderleistung"
+        },
+        "imp2_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2,
+          "placeholder": "m³/h"
+        },
+        "imp2_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "IMP2_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc1_name": {
+          "type": "text",
+          "label": "ADC1 – Filterdrucksensor",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4,
+          "placeholder": "Filterdruck"
+        },
+        "adc1_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2,
+          "placeholder": "bar"
+        },
+        "adc1_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC1_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc2_name": {
+          "type": "text",
+          "label": "ADC2 – Pegelsonde",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4,
+          "placeholder": "Füllstand"
+        },
+        "adc2_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
+        },
+        "adc2_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC2_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc3_name": {
+          "type": "text",
+          "label": "ADC3 – Analog 4–20 mA",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "adc3_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
+        },
+        "adc3_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC3_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc4_name": {
+          "type": "text",
+          "label": "ADC4 – Analog 4–20 mA",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "adc4_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
+        },
+        "adc4_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC4_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc5_name": {
+          "type": "text",
+          "label": "ADC5 – Analog 0–10 V",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4,
+          "placeholder": "z. B. Luftfeuchte"
+        },
+        "adc5_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
+        },
+        "adc5_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC5_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "adc6_name": {
+          "type": "text",
+          "label": "ADC6 – Analogeingang 6",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "adc6_unit": {
+          "type": "autocomplete",
+          "label": "Einheit",
+          "options": [
+            "bar",
+            "mbar",
+            "%rF",
+            "°C",
+            "cm/s",
+            "m³/h",
+            "l/min",
+            "V",
+            "mA",
+            "%"
+          ],
+          "freeSolo": true,
+          "xs": 6,
+          "sm": 3,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
+        },
+        "adc6_value": {
+          "type": "textSendTo",
+          "command": "getAnalog",
+          "data": {
+            "key": "ADC6_value"
+          },
+          "container": "div",
+          "style": {
+            "paddingTop": 18,
+            "opacity": 0.85
+          },
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        }
+      }
+    },
+    "tabRelay": {
+      "type": "panel",
+      "label": "Relais",
+      "items": {
+        "hr1": {
+          "type": "header",
+          "text": "Relaiserweiterung 1",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_ext1"
+        },
+        "ext1_1_name": {
+          "type": "text",
+          "label": "Relais EXT1.1",
+          "newLine": true,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_2_name": {
+          "type": "text",
+          "label": "Relais EXT1.2",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_3_name": {
+          "type": "text",
+          "label": "Relais EXT1.3",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_4_name": {
+          "type": "text",
+          "label": "Relais EXT1.4",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_5_name": {
+          "type": "text",
+          "label": "Relais EXT1.5",
+          "newLine": true,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_6_name": {
+          "type": "text",
+          "label": "Relais EXT1.6",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_7_name": {
+          "type": "text",
+          "label": "Relais EXT1.7",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext1_8_name": {
+          "type": "text",
+          "label": "Relais EXT1.8",
+          "newLine": false,
+          "hidden": "!data.use_ext1",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "hr2": {
+          "type": "header",
+          "text": "Relaiserweiterung 2",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_ext2"
+        },
+        "ext2_1_name": {
+          "type": "text",
+          "label": "Relais EXT2.1",
+          "newLine": true,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_2_name": {
+          "type": "text",
+          "label": "Relais EXT2.2",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_3_name": {
+          "type": "text",
+          "label": "Relais EXT2.3",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_4_name": {
+          "type": "text",
+          "label": "Relais EXT2.4",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_5_name": {
+          "type": "text",
+          "label": "Relais EXT2.5",
+          "newLine": true,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_6_name": {
+          "type": "text",
+          "label": "Relais EXT2.6",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_7_name": {
+          "type": "text",
+          "label": "Relais EXT2.7",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "ext2_8_name": {
+          "type": "text",
+          "label": "Relais EXT2.8",
+          "newLine": false,
+          "hidden": "!data.use_ext2",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "hrnone": {
+          "type": "staticText",
+          "text": "Keine Relaiserweiterung ausgewählt (Reiter „Funktionen“).",
+          "hidden": "data.use_ext1 || data.use_ext2",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    }
+  }
+}

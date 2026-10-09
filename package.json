@@ -1,0 +1,41 @@
+{
+  "name": "iobroker.violet",
+  "version": "0.4.1",
+  "description": "ioBroker-Adapter für die Violet-Poolsteuerung von PoolDigital",
+  "author": {
+    "name": "Line Systems",
+    "email": "office@line-systems.de"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ioBroker",
+    "violet",
+    "pooldigital",
+    "pool",
+    "dosierung"
+  ],
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "lib/",
+    "www/",
+    "main.js",
+    "io-package.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.2.3"
+  },
+  "homepage": "https://github.com/AlPi-BRV/ioBroker.violet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlPi-BRV/ioBroker.violet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlPi-BRV/ioBroker.violet/issues"
+  }
+}
