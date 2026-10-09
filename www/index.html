@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pool Dashboard</title>
+<title>Pool-Display</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFa0lEQVR42u2XXWwdRxXHf2dm9n46vvH1V+uktbETHEKLUhS1AqcKRX1oQZWgEiDeUCXgBcpDLZ55QiCEBEK8oAokhFQeWoWPNog0QKGq1EiVA4aaBif9SF3HiR3H+N4b37s7O4eHvb5qHDt2aFFeWGm1O6PZM/895/8/Z448wTHlFl5uJ4uMEwA0gIYb4xUjiMneg9f3DkCBho9RFIclj2UrswLEwZOEFIAiEYL89wAUJSpY7v/KOPkux9wrK/zjxAI5Y9Cw8c8hDikHjg4yMlElWQucevJN1moJRoStUG8JQASCQq5keeT7d2Gd4ZWfn2fqxDvkjb0uFGKEOKTc9ejt3P/4GADTz8zTqMVYMahujsBsGwKFxmJM8Eqr5m/oUAHiuid4Ze1Ksi1fdgRgnYTGCWJk27VipLN+R7a5xdf/AWwPQLYZ/68ArPM3bQZ8KxN9uTeHUbbU9PvrAQVrhKtXY1bOr6EKIxO97CoV8CFgI0GE6+6b9ZDZTlIxKa/++gIiUNlT4DM/uJuWehpJgtdAqprdieJV0fTm3HPjVJwqBYl46Sevc+TrY1T2FrjvyyPsvqPEX358lgvTqyT1FFEQJ+AhKrn3EYCCM4baSouffe5lvnp8gmJPxPhDA4w/NECr5kmaaYebCkQFS/CKWEFE3rsKQlCKJuLcy0v8cOIFZo4vENpuzu9ydPXn6erPU24/87scxgk2EpKmz6qhbh0WmTS/2kHQFGMMLe9RlJGPVhk90kd1tERUtNfa14yM/zp5idPPzBEZe6P9kcd5esesWa/tLTyesGXaUMAi5Hdw3nEj91RvWrvZqUc2ZIx3Ddte34kiXH0xzjRspBPbTNOCqnbmjZVrNK5eYcN3698aK+s4MiCqmA2VNKSakXx5rkFAiUnJ4xDAEwgoFoMnpUDEVWJStIOhRI6UQEogj+tsmKI0SdC2ZwyCwxLjOyFUlCIRFoMTEXoGihz6wh5e+tHrxKSMHuqlb38X75xeYexoH398cpaJz4/ykUeHwMDimTrPfutV9h/up3eszKmn3qLoHLFPGbyji098cz/5skOsULvYZPb5Re754l5aDY8YIVe0nPz2GRbO1jCpBkrVHPc+dicAsQYGP9zNwUcG6f1AmQMPDzJ8sIdPf/cg08/Oc+qXb3HnfT08ODlOz0iJuz97O7GmiBViTdl7uId9D/Qz9Zu3mfntAudeWKK20GLmxQWGDlXoHiow8+ICcTuBdWjaWIpJNGCNkLYCzVVP6pXVC03GPt7P9NPznPzFGfI4mnMJR74xyuXZOs3VBGOkw6M0CVw+V2fkcC/VPSVm/7DI1HNz/HV6jj1ju1l+s8HzP32NQbpxGJxBqF1q0jNcYuhAhZnXFkiTgI0MImAjobmS0LevqyOr/g92ZQwXQRVawROvOVp4XMFinOHvz81TqRRZfqNB0UWgWeIqVCJ22QLGCCFRnLOWlctr/Ol7s3zp2L0snq/TO1Tmn7+7iCoUd+c4fXyOo5P7mDzxSZprnqGD3Tz12BS5nOVDn7qNyd8/QC7nWF1q8ufvnKWyt8CDk+MYFXwzcOxr06xeaaJB0aCZatpslic4piLQVE/vQJnqcAmfBJbfuEqaZPxYmqtTzEcMf6yKdYZLZ2pcfLtGuZCjb18XUcFm3A5wfuoKldsKVIfLKErwyvzf/o33ge6BAsEH6stxp1eQ9d7QGCEJKZ6AIDhMR1aRWIIGWqTQ7pByxpKGQELoSE6AnDhSDZ1MKUCEw7TlLUjb8oZqGILixODEtithZjSinZBEKEqUWQxKCIog5M216VY32FmfU8CJyaDqFuVYlesql77rZbPuZrPmYzM7bD5160/F/wEUl3Fd7Mh6xwAAAABJRU5ErkJggg==">
 <!--
-  Pool-Dashboard für ioBroker.violet – im Stil der alten ProCon.IP-Anzeige
+  Pool-Display für ioBroker.violet – im Stil der alten ProCon.IP-Anzeige
   Datenquelle: eingebauter Webserver des Violet-Adapters (Standard-Port 8099) – keine weiteren Adapter nötig
   Baut sich selbst auf: angezeigt wird nur, was der Adapter liefert (info.features).
   Optional anpassen: Block CONFIG unten (Paarung der Temperaturen)
@@ -176,7 +176,7 @@
 
 <script>
 /* =====================================================================
-   KONFIGURATION – optional, alles andere erkennt das Dashboard selbst
+   KONFIGURATION – optional, alles andere erkennt das Pool-Display selbst
    ===================================================================== */
 const CONFIG = {
   // Adresse des Violet-Adapters; Standard: die Seite wird vom Adapter selbst ausgeliefert
@@ -525,7 +525,7 @@ function showProblem(why) {
   $('grid').innerHTML = `<div class="cell ev" style="justify-content:center;flex-direction:column;gap:.3em;min-height:150px;text-align:center">
     <span style="font-size:1.4em">Keine Daten vom Violet-Adapter</span>
     <span class="note" style="font-size:.85em"><b>${esc(CONFIG.api)}</b>: ${esc(why)}</span>
-    <span class="note" style="font-size:.85em">Läuft die Instanz violet.0 und ist in der Konfiguration „Dashboard“ aktiviert? Test im Browser:
+    <span class="note" style="font-size:.85em">Läuft die Instanz violet.0 und ist in der Konfiguration „Pool-Display bereitstellen“ aktiviert? Test im Browser:
       <b>${esc(CONFIG.api)}/api/data</b></span>
     <span class="note" style="font-size:.85em">Vorschau mit Beispielwerten: <b>?demo=1</b> an die Adresse anhängen</span></div>`;
   layoutSig = '';

@@ -111,7 +111,7 @@
         },
         "hdrWeb": {
           "type": "header",
-          "text": "Pool-Dashboard",
+          "text": "Pool-Display",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -122,7 +122,7 @@
         },
         "web_enabled": {
           "type": "checkbox",
-          "label": "Dashboard bereitstellen",
+          "label": "Pool-Display bereitstellen",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -145,7 +145,7 @@
         },
         "webNote": {
           "type": "staticText",
-          "text": "Aufruf: http://<ioBroker-IP>:<Port>/ – Schalter im Dashboard nur, wenn „Schalten erlauben“ aktiv ist. Nur im Heimnetz nutzen.",
+          "text": "Aufruf: http://<ioBroker-IP>:<Port>/ – Schalter im Pool-Display nur, wenn „Schalten erlauben“ aktiv ist. Nur im Heimnetz nutzen.",
           "hidden": "!data.web_enabled",
           "newLine": true,
           "style": {

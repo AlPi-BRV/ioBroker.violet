@@ -1,15 +1,19 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "news": {
+      "0.4.2": {
+        "en": "Pool dashboard renamed to pool display; README updated",
+        "de": "Pool-Dashboard heißt jetzt Pool-Display; README überarbeitet"
+      },
       "0.4.1": {
         "en": "Official Violet logo (with permission of PoolDigital)",
         "de": "Offizielles Violet-Logo (mit Genehmigung von PoolDigital)"
       },
       "0.4.0": {
         "en": "Built-in web server for the pool dashboard (port 8099) – simple-api no longer needed",
-        "de": "Eingebauter Webserver für das Pool-Dashboard (Port 8099) – simple-api nicht mehr nötig"
+        "de": "Eingebauter Webserver für das Pool-Display (Port 8099) – simple-api nicht mehr nötig"
       },
       "0.3.5": {
         "en": "Temperature sensors 1–6 named after the fixed Violet assignment",
@@ -24,8 +28,8 @@
         "de": "Dashboard baut sich anhand der aktiven Funktionen selbst auf (info.features)"
       },
       "0.3.2": {
-        "en": "Pool dashboard included (http://<ip>:8082/violet/), uses simple-api",
-        "de": "Pool-Dashboard im Adapter enthalten (http://<ip>:8082/violet/), nutzt simple-api"
+        "en": "Pool display included (http://<ip>:8082/violet/), uses simple-api",
+        "de": "Pool-Display im Adapter enthalten (http://<ip>:8082/violet/), nutzt simple-api"
       },
       "0.3.1": {
         "en": "Unique status texts, status marked as display only",
@@ -107,8 +111,8 @@
       "_default": {
         "link": "http://%ip%:%port%/",
         "name": {
-          "en": "Pool dashboard",
-          "de": "Pool-Dashboard"
+          "en": "Pool display",
+          "de": "Pool-Display"
         },
         "color": "#7c3aed"
       }
@@ -253,7 +257,7 @@
       "type": "state",
       "common": {
         "role": "json",
-        "name": "Aktive Funktionen (für das Dashboard)",
+        "name": "Aktive Funktionen (für das Pool-Display)",
         "type": "string",
         "read": true,
         "write": false

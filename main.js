@@ -27,7 +27,7 @@ class Violet extends utils.Adapter {
         this.on('stateChange', this.onStateChange.bind(this));
         this.controls = [];
         this.cmdQueue = Promise.resolve(); // Schaltbefehle nacheinander senden
-        this.cache = {}; // aktuelle Werte für das Dashboard
+        this.cache = {}; // aktuelle Werte für das Pool-Display
         this.server = null;
         this.lastData = null;
     }
@@ -199,7 +199,7 @@ class Violet extends utils.Adapter {
         }
     }
 
-    /** Beschreibt für das Dashboard, was an dieser Anlage aktiv ist (Datenpunkt info.features) */
+    /** Beschreibt für das Pool-Display, was an dieser Anlage aktiv ist (Datenpunkt info.features) */
     async updateFeatures(data) {
         const c = this.config;
         const name = (k, fallback) => String(c[k] || '').trim() || fallback;
@@ -371,8 +371,8 @@ class Violet extends utils.Adapter {
     }
 
     /* ------------------------------------------------------------------
-     * Eingebauter Webserver für das Pool-Dashboard
-     *   GET /            → Dashboard (www/index.html)
+     * Eingebauter Webserver für das Pool-Display
+     *   GET /            → Pool-Display (www/index.html)
      *   GET /api/data    → aktuelle Werte + Funktionen
      *   GET /api/set?id=…&value=…  → nur freigegebene Schalt-Datenpunkte
      * ------------------------------------------------------------------ */
@@ -397,7 +397,7 @@ class Violet extends utils.Adapter {
                     const value = url.searchParams.get('value');
                     const c = this.controls.find((x) => x.id === id);
                     if (!c) return send(403, { ok: false, error: 'Dieser Datenpunkt ist nicht schaltbar (Schalten erlauben?)' });
-                    this.log.info(`Dashboard (${req.socket.remoteAddress}): ${id} = ${value}`);
+                    this.log.info(`Pool-Display (${req.socket.remoteAddress}): ${id} = ${value}`);
                     await this.onStateChange(`${this.namespace}.${id}`, { val: c.speed ? Number(value) : value, ack: false });
                     return send(200, { ok: true });
                 }
@@ -406,8 +406,8 @@ class Violet extends utils.Adapter {
                 send(500, { ok: false, error: e.message });
             }
         });
-        this.server.on('error', (e) => this.log.error(`Dashboard-Server auf Port ${port} nicht gestartet: ${e.message}`));
-        this.server.listen(port, () => this.log.info(`Pool-Dashboard erreichbar unter http://<ioBroker-IP>:${port}/`));
+        this.server.on('error', (e) => this.log.error(`Pool-Display auf Port ${port} nicht gestartet: ${e.message}`));
+        this.server.listen(port, () => this.log.info(`Pool-Display erreichbar unter http://<ioBroker-IP>:${port}/`));
     }
 
     onUnload(callback) {

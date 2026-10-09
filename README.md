@@ -4,13 +4,14 @@
 
 Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und Relais-Erweiterung).
 
-## Stand 0.3.0 (Testversion)
+## Funktionen
 
-- Liest zyklisch `http://<IP>/getReadings?ALL` und übersetzt die Werte in eine feste Struktur
+- Liest zyklisch alle Werte der Violet (`http://<IP>/getReadings?ALL`) und übersetzt sie in eine feste Struktur
   (`wasser`, `temperatur`, `pumpe`, `dosierung`, `relais`, `heizung`, `solar`, `rueckspuelung`, `analog` …)
 - **Fragebogen in der Konfiguration**: nur genutzte Bereiche werden angelegt
 - Eigene Namen für Temperatursensoren, Relais und Analogeingänge, mit Live-Werten in der Konfiguration
 - **Schalten EIN / AUS / AUTO** (Hauptschalter „Schalten erlauben“, standardmäßig aus)
+- **Pool-Display** im Stil der alten ProCon.IP-Anzeige, direkt vom Adapter ausgeliefert
 
 ## Grundsätze
 
@@ -44,7 +45,7 @@ Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `sc
 | 5 | Automatik – wartet |
 | 6 | Manuell aus |
 
-## Pool-Dashboard
+## Pool-Display
 
 Im Stil der alten ProCon.IP-Anzeige – der Adapter liefert es **selbst** aus (eingebauter Webserver, keine weiteren Adapter nötig):
 `http://<ioBroker-IP>:8099/` (Port in der Konfiguration, Reiter „Verbindung“).
@@ -55,24 +56,35 @@ Im Stil der alten ProCon.IP-Anzeige – der Adapter liefert es **selbst** aus (e
 - **Nur im Heimnetz verwenden**, nicht ins Internet freigeben (kein Login)
 - Vorschau ohne Adapter: Datei `www/index.html` lokal öffnen mit `?demo=1` (optional `&ohne=heizung,solar`)
 
-## Installation ohne Dev-Server
+## Installation
+
+**Im ioBroker-Admin** (empfohlen): Adapter → oben das GitHub-Symbol („Benutzerdefiniert installieren“)
+
+- **Aus Datei:** die `.tgz`-Datei auswählen → „Installieren“ (Haken „Instanz erstellen“ beim ersten Mal)
+- **Von GitHub:** sobald das Repository öffentlich ist, `https://github.com/AlPi-BRV/ioBroker.violet` angeben
+
+Nach einem Update die Instanz neu starten.
+
+**Alternativ über die Shell:**
 
 ```bash
 cd /opt/iobroker
-sudo -u iobroker npm install /tmp/iobroker.violet-0.4.1.tgz
+sudo -u iobroker npm install /tmp/iobroker.violet-<version>.tgz
 iobroker upload violet
 iobroker add violet        # nur beim allerersten Mal
 ```
 
-Update: dieselben Befehle ohne `iobroker add`, danach Instanz neu starten.
-
 ## Changelog
+
+### 0.4.2 (2026-10-09)
+- „Pool-Dashboard“ heißt jetzt „Pool-Display“
+- README: Installation über den Admin (Aus Datei / Von GitHub), Funktionsübersicht ohne Versionsnummer
 
 ### 0.4.1 (2026-10-09)
 - Offizielles Violet-Logo (mit Genehmigung von PoolDigital) als Adapter-Icon, im Dashboard und als Favicon
 
 ### 0.4.0 (2026-10-09)
-- Eingebauter Webserver für das Pool-Dashboard (Standard-Port 8099) – simple-api nicht mehr nötig
+- Eingebauter Webserver für das Pool-Display (Standard-Port 8099) – simple-api nicht mehr nötig
 - Schalten über das Dashboard nur für freigegebene Datenpunkte
 
 ### 0.3.5 (2026-10-09)
@@ -85,7 +97,7 @@ Update: dieselben Befehle ohne `iobroker add`, danach Instanz neu starten.
 - Dashboard baut sich anhand der aktiven Funktionen selbst auf (`info.features`): fehlende Heizung/Absorber/Sensoren werden ausgeblendet, benannte Relais erscheinen automatisch
 
 ### 0.3.2 (2026-10-09)
-- Pool-Dashboard im Adapter enthalten (`/violet/index.html`), Link in der Instanzübersicht
+- Pool-Display im Adapter enthalten (`/violet/index.html`), Link in der Instanzübersicht
 
 ### 0.3.1 (2026-10-09)
 - Status-Texte eindeutig (mit Code), Status als „nur Anzeige“ gekennzeichnet – geschaltet wird über `schalten`
