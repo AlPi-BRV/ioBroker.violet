@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "news": {
+      "0.5.1": {
+        "en": "Pool display: colons of temperatures and water values aligned, more space between label and value",
+        "de": "Pool-Display: Doppelpunkte bei Temperaturen und Wasserwerten untereinander ausgerichtet, mehr Abstand zwischen Bezeichnung und Wert",
+        "ru": "Дисплей бассейна: двоеточия температур и показателей воды выровнены, больше расстояние между названием и значением",
+        "pt": "Display da piscina: dois-pontos de temperaturas e valores da água alinhados, mais espaço entre rótulo e valor",
+        "nl": "Zwembaddisplay: dubbele punten van temperaturen en waterwaarden uitgelijnd, meer ruimte tussen label en waarde",
+        "fr": "Affichage piscine : deux-points des températures et des valeurs de l’eau alignés, plus d’espace entre libellé et valeur",
+        "it": "Display piscina: due punti di temperature e valori dell’acqua allineati, più spazio tra etichetta e valore",
+        "es": "Pantalla de piscina: dos puntos de temperaturas y valores del agua alineados, más espacio entre etiqueta y valor",
+        "pl": "Wyświetlacz basenu: dwukropki temperatur i parametrów wody wyrównane, więcej odstępu między opisem a wartością",
+        "uk": "Дисплей басейну: двокрапки температур і показників води вирівняні, більша відстань між назвою та значенням",
+        "zh-cn": "泳池显示屏：温度和水质数值的冒号对齐，标签与数值间距加大"
+      },
       "0.5.0": {
         "en": "Pool display: larger font, selectable font, speed levels in the pump row, light with DMX scenes, PV indicator, relay view, Violet messages; translations for 11 languages",
         "de": "Pool-Display: größere Schrift, wählbare Schriftart, Drehzahlstufen in der Pumpenzeile, Licht mit DMX-Szenen, PV-Anzeige, Relais-Ansicht, Meldungen der Violet; Übersetzungen in 11 Sprachen",

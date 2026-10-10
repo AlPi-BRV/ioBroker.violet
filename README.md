@@ -109,6 +109,9 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.5.1 (2026-10-10)
+- Pool display: colons of temperatures and water values aligned, more space between label and value
+
 ### 0.5.0 (2026-10-10)
 - Pool display: larger font and more line spacing, selectable font (Verdana, Arial, system font)
 - Pool display: speed levels in the pump row (active level green), PV indicator, light row with DMX scenes
