@@ -85,7 +85,8 @@
   /* Temperaturen + Wasserwerte: feste Beschriftungsbreite -> Doppelpunkte untereinander */
   .tw { gap: 1.4em; }
   .tw .lbl { flex: 0 0 auto; }
-  .tw .lbl .sub { white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
+  .tw .lbl .sub { white-space: nowrap; }
+  .vsub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
   .tw .val { flex: 1 1 auto; min-width: 0; }
   .tw .badge { flex: 0 0 auto; margin-left: auto; }
 
@@ -463,8 +464,8 @@ function waterCell(w, cls) {
     <span class="badge" id="clmode">–</span></div>`;
   if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span></div>
     <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span><span class="mm" id="clmm"></span></div></div>`;
-  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span>${w.note ? `<span class="sub" data-note="${w.note.id}" data-name="${esc(w.note.name)}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div>
-    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span></div></div>`;
+  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span>${w.note ? `<span class="sub">${esc(w.note.name)}:</span>` : ''}</div>
+    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>${w.note ? `<span class="vsub" data-note="${w.note.id}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
 }
 
 const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
@@ -535,7 +536,7 @@ function render() {
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
   document.querySelectorAll('[data-note]').forEach((e) => {
     const d = /bar/i.test(e.dataset.unit) ? 2 : 1;
-    e.textContent = `${e.dataset.name}: ${fmt(V[e.dataset.note], d)} ${e.dataset.unit}`;
+    e.textContent = `${fmt(V[e.dataset.note], d)} ${e.dataset.unit}`;
   });
 
   for (const x of R) {
