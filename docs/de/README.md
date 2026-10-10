@@ -54,7 +54,7 @@ Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `sc
 Im Reiter „Pumpe“ trägst du die Fördermenge der Pumpe in m³/h ein – bei Drehzahlpumpen je Stufe.
 Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert eintragen (leer = wie allein; laufen beide, gilt der kleinere Wert).
 
-- Datenpunkt `pumpe.umwaelzung_heute` (m³), im Pool-Display hinter der Laufzeit: `heute 06h 07m (25,9 m³)`
+- Datenpunkt `pumpe.umwaelzung_heute` (m³), im Pool-Display hinter der Laufzeit: `06h 07m (25,9 m³)`
 - Grundlage sind die Laufzeiten je Stufe, die die Violet selbst zählt – ein Neustart von ioBroker verfälscht nichts
 - Den Abzug für Absorber / Heizung zählt der Adapter bei jeder Abfrage mit; um Mitternacht beginnt alles bei 0
 - Reine Berechnung – an die Violet wird nichts geschrieben

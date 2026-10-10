@@ -55,7 +55,7 @@ With "Allow switching" every selected function gets a data point `schalten`:
 In the tab "Pump" you enter the delivery rate of the pump in m³/h – per speed level for speed-controlled pumps.
 If the absorber or the heating reduces the flow, enter the lower value there (empty = same as alone; if both run, the lower value applies).
 
-- Data point `pumpe.umwaelzung_heute` (m³), in the pool display behind the runtime: `today 06h 07m (25.9 m³)`
+- Data point `pumpe.umwaelzung_heute` (m³), in the pool display behind the runtime: `06h 07m (25.9 m³)`
 - Basis: the runtimes per level counted by the Violet itself – an ioBroker restart does not distort the value
 - The reduction by absorber / heating is counted by the adapter at each poll; resets at midnight
 - Only a calculation – nothing is written to the Violet
@@ -120,6 +120,9 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.5.3 (2026-10-10)
+- Pool display: runtimes without "today" so the line no longer wraps
+
 ### 0.5.2 (2026-10-10)
 - Circulated water volume of the day: new tab "Pump" (delivery rate per level, with absorber / heating), data point `pumpe.umwaelzung_heute`, shown in the pool display
 - Pool display: humidity label and value stacked under filter pressure

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.violet",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "ioBroker adapter for the PoolDigital Violet pool controller",
   "author": {
     "name": "Line Systems",

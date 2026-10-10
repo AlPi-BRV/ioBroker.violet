@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "news": {
+      "0.5.3": {
+        "en": "Pool display: runtimes without \"today\" so the line no longer wraps",
+        "de": "Pool-Display: Laufzeiten ohne „heute“, damit die Zeile nicht mehr umbricht",
+        "ru": "Дисплей: время работы без «сегодня», строка больше не переносится",
+        "pt": "Display: tempos de funcionamento sem «hoje», a linha já não quebra",
+        "nl": "Display: looptijden zonder „vandaag”, de regel loopt niet meer door",
+        "fr": "Affichage : durées sans « aujourd’hui », la ligne ne passe plus à la ligne",
+        "it": "Display: tempi di funzionamento senza «oggi», la riga non va più a capo",
+        "es": "Pantalla: tiempos de funcionamiento sin «hoy», la línea ya no se divide",
+        "pl": "Wyświetlacz: czasy pracy bez „dzisiaj”, wiersz już się nie łamie",
+        "uk": "Дисплей: час роботи без «сьогодні», рядок більше не переноситься",
+        "zh-cn": "显示屏：运行时间去掉“今天”，不再换行"
+      },
       "0.5.2": {
         "en": "Circulated water volume of the day (new tab \"Pump\": delivery rate per level, with absorber / heating); pool display: humidity stacked under filter pressure",
         "de": "Umgewälzte Wassermenge des Tages (neuer Reiter „Pumpe“: Fördermenge je Stufe, mit Absorber / Heizung); Pool-Display: Luftfeuchte unter Filterdruck",

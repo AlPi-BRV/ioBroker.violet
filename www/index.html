@@ -85,7 +85,7 @@
   /* Temperaturen + Wasserwerte: feste Beschriftungsbreite -> Doppelpunkte untereinander */
   .tw { gap: 1.4em; }
   .tw .lbl { flex: 0 0 auto; }
-  .tw .lbl .sub { white-space: nowrap; }
+  .lbl .sub { white-space: nowrap; }
   .vsub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
   .tw .val { flex: 1 1 auto; min-width: 0; }
   .tw .badge { flex: 0 0 auto; margin-left: auto; }
@@ -548,7 +548,7 @@ function render() {
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const rt = V[`${k}.laufzeit_heute`];
       const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
-      setText(`${id}rt`, rt ? `${t('today')} ${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
+      setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
       markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
     if (k === 'pumpe') {
