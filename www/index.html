@@ -84,7 +84,8 @@
 
   /* Temperaturen + Wasserwerte: feste Beschriftungsbreite -> Doppelpunkte untereinander */
   .tw { gap: 1.4em; }
-  .tw .lbl { flex: 0 0 auto; }  /* Breite setzt alignLabels() je Spalte */
+  .tw .lbl { flex: 0 0 auto; }
+  .tw .lbl .sub { white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
   .tw .val { flex: 1 1 auto; min-width: 0; }
   .tw .badge { flex: 0 0 auto; margin-left: auto; }
 
@@ -462,9 +463,8 @@ function waterCell(w, cls) {
     <span class="badge" id="clmode">–</span></div>`;
   if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span></div>
     <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span><span class="mm" id="clmm"></span></div></div>`;
-  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span></div>
-    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>
-    ${w.note ? `<span class="note" data-note="${w.note.id}" data-name="${esc(w.note.name)}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
+  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span>${w.note ? `<span class="sub" data-note="${w.note.id}" data-name="${esc(w.note.name)}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div>
+    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span></div></div>`;
 }
 
 const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
@@ -582,6 +582,7 @@ function render() {
   $('fw').textContent = `${t('fw')}: ${V['system.firmware'] ?? '–'}`;
   $('up').textContent = `${t('uptime')}: ${V['system.laufzeit'] ?? '–'}`;
   $('cpu').textContent = `CPU: ${fmt(V['system.cpu_temperatur'], 1)} °C`;
+  alignLabels();
 }
 
 function setText(id, s) { const e = $(id); if (e) e.textContent = s; }
