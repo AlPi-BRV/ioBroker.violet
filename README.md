@@ -2,137 +2,165 @@
 
 # ioBroker.violet
 
-Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und Relais-Erweiterung).
+Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module and relay extensions).
 
-## Funktionen
+🇩🇪 [Deutsche Anleitung](docs/de/README.md)
 
-- Liest zyklisch alle Werte der Violet (`http://<IP>/getReadings?ALL`) und übersetzt sie in eine feste Struktur
-  (`wasser`, `temperatur`, `pumpe`, `dosierung`, `relais`, `heizung`, `solar`, `rueckspuelung`, `analog` …)
-- **Fragebogen in der Konfiguration**: nur genutzte Bereiche werden angelegt
-- Eigene Namen für Temperatursensoren, Relais und Analogeingänge, mit Live-Werten in der Konfiguration
-- **Schalten EIN / AUS / AUTO** (Hauptschalter „Schalten erlauben“, standardmäßig aus)
-- **Pool-Display** im Stil der alten ProCon.IP-Anzeige, direkt vom Adapter ausgeliefert
+## Features
 
-## Grundsätze
+- Reads all values of the Violet cyclically (`http://<IP>/getReadings?ALL`) and maps them to a fixed structure
+  (`wasser`, `temperatur`, `pumpe`, `dosierung`, `relais`, `heizung`, `solar`, `rueckspuelung`, `analog`, …)
+- **Questionnaire in the configuration**: only the areas you actually use are created as data points
+- Own names for temperature sensors, relays and analog inputs – with live values shown in the configuration
+- **Switching ON / OFF / AUTO** (main switch "Allow switching", disabled by default)
+- **Violet messages** (warnings, alarms, reminders) as data point `meldungen.aktiv` and as notice in the pool display
+- **Pool display** in the style of the classic ProCon.IP display, served directly by the adapter
+- Data point names, configuration and pool display in German and English; configuration in 11 languages
 
-- Der Adapter **liest und schaltet**, er **konfiguriert nie** die Violet (keine Sollwerte, Kalibrierung, Fördermengen, Zeitpläne).
-- **Dosierung** (Chlor, pH, Flockung, Elektrolyse) ist nur lesbar.
-- **Abdeckung** ist nur lesbar (kein dokumentierter Schaltbefehl).
+## Principles
 
-## Schalten
+- The adapter **reads and switches** – it **never configures** the Violet (no set points, calibration, dosing rates, schedules).
+- **Dosing** (chlorine, pH, flocculant, electrolysis) is read-only.
+- **Cover** is read-only (no documented switching command).
 
-Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `schalten`:
+## Switching
 
-| Wert | Wirkung |
+With "Allow switching" every selected function gets a data point `schalten`:
+
+| Value | Effect |
 |---|---|
-| `ON` | manuell Ein |
-| `OFF` | manuell Aus |
-| `AUTO` | zurück in die Automatik der Violet |
+| `ON` | manual on |
+| `OFF` | manual off |
+| `AUTO` | back to the automatic mode of the Violet |
 
-- Schaltbar: Filterpumpe, Heizung, Solar, Licht, ECO, Nachspeisung, Rückspülung, Nachspülen, PV-Überschuss (nur ON/OFF), Relais EXT1/EXT2, DMX-Szenen
-- `pumpe.drehzahl_soll` (1 = ECO, 2 = Normal, 3 = Boost) – wird beim Einschalten verwendet, bei laufender Pumpe sofort übernommen
-- „Dauer bei manuell EIN/AUS“ in Minuten, 0 = dauerhaft
-- Der Datenpunkt `schalten` zeigt immer den tatsächlichen Modus der Violet (Rückmeldung)
-- Befehl: `GET /setFunctionManually?FUNKTION,AKTION,DAUER,WERT` – jeder Befehl und Fehler wird im Log protokolliert
+- Switchable: filter pump, heating, solar, light, ECO, refill, backwash, rinse, PV surplus (ON/OFF only), relays EXT1/EXT2, DMX scenes
+- `pumpe.drehzahl_soll` (1 = ECO, 2 = Normal, 3 = Boost) – used when switching on, applied immediately while the pump runs manually
+- "Duration for manual ON/OFF" in minutes, 0 = permanently
+- The data point `schalten` always reflects the actual mode of the Violet
+- Command: `GET /setFunctionManually?FUNCTION,ACTION,DURATION,VALUE` – every command and error is logged
 
-### Statuscodes (mit Violet-Dashboard abgeglichen)
+### Status codes
 
-| Code | Bedeutung |
+| Code | Meaning |
 |---|---|
-| 0 | Automatik – aus |
-| 1 / 3 | Automatik – an |
-| 2 / 4 | Manuell an |
-| 5 | Automatik – wartet |
-| 6 | Manuell aus |
+| 0 | Auto – off |
+| 1 / 3 | Auto – on |
+| 2 / 4 | Manual on |
+| 5 | Auto – waiting |
+| 6 | Manual off |
 
-## Pool-Display
+## Violet messages
 
-Im Stil der alten ProCon.IP-Anzeige – der Adapter liefert es **selbst** aus (eingebauter Webserver, keine weiteren Adapter nötig):
-`http://<ioBroker-IP>:8099/` (Port in der Konfiguration, Reiter „Verbindung“).
+The adapter reads the messages of the Violet once per minute via `GET /getNotifications?ALL`
+(fallback for older firmware: change of `last_error_id`).
 
-- Baut sich selbst auf: nur vorhandene Funktionen, angeschlossene Sensoren und benannte Relais
-- Schalter nur, wenn „Schalten erlauben“ aktiv ist; die Schnittstelle akzeptiert nur die freigegebenen `schalten`-Datenpunkte (Dosierung nie)
-- Schnittstelle: `GET /api/data` (Werte), `GET /api/set?id=…&value=…` (Schalten)
-- **Nur im Heimnetz verwenden**, nicht ins Internet freigeben (kein Login)
-- Vorschau ohne Adapter: Datei `www/index.html` lokal öffnen mit `?demo=1` (optional `&ohne=heizung,solar`)
+| Data point | Meaning |
+|---|---|
+| `meldungen.aktiv` | `true` if there is a new, not yet acknowledged message – ideal for a signal icon in your visualization |
+| `meldungen.anzahl` | number of new messages |
+| `meldungen.text`, `.zeit`, `.typ` | latest message |
+| `meldungen.liste` | the last 20 messages as JSON |
+| `meldungen.quittieren` | button: acknowledge in ioBroker |
+
+Acknowledging only affects ioBroker – messages that must be confirmed on the Violet itself still have to be confirmed there.
+In the pool display a new message appears as a blinking yellow dot in the footer; a click opens the Violet in a new window and acknowledges the message in ioBroker.
+
+## Pool display
+
+Served by the adapter itself (built-in web server, no other adapters required):
+`http://<ioBroker-IP>:8099/` (port and font in the configuration, tab "Connection").
+
+- Builds itself: only existing functions, connected sensors and configured relays are shown
+- Pump row with speed levels (active level in green) and PV indicator (only if PV surplus is used and active)
+- Light row with DMX scenes (if used)
+- Button "Relays" in the header: shows the switches of the relay extensions instead of the temperatures
+- Switches only if "Allow switching" is enabled; the interface only accepts the released `schalten` data points (never dosing)
+- Interface: `GET /api/data` (values), `GET /api/set?id=…&value=…` (switching), `GET /api/ack` (acknowledge messages)
+- **Use only in your home network** – do not expose it to the internet (no login)
+- Preview without adapter: open `www/index.html` locally with `?demo=1` (options: `&lang=en`, `&font=arial`, `&msg=1`, `&ohne=heizung,solar,pv,dmx,relais`)
 
 ## Installation
 
-**Im ioBroker-Admin** (empfohlen): Adapter → oben das GitHub-Symbol („Benutzerdefiniert installieren“)
+**In the ioBroker admin** (recommended): Adapters → GitHub icon ("Install from custom URL")
 
-- **Aus Datei:** die `.tgz`-Datei auswählen → „Installieren“ (Haken „Instanz erstellen“ beim ersten Mal)
-- **Von GitHub:** sobald das Repository öffentlich ist, `https://github.com/AlPi-BRV/ioBroker.violet` angeben
+- **From GitHub:** `https://github.com/AlPi-BRV/ioBroker.violet`
+- **From file:** select the `.tgz` file → "Install"
 
-Nach einem Update die Instanz neu starten.
+Restart the instance after an update.
 
-**Alternativ über die Shell:**
+**Alternatively via shell:**
 
 ```bash
 cd /opt/iobroker
-sudo -u iobroker npm install /tmp/iobroker.violet-<version>.tgz
-iobroker upload violet
-iobroker add violet        # nur beim allerersten Mal
+iobroker url https://github.com/AlPi-BRV/ioBroker.violet
 ```
+
+## FAQ
+
+**Why can't I switch the dosing?** – Deliberately: wrong dosing can be dangerous for bathers. Dosing is controlled by the Violet only.
+
+**Why are there so few data points?** – Only the areas checked in the tab "Functions" are created. The complete raw data is always available in `info.rawJson`.
+
+**The pool display shows "No data".** – Check that the instance is running and "Provide pool display" is enabled; test `http://<ioBroker-IP>:8099/api/data` in the browser.
 
 ## Changelog
 
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ### **WORK IN PROGRESS**
+-->
+### 0.5.0 (2026-10-10)
+- Pool display: larger font and more line spacing, selectable font (Verdana, Arial, system font)
+- Pool display: speed levels in the pump row (active level green), PV indicator, light row with DMX scenes
+- Pool display: relay view via button in the header, footer shows "Violet firmware", logo removed
+- Violet messages: data points `meldungen.*`, blinking notice in the pool display, click opens the Violet
+- Data point names in German and English, status texts in the system language
+- Configuration translated into 11 languages, English README, log messages in English
+- DMX scenes now as channels with `status`/`aktiv`/`schalten`
+
 ### 0.4.2 (2026-10-09)
-- „Pool-Dashboard“ heißt jetzt „Pool-Display“
-- README: Installation über den Admin (Aus Datei / Von GitHub), Funktionsübersicht ohne Versionsnummer
+- "Pool dashboard" renamed to "pool display"; README updated
 
 ### 0.4.1 (2026-10-09)
-- Offizielles Violet-Logo (mit Genehmigung von PoolDigital) als Adapter-Icon, im Dashboard und als Favicon
+- Official Violet logo (with permission of PoolDigital)
 
 ### 0.4.0 (2026-10-09)
-- Eingebauter Webserver für das Pool-Display (Standard-Port 8099) – simple-api nicht mehr nötig
-- Schalten über das Dashboard nur für freigegebene Datenpunkte
-
-### 0.3.5 (2026-10-09)
-- Temperatursensoren 1–6 heißen automatisch wie in der Violet (Wassertemperatur, Außentemperatur, Absorbertemperatur, Absorber-Rücklauf, Wärmetauscher, Speichertemperatur); ab Sensor 7 frei
-
-### 0.3.4 (2026-10-09)
-- Dashboard: Zeitlimit beim Abruf, klare Meldung, wenn die simple-api nicht antwortet oder der Adapter keine Werte liefert
-
-### 0.3.3 (2026-10-09)
-- Dashboard baut sich anhand der aktiven Funktionen selbst auf (`info.features`): fehlende Heizung/Absorber/Sensoren werden ausgeblendet, benannte Relais erscheinen automatisch
-
-### 0.3.2 (2026-10-09)
-- Pool-Display im Adapter enthalten (`/violet/index.html`), Link in der Instanzübersicht
-
-### 0.3.1 (2026-10-09)
-- Status-Texte eindeutig (mit Code), Status als „nur Anzeige“ gekennzeichnet – geschaltet wird über `schalten`
+- Built-in web server for the pool display (port 8099)
 
 ### 0.3.0 (2026-10-09)
-- Schalten EIN/AUS/AUTO für Pumpe (inkl. Drehzahl), Relais, Heizung, Solar, Licht, ECO, Nachspeisung, Rückspülung, PV-Überschuss, DMX
-- Hauptschalter „Schalten erlauben“ und Schaltdauer in der Konfiguration
-- Dosierung und Abdeckung bewusst nicht schaltbar
-
-### 0.2.4 (2026-10-09)
-- Analogeingänge mit fester Violet-Belegung beschriftet (ADC1 Filterdruck, ADC2 Pegelsonde, Impuls 1 Messwasser, Impuls 2 Förderleistung)
-- Standard-Einheiten bar / cm/s / m³/h, wenn keine eingetragen ist
-
-### 0.2.3 (2026-10-09)
-- Analog- und Impulseingänge mit eigenem Namen, Einheit und Live-Wert (Reiter „Analog“); nur benannte Eingänge werden angelegt
-
-### 0.2.2 (2026-10-09)
-- Aktueller Messwert neben jedem Temperatursensor in der Konfiguration
-
-### 0.2.1 (2026-10-09)
-- Kompaktere Konfigurationsoberfläche (mehrspaltig, Hilfen als Tooltip)
+- Switching ON/OFF/AUTO (main switch in the configuration; dosing and cover not switchable)
 
 ### 0.2.0 (2026-10-09)
-- Feste Datenpunkt-Struktur mit deutschen Namen und Einheiten
-- Fragebogen in der Konfiguration statt Muster-Filter
-- Namen für Temperatursensoren und Relais
+- Fixed data point structure, questionnaire in the configuration, names for sensors and relays
 
 ### 0.1.0 (2026-10-09)
-- Erste Testversion: alle Werte lesen
+- First test version
 
-## Marken
+## Trademarks
 
-Violet und das Violet-Logo sind Marken von PoolDigital. Verwendung mit freundlicher Genehmigung von PoolDigital.
-Dieser Adapter ist ein unabhängiges Community-Projekt und kein offizielles Produkt von PoolDigital.
+Violet and the Violet logo are trademarks of **PoolDigital GmbH & Co. KG**, Kapellenstraße 10a, 86441 Zusmarshausen, Germany – [www.pooldigital.de](https://www.pooldigital.de).
+Used with kind permission of PoolDigital. This adapter is an independent community project and not an official product of PoolDigital.
 
 ## License
 
-MIT License – Copyright (c) 2026 Line Systems
+MIT License
+
+Copyright (c) 2026 Line Systems <office@line-systems.de>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

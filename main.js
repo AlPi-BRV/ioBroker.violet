@@ -1,16 +1,21 @@
 'use strict';
 
 /*
- * ioBroker.violet – Adapter für die Violet-Poolsteuerung (PoolDigital)
- * Feste Datenpunkt-Struktur, Auswahl über Fragebogen in der Konfiguration.
- * Ab 0.3.0: Schalten (EIN/AUS/AUTO) – nur mit Hauptschalter, nie Konfiguration, nie Dosierung.
+ * ioBroker.violet – adapter for the Violet pool controller (PoolDigital)
+ * - fixed data point structure, selection via questionnaire in the configuration
+ * - switching ON/OFF/AUTO only with the main switch – never configuration, never dosing
+ * - built-in web server for the pool display
+ * - Violet messages (warnings, alarms, reminders) with acknowledgement in ioBroker
  */
 
 const utils = require('@iobroker/adapter-core');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const { buildDefinitions, buildControls, modeFromStatus, tempName, CHANNELS } = require('./lib/datapoints');
+const { buildDefinitions, buildControls, messageDefinitions, modeFromStatus, tempName, setLang, CHANNELS } = require('./lib/datapoints');
+const { names, pick } = require('./lib/i18n');
+
+const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
 
 class Violet extends utils.Adapter {
     constructor(options = {}) {
@@ -18,26 +23,42 @@ class Violet extends utils.Adapter {
 
         this.pollTimer = null;
         this.defs = [];
+        this.msgDefs = [];
+        this.controls = [];
         this.prepared = new Set(); // in diesem Lauf bereits angelegte/aktualisierte Objekte
         this.failCount = 0;
+        this.cmdQueue = Promise.resolve(); // Schaltbefehle nacheinander senden
+        this.cache = {}; // aktuelle Werte für das Pool-Display
+        this.server = null;
+        this.lastData = null;
+        this.lang = 'de';
+        this.msg = { supported: null, lastPoll: 0, acked: '', entries: [], active: false, count: 0 };
 
         this.on('ready', this.onReady.bind(this));
         this.on('unload', this.onUnload.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        this.controls = [];
-        this.cmdQueue = Promise.resolve(); // Schaltbefehle nacheinander senden
-        this.cache = {}; // aktuelle Werte für das Pool-Display
-        this.server = null;
-        this.lastData = null;
+    }
+
+    t(de, en) {
+        return this.lang === 'de' ? de : en;
     }
 
     async onReady() {
         await this.setStateAsync('info.connection', false, true);
 
+        // Systemsprache für Statustexte, Display und Konfigurationshinweise
+        try {
+            const sys = await this.getForeignObjectAsync('system.config');
+            this.lang = (sys && sys.common && sys.common.language) || 'de';
+        } catch {
+            this.lang = 'de';
+        }
+        setLang(this.lang);
+
         const host = (this.config.host || '').trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
         if (!host) {
-            this.log.error('Keine IP-Adresse der Violet eingetragen – bitte in der Instanz-Konfiguration ergänzen.');
+            this.log.error('No IP address of the Violet configured – please enter it in the instance settings.');
             return;
         }
 
@@ -51,13 +72,14 @@ class Violet extends utils.Adapter {
             this.headers.Authorization = `Basic ${token}`;
         }
 
-        // fehlende Einstellungen (z. B. nach Update von 0.1.0) mit Standardwerten auffüllen
+        // fehlende Einstellungen (z. B. nach einem Update) mit Standardwerten auffüllen
         const defaults = require('./io-package.json').native;
         for (const [k, v] of Object.entries(defaults)) {
             if (this.config[k] === undefined) this.config[k] = v;
         }
 
         this.defs = buildDefinitions(this.config);
+        this.msgDefs = messageDefinitions(this.config);
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
         if (this.config.use_pump && this.config.use_pump_rpm && this.config.allow_switching) {
             this.controls.push({
@@ -73,16 +95,17 @@ class Violet extends utils.Adapter {
             });
         }
         this.switchDuration = Math.max(0, Number(this.config.switch_duration) || 0) * 60;
-        this.log.info(`${this.defs.length} mögliche Datenpunkte laut Auswahl in der Konfiguration`);
+        this.log.info(`${this.defs.length} possible data points according to the configuration`);
         this.log.info(
             this.controls.length
-                ? `Schalten aus ioBroker ist ERLAUBT (${this.controls.length} schaltbare Datenpunkte)`
-                : 'Schalten aus ioBroker ist deaktiviert – reiner Lesebetrieb',
+                ? `Switching from ioBroker is ENABLED (${this.controls.length} switchable data points)`
+                : 'Switching from ioBroker is disabled – read-only mode',
         );
 
         await this.cleanup();
 
         for (const c of this.controls) await this.prepareObject(c);
+        for (const m of this.msgDefs) await this.prepareObject(m);
         if (this.controls.some((c) => c.speed)) {
             const cur = await this.getStateAsync('pumpe.drehzahl_soll');
             if (!cur || cur.val === null) await this.setStateAsync('pumpe.drehzahl_soll', 2, true);
@@ -92,16 +115,21 @@ class Violet extends utils.Adapter {
             this.subscribeStates('*.schalten');
             this.subscribeStates('pumpe.drehzahl_soll');
         }
+        if (this.msgDefs.length) {
+            const acked = await this.getStateAsync('meldungen.quittiert');
+            this.msg.acked = (acked && acked.val) || '';
+            this.subscribeStates('meldungen.quittieren');
+        }
 
         if (this.config.web_enabled) this.startWebServer();
 
-        this.log.info(`Starte Abfrage von ${this.baseUrl} alle ${this.interval / 1000} s`);
+        this.log.info(`Polling ${this.baseUrl} every ${this.interval / 1000} s`);
         await this.poll();
     }
 
-    /** Entfernt alles, was laut Konfiguration nicht mehr gebraucht wird (inkl. readings.* aus 0.1.0) */
+    /** Entfernt alles, was laut Konfiguration nicht mehr gebraucht wird */
     async cleanup() {
-        const wanted = new Set([...this.defs, ...this.controls].map((d) => d.id));
+        const wanted = new Set([...this.defs, ...this.controls, ...this.msgDefs].map((d) => d.id));
         const wantedChannels = new Set();
         for (const id of wanted) {
             const parts = id.split('.');
@@ -121,7 +149,7 @@ class Violet extends utils.Adapter {
                 await this.delObjectAsync(id);
             }
         }
-        if (removed) this.log.info(`${removed} nicht mehr benötigte Datenpunkte entfernt`);
+        if (removed) this.log.info(`${removed} data points no longer needed were removed`);
     }
 
     async poll() {
@@ -140,7 +168,7 @@ class Violet extends utils.Adapter {
             try {
                 data = JSON.parse(text);
             } catch {
-                throw new Error(`Antwort ist kein gültiges JSON: ${text.substring(0, 120)}`);
+                throw new Error(`Response is not valid JSON: ${text.substring(0, 120)}`);
             }
 
             this.lastData = data;
@@ -150,14 +178,16 @@ class Violet extends utils.Adapter {
             await this.setStateChangedAsync('info.connection', true, true);
 
             if (this.failCount > 0) {
-                this.log.info('Verbindung zur Violet wiederhergestellt');
+                this.log.info('Connection to the Violet restored');
             }
             this.failCount = 0;
+
+            if (this.msgDefs.length) await this.pollMessages(data);
         } catch (err) {
             this.failCount++;
-            const msg = err.name === 'TimeoutError' ? `Zeitüberschreitung nach ${this.timeout / 1000} s` : err.message;
+            const msg = err.name === 'TimeoutError' ? `timeout after ${this.timeout / 1000} s` : err.message;
             if (this.failCount === 1 || this.failCount % 30 === 0) {
-                this.log.warn(`Abruf von ${this.baseUrl} fehlgeschlagen (${this.failCount}x): ${msg}`);
+                this.log.warn(`Request to ${this.baseUrl} failed (${this.failCount}x): ${msg}`);
             }
             await this.setStateChangedAsync('info.connection', false, true);
         }
@@ -174,7 +204,7 @@ class Violet extends utils.Adapter {
             try {
                 value = def.get(data);
             } catch (e) {
-                this.log.debug(`Wert für ${def.id} nicht lesbar: ${e.message}`);
+                this.log.debug(`Value for ${def.id} not readable: ${e.message}`);
                 continue;
             }
             if (value === undefined) continue; // Schlüssel liefert diese Violet nicht
@@ -186,8 +216,6 @@ class Violet extends utils.Adapter {
             this.cache[def.id] = value;
         }
 
-        await this.updateFeatures(data);
-
         // Rückmeldung: aktuellen Modus in die Schalt-Datenpunkte spiegeln
         for (const c of this.controls) {
             if (!c.func) continue;
@@ -197,30 +225,148 @@ class Violet extends utils.Adapter {
                 this.cache[c.id] = mode;
             }
         }
+
+        await this.updateFeatures(data);
+    }
+
+    /* ------------------------------------------------------------------
+     * Meldungen der Violet
+     *   1. Wahl: GET /getNotifications?ALL  (Warnungen, Alarme, Erinnerungen)
+     *   Rückfall: Änderung von last_error_id aus getReadings
+     *   „Quittieren“ wirkt nur in ioBroker – die Violet selbst wird nicht verändert.
+     * ------------------------------------------------------------------ */
+    async pollMessages(data) {
+        const now = Date.now();
+        if (this.msg.lastPoll && now - this.msg.lastPoll < NOTIFY_INTERVAL) return;
+        this.msg.lastPoll = now;
+
+        let entries = null;
+        if (this.msg.supported !== false) {
+            try {
+                const res = await fetch(`${this.baseUrl}/getNotifications?ALL`, {
+                    headers: this.headers,
+                    signal: AbortSignal.timeout(this.timeout),
+                });
+                if (res.ok) {
+                    entries = this.parseNotifications(JSON.parse(await res.text()));
+                    if (this.msg.supported === null) this.log.info('Violet messages are read via getNotifications');
+                    this.msg.supported = true;
+                } else if (res.status === 404 || res.status === 400) {
+                    this.msg.supported = false;
+                    this.log.info('getNotifications is not supported by this Violet – using last_error_id instead');
+                }
+            } catch (e) {
+                this.log.debug(`getNotifications failed: ${e.message}`);
+            }
+        }
+        if (!entries) {
+            const id = data && data.last_error_id;
+            entries = id !== undefined && id !== null && String(id) !== '0'
+                ? [{ sig: `E${id}`, date: '', time: '', type: 'ERROR', text: this.t(`Fehlernummer ${id}`, `Error number ${id}`) }]
+                : [];
+        }
+        this.msg.entries = entries;
+
+        const newest = entries[0];
+        if (!this.msg.acked && newest) {
+            // erster Start: vorhandene (alte) Meldungen nicht als neu melden
+            this.msg.acked = newest.sig;
+            await this.setStateAsync('meldungen.quittiert', newest.sig, true);
+        }
+        let count = 0;
+        if (newest && newest.sig !== this.msg.acked) {
+            const idx = entries.findIndex((e) => e.sig === this.msg.acked);
+            count = idx === -1 ? Math.min(entries.length, 99) : idx;
+        }
+        await this.writeMessageStates(count);
+    }
+
+    parseNotifications(json) {
+        if (!json || typeof json !== 'object') return [];
+        const list = Object.entries(json)
+            .filter(([, v]) => v && typeof v === 'object' && (v.TEXT || v.text))
+            .map(([k, v]) => {
+                const date = String(v.DATE || v.date || '');
+                const time = String(v.TIME || v.time || '');
+                const text = String(v.TEXT || v.text || '').trim();
+                const type = String(v.TYPE || v.type || '').toUpperCase();
+                let ts = 0;
+                const m = date.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/) || null;
+                const iso = m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : date;
+                const parsed = Date.parse(`${iso}T${time || '00:00:00'}`);
+                if (Number.isFinite(parsed)) ts = parsed;
+                return { key: Number(k) || 0, ts, date, time, type, text, sig: `${date} ${time}|${text}` };
+            });
+        list.sort((a, b) => b.ts - a.ts || b.key - a.key);
+        return list.slice(0, 50);
+    }
+
+    async writeMessageStates(count) {
+        const newest = this.msg.entries[0];
+        this.msg.active = count > 0;
+        this.msg.count = count;
+        const vals = {
+            'meldungen.aktiv': count > 0,
+            'meldungen.anzahl': count,
+            'meldungen.text': newest ? newest.text : '',
+            'meldungen.zeit': newest ? `${newest.date} ${newest.time}`.trim() : '',
+            'meldungen.typ': newest ? newest.type : '',
+            'meldungen.liste': JSON.stringify(this.msg.entries.slice(0, 20).map(({ date, time, type, text }) => ({ date, time, type, text }))),
+        };
+        for (const [id, v] of Object.entries(vals)) {
+            await this.setStateChangedAsync(id, v, true);
+            this.cache[id] = v;
+        }
+        if (this.features) {
+            this.features.messages = this.messageInfo();
+        }
+    }
+
+    messageInfo() {
+        const n = this.msg.entries[0];
+        return this.msgDefs.length
+            ? { enabled: true, active: this.msg.active, count: this.msg.count, text: n ? n.text : '', time: n ? `${n.date} ${n.time}`.trim() : '', type: n ? n.type : '' }
+            : { enabled: false };
+    }
+
+    async acknowledgeMessages(source) {
+        const newest = this.msg.entries[0];
+        if (!newest) return;
+        this.msg.acked = newest.sig;
+        await this.setStateAsync('meldungen.quittiert', newest.sig, true);
+        await this.writeMessageStates(0);
+        this.log.info(`Violet messages acknowledged in ioBroker (${source})`);
     }
 
     /** Beschreibt für das Pool-Display, was an dieser Anlage aktiv ist (Datenpunkt info.features) */
     async updateFeatures(data) {
         const c = this.config;
-        const name = (k, fallback) => String(c[k] || '').trim() || fallback;
         const features = {
+            lang: this.lang,
+            font: c.display_font || 'verdana',
+            violetUrl: this.baseUrl,
             switching: this.controls.length > 0,
             pumpRpm: !!(c.use_pump && c.use_pump_rpm),
+            pv: !!c.use_pv,
+            dmx: !!c.use_dmx,
             temps: [],
             relays: [],
-            analog: this.defs.filter((d) => d.id.startsWith('analog.')).map((d) => ({ id: d.id, name: d.name, unit: d.unit || '' })),
+            analog: this.defs
+                .filter((d) => d.id.startsWith('analog.'))
+                .map((d) => ({ id: d.id, name: pick(d.name, this.lang), unit: d.unit || '' })),
+            messages: this.messageInfo(),
         };
         if (c.use_temp) {
             for (let i = 1; i <= 12; i++) {
                 const st = data[`onewire${i}_state`];
-                if (st !== undefined && st !== 'NO_SENSOR_CONFIGURED') features.temps.push({ n: i, name: tempName(c, i) });
+                if (st !== undefined && st !== 'NO_SENSOR_CONFIGURED') features.temps.push({ n: i, name: pick(tempName(c, i), this.lang) });
             }
         }
         for (const e of [1, 2]) {
             if (!c[`use_ext${e}`]) continue;
             for (let r = 1; r <= 8; r++) {
                 const own = String(c[`ext${e}_${r}_name`] || '').trim();
-                if (own) features.relays.push({ id: `relais.ext${e}_${r}`, name: own });
+                features.relays.push({ id: `relais.ext${e}_${r}`, name: own || `EXT${e}.${r}`, named: !!own });
             }
         }
         this.features = features;
@@ -235,17 +381,17 @@ class Violet extends utils.Adapter {
             if (this.prepared.has(ch)) continue;
             await this.extendObjectAsync(ch, {
                 type: 'channel',
-                common: { name: CHANNELS[ch] || this.channelName(ch) },
+                common: { name: names(CHANNELS[ch] || this.channelName(ch)) },
                 native: {},
             });
             this.prepared.add(ch);
         }
 
         const common = {
-            name: def.name,
+            name: names(def.name),
             type: def.type,
             role: def.role,
-            read: true,
+            read: def.read !== false,
             write: def.write === true,
         };
         if (def.min !== undefined) common.min = def.min;
@@ -264,6 +410,8 @@ class Violet extends utils.Adapter {
             const own = String(this.config[`ext${m[1]}_${m[2]}_name`] || '').trim();
             return own ? `${own} (EXT${m[1]}.${m[2]})` : `Relais EXT${m[1]}.${m[2]}`;
         }
+        const d = ch.match(/^dmx\.szene(\d+)$/);
+        if (d) return `DMX-Szene ${d[1]}`;
         return ch.split('.').pop();
     }
 
@@ -282,39 +430,48 @@ class Violet extends utils.Adapter {
 
     describeSensor(i) {
         const d = this.lastData;
-        if (!d) return '⏳ noch keine Daten – IP gespeichert und Instanz gestartet?';
+        if (!d) return this.t('⏳ noch keine Daten – IP gespeichert und Instanz gestartet?', '⏳ no data yet – IP saved and instance started?');
         const state = d[`onewire${i}_state`];
-        if (state === undefined) return '– nicht vorhanden';
-        if (state === 'NO_SENSOR_CONFIGURED') return '– nicht angeschlossen';
+        if (state === undefined) return this.t('– nicht vorhanden', '– not available');
+        if (state === 'NO_SENSOR_CONFIGURED') return this.t('– nicht angeschlossen', '– not connected');
+        const loc = this.lang === 'de' ? 'de-DE' : 'en-GB';
         const fmt = (v) => {
             const n = parseFloat(v);
-            return Number.isFinite(n) ? n.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '?';
+            return Number.isFinite(n) ? n.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '?';
         };
-        let text = `🌡 ${fmt(d[`onewire${i}_value`])} °C   (heute ${fmt(d[`onewire${i}_value_min`])} – ${fmt(d[`onewire${i}_value_max`])})`;
+        let text = `🌡 ${fmt(d[`onewire${i}_value`])} °C   (${this.t('heute', 'today')} ${fmt(d[`onewire${i}_value_min`])} – ${fmt(d[`onewire${i}_value_max`])})`;
         if (state !== 'OK') text += `   ⚠ ${state}`;
         return text;
     }
 
     describeAnalog(key) {
         const d = this.lastData;
-        if (!d) return '⏳ noch keine Daten';
-        if (!key || d[key] === undefined) return '– nicht vorhanden';
+        if (!d) return this.t('⏳ noch keine Daten', '⏳ no data yet');
+        if (!key || d[key] === undefined) return this.t('– nicht vorhanden', '– not available');
         const n = parseFloat(d[key]);
-        if (!Number.isFinite(n)) return `aktuell: ${d[key]}`;
-        return `aktuell: ${n.toLocaleString('de-DE', { maximumFractionDigits: 2 })}`;
+        const now = this.t('aktuell', 'current');
+        if (!Number.isFinite(n)) return `${now}: ${d[key]}`;
+        return `${now}: ${n.toLocaleString(this.lang === 'de' ? 'de-DE' : 'en-GB', { maximumFractionDigits: 2 })}`;
     }
 
     /** Schaltwunsch aus ioBroker (ack=false) */
     async onStateChange(fullId, state) {
         if (!state || state.ack) return;
         const id = fullId.substring(this.namespace.length + 1);
+
+        if (id === 'meldungen.quittieren') {
+            if (state.val) await this.acknowledgeMessages('data point');
+            await this.setStateAsync(id, false, true);
+            return;
+        }
+
         const c = this.controls.find((x) => x.id === id);
         if (!c) return;
 
         if (c.speed) {
             const speed = parseInt(state.val, 10);
             if (![1, 2, 3].includes(speed)) {
-                this.log.warn(`Ungültige Drehzahl ${state.val} – erlaubt sind 1 (ECO), 2 (Normal), 3 (Boost)`);
+                this.log.warn(`Invalid speed ${state.val} – allowed: 1 (ECO), 2 (Normal), 3 (Boost)`);
                 return;
             }
             await this.setStateAsync(id, speed, true);
@@ -328,7 +485,7 @@ class Violet extends utils.Adapter {
         const action = String(state.val).trim().toUpperCase();
         const allowed = c.onOffOnly ? ['ON', 'OFF'] : ['ON', 'OFF', 'AUTO'];
         if (!allowed.includes(action)) {
-            this.log.warn(`${c.name}: ungültiger Wert „${state.val}“ – erlaubt: ${allowed.join(', ')}`);
+            this.log.warn(`${id}: invalid value "${state.val}" – allowed: ${allowed.join(', ')}`);
             return;
         }
 
@@ -348,22 +505,22 @@ class Violet extends utils.Adapter {
 
     async sendCommand(func, action, duration, value, id) {
         const cmd = `${func},${action},${duration},${value}`;
-        this.log.info(`Schaltbefehl an Violet: ${cmd}`);
+        this.log.info(`Switching command to Violet: ${cmd}`);
         try {
             const res = await fetch(`${this.baseUrl}/setFunctionManually?${cmd}`, {
                 headers: this.headers,
                 signal: AbortSignal.timeout(this.timeout),
             });
             const text = (await res.text()).trim();
-            if (res.status === 401) throw new Error('Zugriff verweigert – Benutzername/Passwort in der Konfiguration prüfen');
+            if (res.status === 401) throw new Error('access denied – check user name/password in the configuration');
             if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
             const first = text.split(/\r?\n/)[0].trim().toUpperCase();
-            if (first !== 'OK') throw new Error(`Violet meldet: ${text.replace(/\s+/g, ' ').substring(0, 200)}`);
-            this.log.debug(`Antwort der Violet: ${text.replace(/\s+/g, ' ')}`);
+            if (first !== 'OK') throw new Error(`Violet answered: ${text.replace(/\s+/g, ' ').substring(0, 200)}`);
+            this.log.debug(`Violet answer: ${text.replace(/\s+/g, ' ')}`);
             await this.setStateAsync(id, action, true);
         } catch (err) {
-            const msg = err.name === 'TimeoutError' ? 'Zeitüberschreitung' : err.message;
-            this.log.warn(`Schaltbefehl ${cmd} fehlgeschlagen: ${msg}`);
+            const msg = err.name === 'TimeoutError' ? 'timeout' : err.message;
+            this.log.warn(`Switching command ${cmd} failed: ${msg}`);
         }
         // Zustand kurz danach neu einlesen, damit Status/Rückmeldung stimmen
         if (this.pollTimer) this.clearTimeout(this.pollTimer);
@@ -375,6 +532,7 @@ class Violet extends utils.Adapter {
      *   GET /            → Pool-Display (www/index.html)
      *   GET /api/data    → aktuelle Werte + Funktionen
      *   GET /api/set?id=…&value=…  → nur freigegebene Schalt-Datenpunkte
+     *   GET /api/ack     → Meldungen in ioBroker quittieren
      * ------------------------------------------------------------------ */
     startWebServer() {
         const port = Number(this.config.port) || 8099;
@@ -390,24 +548,30 @@ class Violet extends utils.Adapter {
                     return send(200, fs.readFileSync(page), 'text/html; charset=utf-8');
                 }
                 if (url.pathname === '/api/data') {
+                    if (this.features) this.features.messages = this.messageInfo();
                     return send(200, { ok: !!this.lastData, connected: this.failCount === 0 && !!this.lastData, features: this.features || null, values: this.cache, ts: Date.now() });
+                }
+                if (url.pathname === '/api/ack') {
+                    if (!this.msgDefs.length) return send(403, { ok: false, error: 'messages disabled' });
+                    await this.acknowledgeMessages(`pool display ${req.socket.remoteAddress}`);
+                    return send(200, { ok: true });
                 }
                 if (url.pathname === '/api/set') {
                     const id = url.searchParams.get('id') || '';
                     const value = url.searchParams.get('value');
                     const c = this.controls.find((x) => x.id === id);
-                    if (!c) return send(403, { ok: false, error: 'Dieser Datenpunkt ist nicht schaltbar (Schalten erlauben?)' });
-                    this.log.info(`Pool-Display (${req.socket.remoteAddress}): ${id} = ${value}`);
+                    if (!c) return send(403, { ok: false, error: 'This data point is not switchable (switching enabled?)' });
+                    this.log.info(`Pool display (${req.socket.remoteAddress}): ${id} = ${value}`);
                     await this.onStateChange(`${this.namespace}.${id}`, { val: c.speed ? Number(value) : value, ack: false });
                     return send(200, { ok: true });
                 }
-                send(404, { ok: false, error: 'nicht gefunden' });
+                send(404, { ok: false, error: 'not found' });
             } catch (e) {
                 send(500, { ok: false, error: e.message });
             }
         });
-        this.server.on('error', (e) => this.log.error(`Pool-Display auf Port ${port} nicht gestartet: ${e.message}`));
-        this.server.listen(port, () => this.log.info(`Pool-Display erreichbar unter http://<ioBroker-IP>:${port}/`));
+        this.server.on('error', (e) => this.log.error(`Pool display could not be started on port ${port}: ${e.message}`));
+        this.server.listen(port, () => this.log.info(`Pool display available at http://<ioBroker-IP>:${port}/`));
     }
 
     onUnload(callback) {
