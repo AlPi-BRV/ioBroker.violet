@@ -4,13 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pool-Display</title>
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFa0lEQVR42u2XXWwdRxXHf2dm9n46vvH1V+uktbETHEKLUhS1AqcKRX1oQZWgEiDeUCXgBcpDLZ55QiCEBEK8oAokhFQeWoWPNog0QKGq1EiVA4aaBif9SF3HiR3H+N4b37s7O4eHvb5qHDt2aFFeWGm1O6PZM/895/8/Z448wTHlFl5uJ4uMEwA0gIYb4xUjiMneg9f3DkCBho9RFIclj2UrswLEwZOEFIAiEYL89wAUJSpY7v/KOPkux9wrK/zjxAI5Y9Cw8c8hDikHjg4yMlElWQucevJN1moJRoStUG8JQASCQq5keeT7d2Gd4ZWfn2fqxDvkjb0uFGKEOKTc9ejt3P/4GADTz8zTqMVYMahujsBsGwKFxmJM8Eqr5m/oUAHiuid4Ze1Ksi1fdgRgnYTGCWJk27VipLN+R7a5xdf/AWwPQLYZ/68ArPM3bQZ8KxN9uTeHUbbU9PvrAQVrhKtXY1bOr6EKIxO97CoV8CFgI0GE6+6b9ZDZTlIxKa/++gIiUNlT4DM/uJuWehpJgtdAqprdieJV0fTm3HPjVJwqBYl46Sevc+TrY1T2FrjvyyPsvqPEX358lgvTqyT1FFEQJ+AhKrn3EYCCM4baSouffe5lvnp8gmJPxPhDA4w/NECr5kmaaYebCkQFS/CKWEFE3rsKQlCKJuLcy0v8cOIFZo4vENpuzu9ydPXn6erPU24/87scxgk2EpKmz6qhbh0WmTS/2kHQFGMMLe9RlJGPVhk90kd1tERUtNfa14yM/zp5idPPzBEZe6P9kcd5esesWa/tLTyesGXaUMAi5Hdw3nEj91RvWrvZqUc2ZIx3Ddte34kiXH0xzjRspBPbTNOCqnbmjZVrNK5eYcN3698aK+s4MiCqmA2VNKSakXx5rkFAiUnJ4xDAEwgoFoMnpUDEVWJStIOhRI6UQEogj+tsmKI0SdC2ZwyCwxLjOyFUlCIRFoMTEXoGihz6wh5e+tHrxKSMHuqlb38X75xeYexoH398cpaJz4/ykUeHwMDimTrPfutV9h/up3eszKmn3qLoHLFPGbyji098cz/5skOsULvYZPb5Re754l5aDY8YIVe0nPz2GRbO1jCpBkrVHPc+dicAsQYGP9zNwUcG6f1AmQMPDzJ8sIdPf/cg08/Oc+qXb3HnfT08ODlOz0iJuz97O7GmiBViTdl7uId9D/Qz9Zu3mfntAudeWKK20GLmxQWGDlXoHiow8+ICcTuBdWjaWIpJNGCNkLYCzVVP6pXVC03GPt7P9NPznPzFGfI4mnMJR74xyuXZOs3VBGOkw6M0CVw+V2fkcC/VPSVm/7DI1HNz/HV6jj1ju1l+s8HzP32NQbpxGJxBqF1q0jNcYuhAhZnXFkiTgI0MImAjobmS0LevqyOr/g92ZQwXQRVawROvOVp4XMFinOHvz81TqRRZfqNB0UWgWeIqVCJ22QLGCCFRnLOWlctr/Ol7s3zp2L0snq/TO1Tmn7+7iCoUd+c4fXyOo5P7mDzxSZprnqGD3Tz12BS5nOVDn7qNyd8/QC7nWF1q8ufvnKWyt8CDk+MYFXwzcOxr06xeaaJB0aCZatpslic4piLQVE/vQJnqcAmfBJbfuEqaZPxYmqtTzEcMf6yKdYZLZ2pcfLtGuZCjb18XUcFm3A5wfuoKldsKVIfLKErwyvzf/o33ge6BAsEH6stxp1eQ9d7QGCEJKZ6AIDhMR1aRWIIGWqTQ7pByxpKGQELoSE6AnDhSDZ1MKUCEw7TlLUjb8oZqGILixODEtithZjSinZBEKEqUWQxKCIog5M216VY32FmfU8CJyaDqFuVYlesql77rZbPuZrPmYzM7bD5160/F/wEUl3Fd7Mh6xwAAAABJRU5ErkJggg==">
 <!--
   Pool-Display für ioBroker.violet – im Stil der alten ProCon.IP-Anzeige
-  Datenquelle: eingebauter Webserver des Violet-Adapters (Standard-Port 8099) – keine weiteren Adapter nötig
+  Datenquelle: eingebauter Webserver des Violet-Adapters (Standard-Port 8099)
   Baut sich selbst auf: angezeigt wird nur, was der Adapter liefert (info.features).
-  Optional anpassen: Block CONFIG unten (Paarung der Temperaturen)
-  URL-Parameter: ?api=http://10.10.3.x:8099   ?demo=1
+  URL-Parameter: ?api=http://10.10.3.x:8099   ?demo=1   ?lang=en   ?font=arial
 -->
 <style>
   :root {
@@ -30,6 +28,7 @@
     --manual-on: #2f6fd6;
     --manual-off: #b8262c;
     --seg: #2a2d31;
+    --font: Verdana, "DejaVu Sans", Tahoma, sans-serif;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; overflow: hidden; }
@@ -37,50 +36,57 @@
   body {
     background: radial-gradient(ellipse at top, #62666c 0%, var(--bg) 45%, var(--bg-deep) 100%);
     color: var(--text);
-    font-family: Verdana, "DejaVu Sans", Tahoma, sans-serif;
+    font-family: var(--font);
     font-weight: 700;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { width: 1374px; margin: 0; transform-origin: 0 0; padding: 19.2px 22.0px; }
+  .wrap { width: 1374px; margin: 0; transform-origin: 0 0; padding: 19px 22px; }
 
   /* ---------- obere Tabelle ---------- */
-  .grid { display: grid; grid-template-columns: 1fr 1fr 1.15fr; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1.25fr; }
   .head {
-    text-align: center; font-size: 17.2px; letter-spacing: .04em;
-    padding: .55em 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    position: relative; text-align: center; font-size: 19px; letter-spacing: .04em;
+    padding: .5em 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
   }
-  .rows { display: contents; }
+  .head .hbtn {
+    position: absolute; right: .6em; top: 50%; transform: translateY(-50%);
+    font: inherit; font-size: .62em; letter-spacing: .03em; color: #fff; cursor: pointer;
+    background: linear-gradient(#4a4f55, #2c3035); border: 1px solid rgba(255,255,255,.4);
+    border-radius: 5px; padding: .45em .8em;
+  }
+  .head .hbtn:hover { background: linear-gradient(#5a6067, #353a40); }
+  .head .hbtn.active { background: linear-gradient(#4c8af0, var(--manual-on)); }
   .cell {
     display: flex; align-items: center; gap: .8em;
-    min-height: 76.9px; padding: .35em .9em;
-    font-size: 14.4px;
+    min-height: 88px; padding: .4em .9em;
+    font-size: 16.5px;
   }
   .ev { background: var(--row-a); } .od { background: var(--row-b); }
 
   .lbl { flex: 1 1 52%; text-align: right; line-height: 1.25; }
   .lbl .main { font-size: 1.12em; }
-  .lbl .sub { display: block; font-size: .72em; font-weight: 400; color: var(--muted); }
+  .lbl .sub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); }
   .val { flex: 1 1 48%; line-height: 1.15; }
-  .val .big { font-size: 1.6em; white-space: nowrap; }
+  .val .big { font-size: 1.62em; white-space: nowrap; }
   .val .unit { font-size: .6em; color: var(--muted); margin-left: .15em; }
-  .mm { display: block; font-size: .68em; font-weight: 400; white-space: nowrap; }
+  .mm { display: block; margin-top: .35em; font-size: .72em; font-weight: 400; white-space: nowrap; }
   .mm .lo { color: var(--min); margin-right: .9em; } .mm .hi { color: var(--max); }
   .mm .lo::before { content: "↓"; } .mm .hi::before { content: "↑"; }
-  .note { display: block; font-size: .66em; font-weight: 400; color: var(--muted); }
-  .center .val { text-align: center; }
+  .note { display: block; margin-top: .25em; font-size: .7em; font-weight: 400; color: var(--muted); }
 
   .badge {
-    font-size: .62em; padding: .45em .6em; border-radius: 5px; min-width: 4.6em; text-align: center;
+    font-size: .64em; padding: .45em .6em; border-radius: 5px; min-width: 4.6em; text-align: center;
     border: 1px solid rgba(255,255,255,.35); box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
   }
   .badge.auto { background: linear-gradient(#3cb556, var(--auto)); }
   .badge.man-on { background: linear-gradient(#4c8af0, var(--manual-on)); }
   .badge.man-off { background: linear-gradient(#d8414a, var(--manual-off)); }
-  .badge.none { background: #444; color: #aaa; }
 
   /* Relais-Spalte */
-  .relay .lbl { flex: 0 0 34%; }
-  .state { flex: 0 0 auto; display: flex; align-items: center; gap: .5em; min-width: 5.2em; }
+  .relay .lbl { flex: 0 0 33%; }
+  .state { flex: 0 0 auto; display: flex; align-items: center; gap: .5em; min-width: 5em; }
+  .ctrl { display: flex; flex-direction: column; align-items: flex-start; gap: .4em; }
+  .ctrl .line { display: flex; align-items: center; gap: .5em; }
   .lamp {
     width: 1em; height: 1em; border-radius: 50%; flex: 0 0 auto;
     background: radial-gradient(circle at 35% 30%, #ff9a9a, var(--off) 55%, #6b0f12);
@@ -88,7 +94,6 @@
   }
   .lamp.on { background: radial-gradient(circle at 35% 30%, #b8ffc5, var(--on) 55%, #0c5a1c); box-shadow: 0 0 .6em rgba(61,220,92,.75); }
   .lamp.wait { background: radial-gradient(circle at 35% 30%, #ffe6a3, var(--wait) 55%, #6b4a05); box-shadow: 0 0 .6em rgba(240,180,41,.7); }
-  .extra { font-size: .72em; font-weight: 400; color: var(--muted); text-align: right; flex: 1; white-space: nowrap; }
 
   .seg { display: inline-flex; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,.3); flex: 0 0 auto; }
   .seg button {
@@ -101,42 +106,57 @@
   .seg button.sel.on { background: var(--manual-on); color: #fff; }
   .seg button.sel.off { background: var(--manual-off); color: #fff; }
   .seg button.sel.lvl { background: #6c737b; color: #fff; }
+  .seg button.sel.lvl.run { background: var(--auto); color: #fff; }
   .seg button.pending { animation: pulse .8s ease-in-out infinite; }
-  .seg button:disabled { cursor: default; opacity: .45; }
+  .seg.small button { font-size: .62em; padding: .45em .6em; min-width: 3.2em; }
+  .pv {
+    font-size: .7em; padding: .55em .75em; border-radius: 6px; color: #fff;
+    background: var(--auto); border: 1px solid rgba(255,255,255,.3);
+  }
+  select.dmx {
+    font: inherit; font-size: .7em; color: #fff; background: var(--seg);
+    border: 1px solid rgba(255,255,255,.3); border-radius: 6px; padding: .4em .5em;
+  }
   @keyframes pulse { 50% { opacity: .45; } }
+
+  /* Relais-Ansicht (ersetzt die Temperaturspalte) */
+  .rlist { display: flex; flex-direction: column; gap: .35em; width: 100%; }
+  .rrow { display: flex; align-items: center; gap: .6em; }
+  .rrow .rname { flex: 1 1 auto; text-align: right; font-size: .92em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rrow .rname.dim { color: var(--muted); font-weight: 400; }
 
   /* Datum / Uhrzeit */
   .clock {
     display: flex; justify-content: center; gap: 3.5em; align-items: baseline;
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 13.7px;
-    padding: .35em 0; font-size: 31.6px; letter-spacing: .05em;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 14px;
+    padding: .35em 0; font-size: 32px; letter-spacing: .05em;
     text-shadow: 0 2px 4px rgba(0,0,0,.6);
   }
 
-  .clock { position: relative; }
-  .clock .logo { position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 1.7em; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.4); }
-
   /* Große Anzeige */
-  .hero { display: grid; grid-template-columns: 1fr 1fr; background: #000; margin-top: 13.7px; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; background: #000; margin-top: 14px; }
   .hero > div { text-align: center; padding: .15em 0 .6em; }
-  .hero .num { font-size: 158.0px; line-height: 1; letter-spacing: -.01em; }
-  .hero .cap { margin-top: 1.1em; }
-  .hero .cap { font-size: 16.5px; }
+  .hero .num { font-size: 158px; line-height: 1; letter-spacing: -.01em; }
+  .hero .cap { margin-top: 1.1em; font-size: 18px; }
 
   .bottom {
     display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; text-align: center;
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 13.7px; padding: .25em 0;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 14px; padding: .25em 0;
   }
-  .bottom .xl { font-size: 41.2px; }
-  .bottom .md { font-size: 15.8px; }
+  .bottom .xl { font-size: 42px; }
+  .bottom .md { font-size: 17px; }
 
   .foot {
-    display: flex; justify-content: center; gap: 3em; flex-wrap: wrap; padding: .7em 0 .2em;
-    font-size: 11.7px; font-weight: 400; color: var(--muted);
+    display: flex; justify-content: center; gap: 3em; flex-wrap: wrap; padding: .75em 0 .2em;
+    font-size: 13px; font-weight: 400; color: var(--muted);
   }
   .conn::before { content: "●"; margin-right: .4em; color: var(--on); }
   .conn.err::before { color: var(--off); }
   .conn.demo::before { color: var(--wait); }
+  .conn.msg { color: #ffd666; cursor: pointer; font-weight: 700; }
+  .conn.msg::before { color: var(--wait); animation: blink 1s steps(2, start) infinite; text-shadow: 0 0 6px rgba(240,180,41,.9); }
+  .conn.msg:hover { text-decoration: underline; }
+  @keyframes blink { to { visibility: hidden; } }
 
   .toast {
     position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(150%);
@@ -144,7 +164,6 @@
     font-size: 13px; font-weight: 400; transition: transform .25s ease, opacity .25s; z-index: 9; max-width: 90vw; opacity: 0; pointer-events: none;
   }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
 </style>
 </head>
 <body>
@@ -152,21 +171,21 @@
 
   <div class="grid" id="grid"></div>
 
-  <div class="clock"><img class="logo" alt="Violet" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAANiklEQVR42u2de4xc9XXHP+d3752ZfXgfZtdev3mZGDA2TqGYNAS3Cii0IY/SREKkETURjdRWVOp/tGnUpi+10BSlaVMRJXEiWQkJxU2EGmgSC1PCIxhDTAh+EIwfa2z82PF653Hv/f1O/7izs7M7M/swu7MU3yNdrebO3Du/Pd/z/p1zR/6MR5SU5o1MyoIUgBSAlFIAUgBSSgFIAUip9eS3FG1fmr+p4GxrUhIxgkwies4q6LsMAAVG4rDJe4qHIduC5QhQdjGxswiNBSKLj0HePQAoip/xuPH3L8XPGnAVTgCqivEN+cNFdm8bbMqUWWG+QKyONR9YxNKru7Flh5j679v9n4MMHSviiZlzTZhzAETAKQTtHp988OrkRAM68mKel7YdwRdBde5MT2Qt1/7BKq69c2XTzw2+lOfksQK+EXSOzWLrfIBC4XRErjtAdQwHtYoYoZyPWraUcCTGxYqzOuaXdEwrXdy68lhrnbAnGE/GAwCIJ4gnLVuHGKky3nj1ACAt5EkaCKZ5QApASikAKQAppQCkAKSUApACkFIKQApASikAKQAppQCkAKSUApACkNJ5AoBqCsCck0yy1Re0eXPaEXHeAjC61epiR3nY1ot7heftvQHGmPNOE1qiAQLEJUfhdNhULXI9AZ39GSxu0q61FIBzUAExQtlaht8s1SuAJK87Fmbou7STGDe5rUoBOAcNMEJEzPFfnh2zS7UYWQWB1b/Vh0PPJ/63zgkLwsHnT4+z+7UAAbz3UytoDzI4p5wv/rglAKiDAI83njpFVLJJM1StGTJJR3L/ZZ1cc8cKCi7E80wKwOwBoARiePO1YQ7vHEpa0Z1O8MVJx9yH/uZyLujroBzHGCMpALPpB0IsO7ccAqm3MGIAp3Qva+OOb16DCYTYubHWwRSAt68FOfHZ9d3D5AdLYAR1E0DwBGeVNbcs5q6HrsfkhKKNMC3uHX13AqDgG8PQUJEd9+1Pwk9Xn3WZCghXfmyAe3Zs4uKNF1CwIWUbVd83vlSmXAQRZnyct6UIdUrOBDz5H69x7JVhjC91vqAWhBXX9nDPk5u4a+tGVt+wCBVlxIaMxCFlFxM5i1Wd/hEnfxsBP1/U0vZ0VfCMUCpEfHvzC/zxjhsQT1BVZIJoGk9Ql/Tvb7h9BRtuX8GRXXn2/vg4B585zekDBQqnQ4qnozpT1lTaPEEs+Dnv/AQAknCzzQvY8+xxtt2zm9v+fX0yEOHVmwcxUo2YjBGWbehm2Ybu6vtxyRGX7bjW/unUpjJtCQCTDg2+WwEAsFbp9DNs/8peupZmuelza1CrqDSYXpSxIQp1mkh75ZyfM/i5/9/5gj9fX+xipc3L8P2/fJnScMyt/7i2er6ZZI4bL9WGVY3phcTvIEc8r+KjVsl5AT/8p1/ytY8/w5nBEsZPErIpZ3UlOeYiCmplNXbe9Vet0uFleGHbIb543Xae33IQGTU7kmiEutYMTqsmKhWNuMSn6HkAwKhjbvcyDB0usuXO5/jS+59g97ajVXMkJgFDnSbTjZUJR52twylx5BCBY68MM/hqnkA8tAW7Q/47xRY6q/ji4RuPvU+9xb6nTrD8qh6u/sQyrrhlgIF1XfgZM2fmwc8IxaGIhz67izC0ZI3fknxB3onPjDNGUCB0MRGOHD79F3cycFUXS9Z20XthGx19WdoXZt4eIJX41VllcFeep77yOkf2DJGToCXS/44FYGLU42IlxhHjcDgMhmQLf3a28RWIsAR4ZIzXMDt/15ugZqWL0Sw3MB4Z8ZLoR0cd5uwxKmO8JPpqcZniHQ1AHRhzHI2dd3lASuCLkZQL8wlA6OKUC/MZaOx+ZDB9dPF8AvCFFT9MAZhPE3Ti0EjKhfkEIJA0EJpXADQ1QPNKqfjPtwY09c6m+lzJKTP+xIqNbRtOdb76viS9QGobf8eU789gjU2vnWE2fq7XNltjQwAUJXTJMIVXKXxNRpFzjBYKArwpz0NS8YycI4wjMniYBspo1RHGlgw+gTF1dZrRHEYQ/Bkos1Su1Rlt50MGr1qlnbmpabxGf6IkR84xsLqLW/72crxAeParb/DSo4NkPb+uXiIGQmf57c9fwbINPZw+UGDbn+7GNDkvNcwvuYjevnau+8x7uOzmfhYszlbZMfr37PGQV//7GM9+7QBDJ4rkTIBTRVXJ5Hw+ft86upe38fqTJ/nx/XsJxExLW0Nnufw3F3P9Zy9KjLBOKrgYI4SFmIfu2kX7wgy/++V19d9Ts91Z2yajTvECw692nOAnD+xLin6umQaI4FA6+zOs/8QyAA789BTxo46cNFhn5fNrPrSIVRsvYOhgwuim52uYv/r9/XzqW9fSe2F7039+8RVwyaY+3vdHF7H10zt59YljtHkBsVVMIKy7bSkLBnIYX/if+/eMTXtMioBgUW76/BouubFvRlL83btfJNfls+73ls3c1meFxx/YS1aE2rJiQxPkYiUOLcYzxGU3pZKWh2OcVUoTHr468bwYIVRL/8pONj9yPR19GQDODJZ485Uz4zbMVWHxmgV0L2+jd2U7m7dt5P73/oSTb4wk5kqhmI/o6M8Snp2ZSRCSTRhnlag4NrnTVAM8oTwcg4O47Dj52sjYho0kldT2hRlyPQEo5AdL2NBV2+79wPDWvpGGz6P2m61w9CGr0+sikIYNtBPPi0DsLDf/xZoq85998ADfv/dlzpwoT7AFwoKFGT7y91ex8e4LaesJuOnP1/Ctz/yMHGb8Gs/RKRpPyB8u8i/XPtF8Z61iD9WBjRz5I0X+ecP26lKNLwxHZT5875V88N73YGPHlo89y9H9Z8iMbmsasKGSxat7QnzL9gMEsNbR1ZHj0g/2owpHd+f5zh/uwqnS5vt1s2OFU8ke7cpf72HJ+h4uu6mf7gU5CsPhrK1LnVI8GzHZboNUHL0h6eguDo9puhGhqBFxacywl8/EFM9GWLR639F7TDsMnQuyODoX5ViwKIsI7PvRW5Q1pjPIYiNXJ3hZ32ckLrN/+wmWXt1DdoFPZ3+G4eHyrDZX+b4h1+k35b5apTwcVwXEq/ly4wtePL6jT3zBE8GracFXGjt7f1qiO0sqoApeRvAq7YTFfIQTbboBrqrV62pt8mxSVLAsWdvF5h9clzCoJjJVpxjPcOJXI/zbjf9bZcXE9dStScfOT7Vev0mgMHYvO8sDczomCTJFCDj6+blsJVQHQYdHz/Lm0Zg3h/2nfh1zSDy9OsCDzkW5ytPOhVlvFZsGc0Xm9qdNTCCcfbPMrq2H6qRVFTxfyB8ptgYAVcXHcGLfCGffKtO1pI31n1zGY3/9KmEUkwnGNyuJlzimaWmIJk4oKljC4Zi23gw9K9qRSqKjZmJWmkQp1iq57mCcxDYCyXiS3EemVsBxDMgZTrw2wtfveG5SK5z1/DkRBDNxdb5nyJ8t8soP3kQE+i/r5LZ/XY9khLNRmaKNKIweYUTBhrhoegvzxZA/VmTocBF1yhUfHmBgeTdDYZHYOSJnq0fsHENhiaWrurnyo0tQpwwfLZE/WsRnfMZrI03WE9WsrcFRtFG9lFulTDwFaErRRi0wQRUtCMTjR3+3h3W3LaOjL8PGuy9k5XW9vPDtQwzuzGOjyjS7EUIbV2P6qSTP84SRKOT5LYe49b61dPZnuPux9/Ho537B0RfPJL8tU7OygbUL+Mg/rKWzL4MYYec3DzMShrQTjBPlBUuyXLVpCYHxmrcTVhp9Dz13mlJZsaFDndKzsp3f+PRFnDw4gm9MUw2zsfLG06ewsc6qS/QbOiXjcfzgWb5+2zPc+b3r6OzPsnR9N0vXdzcOL2OHixWvbXyu5+xYI+3o6zYTsOPL+7ny1gEuvrGPxVcsYPPDGykMhROGt4W2GtNz4Kcn2f6lfbSZAOuSkSY/a3CxcvENF/An2z8wdcRTivnC8sdx5RI/f/goa24ZINflc/uWX5vWtX818BiFfIhp8Ds3tY3DM3GVDd27cwmj9uw4zgPXP8HPthykcKp58uP5BuMLp14rEGGToWugrTfA+EL7wsw4PxCXlK9+9Gle2HqoCk57T4b23rFjlPkuVl7YeogHf+dp4oJFRpOfYkT+SDJPYKY5Ve9nvWQmAZ9nvnGAJ764n0rRd1rXNhN9BTIdPsYXgpw3o9GnSXtDjRFCZ7E4+pd0smxDNx39mcZeTYS9jx/n9NECvvGInePymxfTtSRHaSji5f86WqPSgtWk1/OiaxayelM/XUtzdZlwfrDE/u1v8frOU3gYfDHVgb5ILf2rOrlkU1/l3OQVTRHBho6ff2+wmvSFWFZd1ZvMncn4HKDhtQ8PEofja2MiEKlj5fpell7djaryi21HKZyJMCJTasOUzbmjdZbYWaJKc2wzyuInDnI0JSfG4jAIOYL6XEOEsks+I838Boas+IkrnPCcpxg3pQMd7waSdUjN/5Z0YNsZX1u3v4Ct3Edow5922/CUmfCoU/PFEBhv0pBz4s5VmxdUJWtiCDfaXJs1fvOErFIEa+RYFfCNl6xpBlT7E1XqlIzxyRp/xtfWmaCa+8zkpxCnXQtSnXkD63Ti5toO6HMppJ3rtbN5j7dzn3RTfp4pBSAFIAUgpRSAFICUUgBSAFJKAUgBSCkF4Pyi/wMx1K6HbEVL8QAAAABJRU5ErkJggg=="><span id="date">–</span><span id="time">–</span></div>
+  <div class="clock"><span id="date">–</span><span id="time">–</span></div>
 
   <div class="hero" id="hero">
-    <div id="heroWaterBox"><div class="num" id="heroWater">–</div><div class="cap" id="heroWaterCap">Wassertemperatur</div></div>
-    <div id="heroAirBox"><div class="num" id="heroAir">–</div><div class="cap" id="heroAirCap">Außentemperatur</div></div>
+    <div id="heroWaterBox"><div class="num" id="heroWater">–</div><div class="cap" id="heroWaterCap">–</div></div>
+    <div id="heroAirBox"><div class="num" id="heroAir">–</div><div class="cap" id="heroAirCap">–</div></div>
   </div>
 
   <div class="bottom">
     <div class="xl" id="botPh">pH: –</div>
-    <div class="md" id="botFlow">Anströmung: –</div>
+    <div class="md" id="botFlow">–</div>
     <div class="xl" id="botRdx">RedOx: –</div>
   </div>
 
   <div class="foot">
-    <span id="fw">Firmware: –</span>
+    <span id="fw">Violet Firmware: –</span>
     <span id="up">Uptime: –</span>
     <span id="cpu">CPU: –</span>
     <span id="conn" class="conn">–</span>
@@ -183,17 +202,18 @@ const CONFIG = {
   api: location.protocol.startsWith('http') ? location.origin : 'http://localhost:8099',
   pollMs: 5000,
 
-  // Temperatur-Zeilen: Hauptwert + kleine Zusatzzeile (Sensor-Nummern der Violet).
-  // Nicht angeschlossene Sensoren werden automatisch weggelassen.
+  // Temperatur-Zeilen: Hauptsensor + kleine Zusatzzeile (Sensor-Nummern der Violet).
+  // Namen kommen aus der Adapter-Konfiguration; nicht angeschlossene Sensoren entfallen.
   // Leere Liste [] = automatisch alle angeschlossenen Sensoren, je zwei pro Zeile.
   temps: [
-    { label: 'Außentemperatur',  sensor: 2, subLabel: 'Schwimmbad',     subSensor: 11 },
-    { label: 'Absorber',         sensor: 3, subLabel: 'Solar Rücklauf', subSensor: 4 },
-    { label: 'Wassertemperatur', sensor: 1, subLabel: 'Heizung VL',     subSensor: 8 },
-    { label: 'Pool Rücklauf',    sensor: 7, subLabel: 'Heizung RL',     subSensor: 9 },
+    { sensor: 2, sub: 11 },
+    { sensor: 3, sub: 4 },
+    { sensor: 1, sub: 8 },
+    { sensor: 7, sub: 9 },
   ],
   heroWater: 1,   // große Anzeige links  (Sensor-Nummer)
   heroAir: 2,     // große Anzeige rechts (Sensor-Nummer)
+  relayViewTimeout: 120, // Sekunden ohne Bedienung, dann zurück zu den Temperaturen
 };
 
 /* =====================================================================
@@ -203,31 +223,82 @@ const params = new URLSearchParams(location.search);
 if (params.get('api')) CONFIG.api = params.get('api').replace(/\/+$/, '');
 let demo = params.get('demo') === '1';
 
-const STATUS_TXT = { 0: 'AUS', 1: 'EIN', 2: 'EIN', 3: 'EIN', 4: 'EIN', 5: 'WARTET', 6: 'AUS' };
+const FONTS = {
+  verdana: 'Verdana, "DejaVu Sans", Tahoma, sans-serif',
+  arial: 'Arial, "Helvetica Neue", Helvetica, "Liberation Sans", sans-serif',
+  system: 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Ubuntu, sans-serif',
+};
+
+/* ---------- Texte (Deutsch / Englisch) ---------- */
+const TXT = {
+  de: {
+    temps: 'TEMPERATUREN', water: 'WASSERWERTE', relays: 'RELAISSTATUS', relayView: 'RELAIS',
+    btnRelays: 'Relais', btnTemps: 'Temperaturen',
+    off: 'AUS', on: 'EIN', wait: 'WARTET', auto: 'AUTO',
+    pump: 'Filterpumpe', solar: 'Absorber', heater: 'Heizung', light: 'Licht', eco: 'ECO-Modus',
+    backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
+    today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
+    chlorine: 'Chlor', fw: 'Violet Firmware', uptime: 'Uptime',
+    live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
+    msg: 'Meldung der Violet', msgs: 'Meldungen der Violet', msgHint: 'Klicken öffnet die Violet in einem neuen Fenster',
+    confirmPumpOff: 'Filterpumpe wirklich manuell AUSschalten?',
+    sent: 'Befehl gesendet', speedSet: 'Drehzahl gesetzt', failed: 'Schalten fehlgeschlagen', demoSim: 'Demo: Befehl simuliert',
+    dosingOnly: 'Dosierung – nur Anzeige', level: 'Stufe', running: 'läuft', stop: 'STOP', clockSuffix: ' Uhr',
+    noData: 'Keine Daten vom Violet-Adapter',
+    noDataHint: 'Läuft die Instanz violet.0 und ist in der Konfiguration „Pool-Display bereitstellen“ aktiviert? Test im Browser:',
+    demoHint: 'Vorschau mit Beispielwerten: <b>?demo=1</b> an die Adresse anhängen',
+    timeout: 'keine Antwort (Zeitüberschreitung)', unreachable: 'nicht erreichbar', noValues: 'der Adapter hat noch keine Daten von der Violet',
+  },
+  en: {
+    temps: 'TEMPERATURES', water: 'WATER VALUES', relays: 'RELAY STATUS', relayView: 'RELAYS',
+    btnRelays: 'Relays', btnTemps: 'Temperatures',
+    off: 'OFF', on: 'ON', wait: 'WAIT', auto: 'AUTO',
+    pump: 'Filter pump', solar: 'Absorber', heater: 'Heating', light: 'Light', eco: 'ECO mode',
+    backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
+    today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
+    chlorine: 'Chlorine', fw: 'Violet firmware', uptime: 'Uptime',
+    live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
+    msg: 'Violet message', msgs: 'Violet messages', msgHint: 'Click to open the Violet in a new window',
+    confirmPumpOff: 'Really switch the filter pump OFF manually?',
+    sent: 'Command sent', speedSet: 'Speed set', failed: 'Switching failed', demoSim: 'Demo: command simulated',
+    dosingOnly: 'Dosing – display only', level: 'Level', running: 'running', stop: 'STOP', clockSuffix: '',
+    noData: 'No data from the Violet adapter',
+    noDataHint: 'Is the instance violet.0 running and “Provide pool display” enabled in the configuration? Test in the browser:',
+    demoHint: 'Preview with sample values: append <b>?demo=1</b> to the address',
+    timeout: 'no answer (timeout)', unreachable: 'not reachable', noValues: 'the adapter has no data from the Violet yet',
+  },
+};
+let LANG = (params.get('lang') || navigator.language || 'de').slice(0, 2).toLowerCase() === 'de' ? 'de' : 'en';
+const t = (k) => (TXT[LANG] && k in TXT[LANG] ? TXT[LANG][k] : k in TXT.en ? TXT.en[k] : k);
+const LOCALE = () => (LANG === 'de' ? 'de-DE' : 'en-GB');
+
+const STATUS_TXT = () => ({ 0: t('off'), 1: t('on'), 2: t('on'), 3: t('on'), 4: t('on'), 5: t('wait'), 6: t('off') });
 const STAGES = { 1: 'ECO', 2: 'Normal', 3: 'Boost' };
 // mögliche Funktionen in der Relais-Spalte (erscheinen nur, wenn vorhanden)
 const FUNCS = [
-  { key: 'pumpe', label: 'Filterpumpe' },
-  { key: 'solar', label: 'Absorber' },
-  { key: 'heizung', label: 'Heizung' },
-  { key: 'licht', label: 'Licht' },
-  { key: 'eco', label: 'ECO-Modus' },
-  { key: 'rueckspuelung', label: 'Rückspülung' },
-  { key: 'nachspeisung', label: 'Nachspeisung' },
+  { key: 'pumpe', label: 'pump' },
+  { key: 'solar', label: 'solar' },
+  { key: 'heizung', label: 'heater' },
+  { key: 'licht', label: 'light' },
+  { key: 'eco', label: 'eco' },
+  { key: 'rueckspuelung', label: 'backwash' },
+  { key: 'nachspeisung', label: 'refill' },
 ];
 const FLOW_UNITS = /cm\/s/i;
 
 /* ---------- Demo-Daten (Werte deiner Anlage vom 09.10.2026) ---------- */
+const DEMO_TEMPS = { 1: 'Wassertemperatur', 2: 'Außentemperatur', 3: 'Absorbertemperatur', 4: 'Absorber-Rücklauf', 7: 'Pool Rücklauf', 8: 'Heizung Vorlauf', 9: 'Heizung Rücklauf', 11: 'Schwimmbad' };
 const DEMO = {
   'info.features': JSON.stringify({
-    switching: true, pumpRpm: true,
-    temps: [1, 2, 3, 4, 7, 8, 9, 11].map((n) => ({ n, name: `Temperatur ${n}` })),
-    relays: [],
+    lang: LANG, font: params.get('font') || 'verdana', violetUrl: 'http://violet.local', switching: true, pumpRpm: true, pv: true, dmx: true,
+    temps: Object.entries(DEMO_TEMPS).map(([n, name]) => ({ n: Number(n), name })),
+    relays: [1, 2, 3, 4, 5, 6, 7, 8].map((r) => ({ id: `relais.ext1_${r}`, name: { 6: 'Gartenlicht', 8: 'Teichpumpe' }[r] || `EXT1.${r}`, named: r === 6 || r === 8 })),
     analog: [
       { id: 'analog.adc1', name: 'Filterdruck', unit: 'bar' },
       { id: 'analog.adc5', name: 'Luftfeuchte', unit: '%rF' },
       { id: 'analog.impuls1', name: 'Anströmung', unit: 'cm/s' },
     ],
+    messages: { enabled: true, active: params.get('msg') === '1', count: 1, text: 'Elektroden-Kalibrierung überfällig', time: '10.10.2026 09:12:00', type: 'REMINDER' },
   }),
   'wasser.ph': 7.22, 'wasser.ph_min': 7.19, 'wasser.ph_max': 7.29,
   'wasser.redox': 885.2, 'wasser.redox_min': 824.9, 'wasser.redox_max': 898.7,
@@ -240,42 +311,56 @@ const DEMO = {
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
   'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
+  'pv.ueberschuss': 1,
   'solar.status': 6, 'solar.aktiv': false, 'solar.schalten': 'OFF', 'solar.laufzeit_heute': '00h 00m 00s',
   'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 00m 00s',
+  'licht.status': 0, 'licht.aktiv': false, 'licht.schalten': 'AUTO',
   'system.firmware': '1.2.5', 'system.laufzeit': '09d 16h 25m', 'system.cpu_temperatur': 53.2,
 };
-// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar
-if (params.get('ohne')) for (const k of params.get('ohne').split(',')) for (const id of Object.keys(DEMO)) if (id.startsWith(k + '.')) delete DEMO[id];
+for (let s = 1; s <= 12; s++) { DEMO[`dmx.szene${s}.status`] = s === 3 ? 4 : 0; DEMO[`dmx.szene${s}.aktiv`] = s === 3; DEMO[`dmx.szene${s}.schalten`] = s === 3 ? 'ON' : 'AUTO'; }
+for (let r = 1; r <= 8; r++) { DEMO[`relais.ext1_${r}.status`] = r === 6 ? 4 : 6; DEMO[`relais.ext1_${r}.aktiv`] = r === 6; DEMO[`relais.ext1_${r}.schalten`] = r === 6 ? 'ON' : 'OFF'; }
+// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &msg=1
+if (params.get('ohne')) {
+  const f = JSON.parse(DEMO['info.features']);
+  for (const k of params.get('ohne').split(',')) {
+    for (const id of Object.keys(DEMO)) if (id.startsWith(k + '.')) delete DEMO[id];
+    if (k === 'pv') f.pv = false;
+    if (k === 'dmx') f.dmx = false;
+    if (k === 'relais') f.relays = [];
+  }
+  DEMO['info.features'] = JSON.stringify(f);
+}
 
 let V = {};
-let F = { temps: [], relays: [], analog: [] };
+let F = { temps: [], relays: [], analog: [], messages: { enabled: false } };
 let layoutSig = '';
+let relayView = false;
+let relayViewTimer = null;
 const pending = {};
 const $ = (id) => document.getElementById(id);
 const has = (id) => V[id] !== undefined && V[id] !== null;
-const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const kid = (k) => k.replace(/\./g, '_');
 
 function fmt(v, d = 1) {
   if (v === undefined || v === null || v === '' || !Number.isFinite(Number(v))) return '–';
-  return Number(v).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+  return Number(v).toLocaleString(LOCALE(), { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
 /* ---------- was ist vorhanden? ---------- */
-const tempName = (n) => (F.temps.find((t) => t.n === n) || {}).name || `Temperatur ${n}`;
-const tempOk = (n) => has(`temperatur.sensor${n}`) && (!F.temps.length || F.temps.some((t) => t.n === n));
+const tempName = (n) => (F.temps.find((x) => x.n === n) || {}).name || `${LANG === 'de' ? 'Temperatur' : 'Temperature'} ${n}`;
+const tempOk = (n) => n && has(`temperatur.sensor${n}`) && (!F.temps.length || F.temps.some((x) => x.n === n));
 
 function tempRows() {
   if (CONFIG.temps && CONFIG.temps.length) {
     return CONFIG.temps
-      .filter((t) => tempOk(t.sensor) || tempOk(t.subSensor))
-      .map((t) => (tempOk(t.sensor) ? t : { label: t.subLabel || tempName(t.subSensor), sensor: t.subSensor }))
-      .map((t) => ({ ...t, subSensor: t.subSensor !== t.sensor && tempOk(t.subSensor) ? t.subSensor : null }));
+      .filter((x) => tempOk(x.sensor) || tempOk(x.sub))
+      .map((x) => (tempOk(x.sensor) ? x : { sensor: x.sub }))
+      .map((x) => ({ sensor: x.sensor, sub: x.sub !== x.sensor && tempOk(x.sub) ? x.sub : null }));
   }
-  const list = (F.temps.length ? F.temps.map((t) => t.n) : [...Array(12).keys()].map((i) => i + 1)).filter(tempOk);
+  const list = (F.temps.length ? F.temps.map((x) => x.n) : [...Array(12).keys()].map((i) => i + 1)).filter(tempOk);
   const rows = [];
-  for (let i = 0; i < list.length; i += 2) {
-    rows.push({ label: tempName(list[i]), sensor: list[i], subLabel: list[i + 1] ? tempName(list[i + 1]) : '', subSensor: list[i + 1] || null });
-  }
+  for (let i = 0; i < list.length; i += 2) rows.push({ sensor: list[i], sub: list[i + 1] || null });
   return rows;
 }
 
@@ -289,34 +374,51 @@ function waterRows() {
   return rows;
 }
 
+const dmxOn = () => F.dmx && has('dmx.szene1.status');
+
 function relayRows() {
   const rows = [];
   for (const f of FUNCS) {
-    if (!has(`${f.key}.status`)) continue;
-    rows.push({ key: f.key, label: f.label });
-    if (f.key === 'pumpe' && (has('pumpe.stufe') || has('pumpe.drehzahl_soll'))) rows.push({ speed: true });
+    if (f.key === 'licht') {
+      if (has('licht.status') || dmxOn()) rows.push({ key: 'licht', label: f.label, light: has('licht.status'), dmx: dmxOn() });
+      continue;
+    }
+    if (has(`${f.key}.status`)) rows.push({ key: f.key, label: f.label });
   }
-  for (const r of F.relays) if (has(`${r.id}.status`)) rows.push({ key: r.id, label: r.name });
   return rows;
 }
 
+const relayList = () => F.relays.filter((r) => has(`${r.id}.status`));
+
 /* ---------- Aufbau ---------- */
 function build() {
-  const T = tempRows(), W = waterRows(), R = relayRows();
-  const n = Math.max(T.length, W.length, R.length, 1);
-  const cols = [T.length && 'TEMPERATUREN', W.length && 'WASSERWERTE', R.length && 'RELAISSTATUS'];
-  const used = cols.filter(Boolean).length || 1;
+  const T = tempRows(), W = waterRows(), R = relayRows(), RL = relayList();
+  if (!RL.length) relayView = false;
+  const firstCol = relayView ? Math.ceil(RL.length / 2) : T.length;
+  const n = Math.max(firstCol, W.length, R.length, 1);
+  const showFirst = relayView || T.length;
+  const cols = [showFirst && (relayView ? t('relayView') : t('temps')), W.length && t('water'), R.length && t('relays')];
   const g = $('grid');
-  g.style.gridTemplateColumns = cols.map((c, i) => (c ? (i === 2 ? '1.15fr' : '1fr') : null)).filter(Boolean).join(' ') || '1fr';
-  g.innerHTML = cols.filter(Boolean).map((h) => `<div class="head">${h}</div>`).join('');
+  g.style.gridTemplateColumns = cols.map((c, i) => (c ? (i === 2 ? '1.25fr' : '1fr') : null)).filter(Boolean).join(' ') || '1fr';
+  g.innerHTML = cols.map((h, i) => {
+    if (!h) return '';
+    const btn = i === 2 && RL.length ? `<button class="hbtn ${relayView ? 'active' : ''}" id="relayBtn">${relayView ? t('btnTemps') : t('btnRelays')}</button>` : '';
+    return `<div class="head">${h}${btn}</div>`;
+  }).join('');
   for (let r = 0; r < n; r++) {
     const cls = `cell ${r % 2 ? 'od' : 'ev'}`;
-    if (T.length) g.insertAdjacentHTML('beforeend', T[r] ? tempCell(T[r], r, cls) : `<div class="${cls}"></div>`);
-    if (W.length) g.insertAdjacentHTML('beforeend', W[r] ? waterCell(W[r], r, cls) : `<div class="${cls}"></div>`);
+    if (showFirst) {
+      if (relayView) g.insertAdjacentHTML('beforeend', relayPairCell(RL.slice(r * 2, r * 2 + 2), cls));
+      else g.insertAdjacentHTML('beforeend', T[r] ? tempCell(T[r], r, cls) : `<div class="${cls}"></div>`);
+    }
+    if (W.length) g.insertAdjacentHTML('beforeend', W[r] ? waterCell(W[r], cls) : `<div class="${cls}"></div>`);
     if (R.length) g.insertAdjacentHTML('beforeend', R[r] ? relayCell(R[r], cls) : `<div class="${cls} relay"></div>`);
   }
   g.querySelectorAll('.seg').forEach((seg) => seg.addEventListener('click', onSegClick));
-  g.dataset.rows = JSON.stringify({ T, W, R });
+  g.querySelectorAll('select.dmx').forEach((s) => s.addEventListener('change', onDmxChange));
+  const rb = $('relayBtn');
+  if (rb) rb.addEventListener('click', toggleRelayView);
+  g.dataset.rows = JSON.stringify({ T, R });
 
   // große Anzeige und Fußzeile
   const hw = tempOk(CONFIG.heroWater) ? CONFIG.heroWater : (T[0] || {}).sensor;
@@ -324,8 +426,8 @@ function build() {
   $('hero').style.display = hw || ha ? '' : 'none';
   $('heroWaterBox').style.display = hw ? '' : 'none';
   $('heroAirBox').style.display = ha ? '' : 'none';
-  $('heroWaterCap').textContent = hw === CONFIG.heroWater ? 'Wassertemperatur' : tempName(hw);
-  $('heroAirCap').textContent = ha === CONFIG.heroAir ? 'Außentemperatur' : tempName(ha);
+  $('heroWaterCap').textContent = hw ? tempName(hw) : '';
+  $('heroAirCap').textContent = ha ? tempName(ha) : '';
   $('hero').style.gridTemplateColumns = hw && ha ? '1fr 1fr' : '1fr';
   $('hero').dataset.w = hw || ''; $('hero').dataset.a = ha || '';
   const flow = F.analog.find((a) => FLOW_UNITS.test(a.unit) && has(a.id));
@@ -337,61 +439,89 @@ function build() {
   setTimeout(fit, 0);
 }
 
-function tempCell(t, r, cls) {
+function tempCell(x, r, cls) {
   return `<div class="${cls}">
-    <div class="lbl"><span class="main">${esc(t.label)}:</span><span class="sub" id="tsub${r}"></span></div>
+    <div class="lbl"><span class="main">${esc(tempName(x.sensor))}:</span><span class="sub" id="tsub${r}"></span></div>
     <div class="val"><span class="big" id="t${r}">–</span><span class="mm" id="tmm${r}"></span></div></div>`;
 }
 
-function waterCell(w, r, cls) {
+function waterCell(w, cls) {
   if (w === 'ph') return `<div class="${cls}"><div class="lbl"><span class="main">pH:</span></div>
     <div class="val"><span class="big" id="ph">–</span><span class="mm" id="phmm"></span><span class="note" id="phdos"></span></div>
     <span class="badge" id="phmode">–</span></div>`;
   if (w === 'redox') return `<div class="${cls}"><div class="lbl"><span class="main">RedOx:</span></div>
     <div class="val"><span class="big" id="rdx">–</span><span class="unit">mV</span><span class="mm" id="rdxmm"></span><span class="note" id="cldos"></span></div>
     <span class="badge" id="clmode">–</span></div>`;
-  if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">Chlor:</span></div>
+  if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span></div>
     <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span><span class="mm" id="clmm"></span></div></div>`;
   return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span></div>
     <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>
     ${w.note ? `<span class="note" data-note="${w.note.id}" data-name="${esc(w.note.name)}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
 }
 
+const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
+  <button data-v="AUTO" class="auto">${t('auto')}</button><button data-v="ON" class="on">${t('on')}</button><button data-v="OFF" class="off">${t('off')}</button></div>`;
+
 function relayCell(x, cls) {
-  if (x.speed) return `<div class="${cls} relay">
-    <div class="lbl"><span class="main">Drehzahl:</span></div>
-    <div class="state"><span id="stagetxt">–</span></div>
-    <div class="seg" data-speed="1">
-      <button data-v="1" class="lvl">ECO</button><button data-v="2" class="lvl">Normal</button><button data-v="3" class="lvl">Boost</button>
-    </div></div>`;
-  const k = x.key, kid = k.replace(/\./g, '_');
+  const k = x.key, id = kid(k);
+  const state = `<div class="state"><span class="lamp" id="${id}lamp"></span><span id="${id}txt">–</span></div>`;
+  if (k === 'pumpe') {
+    const stage = F.pumpRpm || has('pumpe.stufe') ? `<div class="line"><div class="seg" data-speed="1">
+      <button data-v="1" class="lvl">ECO</button><button data-v="2" class="lvl">Normal</button><button data-v="3" class="lvl">Boost</button></div></div>` : '';
+    return `<div class="${cls} relay">
+      <div class="lbl"><span class="main">${t('pump')}:</span><span class="sub" id="${id}rt"></span></div>${state}
+      <div class="ctrl"><div class="line">${modeSeg(k)}<span class="pv" id="pvBadge" hidden>PV</span></div>${stage}</div></div>`;
+  }
+  if (k === 'licht') {
+    const opts = [`<option value="">${t('sceneChoose')}</option>`, `<option value="off">${t('sceneOff')}</option>`]
+      .concat([...Array(12).keys()].map((i) => `<option value="${i + 1}">${t('scene')} ${i + 1}</option>`)).join('');
+    const dmx = x.dmx ? `<div class="line"><select class="dmx" id="dmxSel">${opts}</select></div>` : '';
+    return `<div class="${cls} relay">
+      <div class="lbl"><span class="main">${x.light ? t('light') : t('dmx')}:</span><span class="sub" id="${id}rt"></span></div>
+      ${x.light ? state : '<div class="state"></div>'}
+      <div class="ctrl">${x.light ? `<div class="line">${modeSeg(k)}</div>` : ''}${dmx}</div></div>`;
+  }
   return `<div class="${cls} relay">
-    <div class="lbl"><span class="main">${esc(x.label)}:</span><span class="sub" id="${kid}rt"></span></div>
-    <div class="state"><span class="lamp" id="${kid}lamp"></span><span id="${kid}txt">–</span></div>
-    <div class="seg" data-key="${k}">
-      <button data-v="AUTO" class="auto">AUTO</button><button data-v="ON" class="on">EIN</button><button data-v="OFF" class="off">AUS</button>
-    </div></div>`;
+    <div class="lbl"><span class="main">${t(x.label)}:</span><span class="sub" id="${id}rt"></span></div>${state}
+    <div class="ctrl">${modeSeg(k)}</div></div>`;
+}
+
+function relayPairCell(list, cls) {
+  const rows = list.map((r) => `<div class="rrow">
+      <span class="rname ${r.named ? '' : 'dim'}">${esc(r.name)}</span>
+      <span class="lamp" id="${kid(r.id)}lamp"></span>
+      ${modeSeg(r.id, 'small')}</div>`).join('');
+  return `<div class="${cls}"><div class="rlist">${rows}</div></div>`;
 }
 
 /* ---------- Anzeige aktualisieren ---------- */
 function render() {
-  const sig = JSON.stringify([tempRows(), waterRows(), relayRows(), F.analog.map((a) => a.id)]);
+  const sig = JSON.stringify([relayView, tempRows(), waterRows(), relayRows(), relayList().map((r) => r.id + r.name), F.analog.map((a) => a.id), LANG]);
   if (sig !== layoutSig) { layoutSig = sig; build(); }
   const { T, R } = JSON.parse($('grid').dataset.rows || '{"T":[],"R":[]}');
 
-  T.forEach((t, r) => {
-    const id = `temperatur.sensor${t.sensor}`;
-    $(`t${r}`).textContent = has(id) ? `${fmt(V[id], 2)}°` : '–';
-    $(`tmm${r}`).innerHTML = has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], 2)}°</span><span class="hi">${fmt(V[`${id}_max`], 2)}°</span>` : '';
-    const sub = t.subSensor ? `temperatur.sensor${t.subSensor}` : null;
-    $(`tsub${r}`).textContent = sub && has(sub) ? `${t.subLabel || tempName(t.subSensor)}: ${fmt(V[sub], 1)}°C` : '';
-  });
+  if (!relayView) {
+    T.forEach((x, r) => {
+      const id = `temperatur.sensor${x.sensor}`;
+      setText(`t${r}`, has(id) ? `${fmt(V[id], 2)}°` : '–');
+      setHtml(`tmm${r}`, has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], 2)}°</span><span class="hi">${fmt(V[`${id}_max`], 2)}°</span>` : '');
+      const sub = x.sub ? `temperatur.sensor${x.sub}` : null;
+      setText(`tsub${r}`, sub && has(sub) ? `${tempName(x.sub)}: ${fmt(V[sub], 1)} °C` : '');
+    });
+  } else {
+    for (const r of relayList()) {
+      const code = Number(V[`${r.id}.status`]);
+      const lamp = $(`${kid(r.id)}lamp`);
+      if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${r.id}.aktiv`] === true ? ' on' : '');
+      markSeg(document.querySelector(`.seg[data-key="${r.id}"]`), V[`${r.id}.schalten`] ?? modeFromCode(code), has(`${r.id}.schalten`));
+    }
+  }
 
   setText('ph', fmt(V['wasser.ph'], 2)); setHtml('phmm', mm('wasser.ph', 2));
-  setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ml heute` : '');
+  setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('phmode', 'dosierung.ph_minus.status');
   setText('rdx', fmt(V['wasser.redox'], 1)); setHtml('rdxmm', mm('wasser.redox', 1));
-  setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ml heute` : '');
+  setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('clmode', 'dosierung.chlor.status');
   setText('cl', fmt(V['wasser.chlor'], 2)); setHtml('clmm', mm('wasser.chlor', 2));
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
@@ -401,20 +531,37 @@ function render() {
   });
 
   for (const x of R) {
-    if (x.speed) {
-      const stage = V['pumpe.stufe'];
-      setText('stagetxt', V['pumpe.aktiv'] && STAGES[stage] ? `Stufe ${stage}` : V['pumpe.aktiv'] ? 'läuft' : 'STOP');
-      const wanted = has('pumpe.drehzahl_soll') ? V['pumpe.drehzahl_soll'] : null;
-      markSeg(document.querySelector('.seg[data-speed]'), String(V['pumpe.aktiv'] && STAGES[stage] ? stage : wanted ?? ''), has('pumpe.drehzahl_soll'));
-      continue;
+    const k = x.key, id = kid(k);
+    if (k !== 'licht' || x.light) {
+      const code = Number(V[`${k}.status`]);
+      const lamp = $(`${id}lamp`);
+      if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
+      setText(`${id}txt`, STATUS_TXT()[code] || '–');
+      const rt = V[`${k}.laufzeit_heute`];
+      setText(`${id}rt`, rt ? `${t('today')} ${String(rt).replace(/ \d+s$/, '')}` : '');
+      markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
-    const k = x.key, kid = k.replace(/\./g, '_');
-    const code = Number(V[`${k}.status`]);
-    $(`${kid}lamp`).className = 'lamp' + (code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
-    $(`${kid}txt`).textContent = STATUS_TXT[code] || '–';
-    const rt = V[`${k}.laufzeit_heute`];
-    $(`${kid}rt`).textContent = rt ? `heute ${String(rt).replace(/ \d+s$/, '')}` : '';
-    markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
+    if (k === 'pumpe') {
+      const running = V['pumpe.aktiv'] === true;
+      const stage = Number(V['pumpe.stufe']);
+      const segS = document.querySelector('.seg[data-speed]');
+      if (segS) {
+        const sel = running && STAGES[stage] ? stage : has('pumpe.drehzahl_soll') ? V['pumpe.drehzahl_soll'] : '';
+        markSeg(segS, String(sel), true, !has('pumpe.drehzahl_soll'));
+        segS.querySelectorAll('button').forEach((b) => b.classList.toggle('run', running && Number(b.dataset.v) === stage));
+      }
+      const pv = $('pvBadge');
+      if (pv) pv.hidden = !(F.pv && has('pv.ueberschuss') && Number(V['pv.ueberschuss']) > 0);
+    }
+    if (k === 'licht' && x.dmx) {
+      const sel = $('dmxSel');
+      if (sel && document.activeElement !== sel) {
+        let active = '';
+        for (let s = 1; s <= 12; s++) if (V[`dmx.szene${s}.aktiv`] === true) { active = String(s); break; }
+        sel.value = active;
+        sel.disabled = !has('dmx.szene1.schalten');
+      }
+    }
   }
 
   const hw = $('hero').dataset.w, ha = $('hero').dataset.a;
@@ -424,13 +571,13 @@ function render() {
   $('botRdx').textContent = `RedOx: ${fmt(V['wasser.redox'], 1)}`;
   const fl = $('botFlow');
   if (fl.dataset.id) fl.textContent = `${fl.dataset.name}: ${fmt(V[fl.dataset.id], 2)} cm/s`;
-  $('fw').textContent = `Firmware: ${V['system.firmware'] ?? '–'}`;
-  $('up').textContent = `Uptime: ${V['system.laufzeit'] ?? '–'}`;
+  $('fw').textContent = `${t('fw')}: ${V['system.firmware'] ?? '–'}`;
+  $('up').textContent = `${t('uptime')}: ${V['system.laufzeit'] ?? '–'}`;
   $('cpu').textContent = `CPU: ${fmt(V['system.cpu_temperatur'], 1)} °C`;
 }
 
-function setText(id, t) { const e = $(id); if (e) e.textContent = t; }
-function setHtml(id, t) { const e = $(id); if (e) e.innerHTML = t; }
+function setText(id, s) { const e = $(id); if (e) e.textContent = s; }
+function setHtml(id, s) { const e = $(id); if (e) e.innerHTML = s; }
 const mm = (id, d) => (has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], d)}</span><span class="hi">${fmt(V[`${id}_max`], d)}</span>` : '');
 const modeFromCode = (c) => (c === 2 || c === 4 ? 'ON' : c === 6 ? 'OFF' : 'AUTO');
 
@@ -442,80 +589,157 @@ function dosBadge(el, id) {
   const m = modeFromCode(Number(V[id]));
   e.className = 'badge ' + (m === 'AUTO' ? 'auto' : m === 'ON' ? 'man-on' : 'man-off');
   e.textContent = m === 'AUTO' ? 'AUTO' : 'MAN';
-  e.title = 'Dosierung – nur Anzeige';
+  e.title = t('dosingOnly');
 }
 
-function markSeg(seg, value, enabled) {
+function markSeg(seg, value, visible, readOnly) {
   if (!seg) return;
   const key = seg.dataset.key || 'speed';
-  seg.style.display = enabled ? '' : 'none'; // ohne „Schalten erlauben“ keine Schalter
+  const canSwitch = (F.switching || demo) && !readOnly;
+  seg.style.display = visible || seg.dataset.speed ? '' : 'none'; // ohne „Schalten erlauben“ keine Schalter
   seg.querySelectorAll('button').forEach((b) => {
+    b.disabled = !canSwitch || (!visible && !seg.dataset.speed);
     b.classList.toggle('sel', String(b.dataset.v) === String(value));
     b.classList.toggle('pending', pending[key] === b.dataset.v);
   });
 }
 
+/* ---------- Relais-Ansicht ---------- */
+function toggleRelayView(force) {
+  relayView = typeof force === 'boolean' ? force : !relayView;
+  clearTimeout(relayViewTimer);
+  if (relayView && CONFIG.relayViewTimeout > 0) relayViewTimer = setTimeout(() => toggleRelayView(false), CONFIG.relayViewTimeout * 1000);
+  render();
+}
+function touchRelayView() {
+  if (relayView) toggleRelayView(true);
+}
+
 /* ---------- Schalten ---------- */
+async function send(id, value, okMsg) {
+  if (demo) {
+    await new Promise((r) => setTimeout(r, 500));
+    const base = id.replace(/\.(schalten|drehzahl_soll)$/, '');
+    if (id === 'pumpe.drehzahl_soll') { V[id] = Number(value); V['pumpe.stufe'] = Number(value); }
+    else {
+      V[id] = value;
+      V[`${base}.status`] = value === 'ON' ? 4 : value === 'OFF' ? 6 : 1;
+      V[`${base}.aktiv`] = value !== 'OFF';
+    }
+    toast(t('demoSim'));
+    return;
+  }
+  const r = await fetch(`${CONFIG.api}/api/set?id=${encodeURIComponent(id)}&value=${encodeURIComponent(value)}`, { signal: AbortSignal.timeout(6000) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.ok) throw new Error(j.error || `HTTP ${r.status}`);
+  toast(okMsg);
+  setTimeout(load, 2500);
+}
+
 async function onSegClick(ev) {
   const btn = ev.target.closest('button');
   if (!btn || btn.disabled) return;
+  touchRelayView();
   const seg = btn.parentElement;
   const isSpeed = !!seg.dataset.speed;
   const key = isSpeed ? 'speed' : seg.dataset.key;
   const id = isSpeed ? 'pumpe.drehzahl_soll' : `${key}.schalten`;
   const value = btn.dataset.v;
 
-  if (key === 'pumpe' && value === 'OFF' && !confirm('Filterpumpe wirklich manuell AUSschalten?')) return;
+  if (key === 'pumpe' && value === 'OFF' && !confirm(t('confirmPumpOff'))) return;
 
   pending[key] = value;
   render();
   try {
-    if (demo) {
-      await new Promise((r) => setTimeout(r, 600));
-      V[id] = isSpeed ? Number(value) : value;
-      if (!isSpeed) {
-        V[`${key}.status`] = value === 'ON' ? 4 : value === 'OFF' ? 6 : 1;
-        V[`${key}.aktiv`] = value !== 'OFF';
-      } else V['pumpe.stufe'] = Number(value);
-      toast('Demo: Befehl simuliert');
-    } else {
-      const r = await fetch(`${CONFIG.api}/api/set?id=${encodeURIComponent(id)}&value=${encodeURIComponent(value)}`, { signal: AbortSignal.timeout(6000) });
-      const j = await r.json().catch(() => ({}));
-      if (!r.ok || !j.ok) throw new Error(j.error || `HTTP ${r.status}`);
-      toast(isSpeed ? `Drehzahl ${STAGES[value]} gesetzt` : `Befehl gesendet: ${value}`);
-      setTimeout(load, 2500);
-    }
+    await send(id, value, isSpeed ? `${t('speedSet')}: ${STAGES[value]}` : `${t('sent')}: ${value}`);
   } catch (e) {
-    toast(`Schalten fehlgeschlagen: ${e.message}`);
+    toast(`${t('failed')}: ${e.message}`);
   }
   delete pending[key];
   render();
 }
 
+async function onDmxChange(ev) {
+  const v = ev.target.value;
+  let active = 0;
+  for (let s = 1; s <= 12; s++) if (V[`dmx.szene${s}.aktiv`] === true) { active = s; break; }
+  try {
+    if (v === 'off') { if (active) await send(`dmx.szene${active}.schalten`, 'OFF', `${t('sceneOff')}`); }
+    else if (v) {
+      if (active && String(active) !== v) await send(`dmx.szene${active}.schalten`, 'OFF', '');
+      await send(`dmx.szene${v}.schalten`, 'ON', `${t('scene')} ${v}`);
+      for (let s = 1; s <= 12; s++) if (demo) V[`dmx.szene${s}.aktiv`] = String(s) === v;
+    }
+  } catch (e) {
+    toast(`${t('failed')}: ${e.message}`);
+  }
+  ev.target.blur();
+  render();
+}
+
+/* ---------- Meldungen der Violet ---------- */
+async function openMessages() {
+  const url = F.violetUrl || '';
+  if (url) window.open(url, '_blank', 'noopener');
+  try {
+    if (demo) { F.messages.active = false; }
+    else await fetch(`${CONFIG.api}/api/ack`, { signal: AbortSignal.timeout(6000) });
+  } catch { /* egal – nächster Abruf zeigt den Stand */ }
+  setTimeout(load, 500);
+}
+$('conn').addEventListener('click', () => { if ($('conn').classList.contains('msg')) openMessages(); });
+
 /* ---------- Daten laden (eingebauter Webserver des Adapters) ---------- */
 function applyFeatures() {
   try {
     const f = JSON.parse(V['info.features'] || '{}');
-    F = { temps: f.temps || [], relays: f.relays || [], analog: f.analog || [] };
+    F = {
+      temps: f.temps || [], relays: f.relays || [], analog: f.analog || [],
+      switching: !!f.switching, pumpRpm: !!f.pumpRpm, pv: !!f.pv, dmx: !!f.dmx,
+      violetUrl: f.violetUrl || '', messages: f.messages || { enabled: false }, font: f.font || 'verdana', lang: f.lang,
+    };
+    if (!params.get('lang') && f.lang) LANG = String(f.lang).slice(0, 2) === 'de' ? 'de' : 'en';
+    document.documentElement.lang = LANG;
+    document.documentElement.style.setProperty('--font', FONTS[params.get('font') || F.font] || FONTS.verdana);
   } catch { /* bleibt wie es ist */ }
+}
+
+function liveStatus(connected) {
+  const m = F.messages || {};
+  if (m.enabled && m.active) {
+    const txt = m.text ? `: ${m.text.length > 70 ? m.text.slice(0, 67) + '…' : m.text}` : '';
+    const label = m.count > 1 ? `${m.count} ${t('msgs')}` : t('msg');
+    setConn('msg', `${label}${txt}`);
+    $('conn').title = `${m.time ? m.time + ' – ' : ''}${m.text || ''}\n${t('msgHint')}`;
+    return;
+  }
+  $('conn').title = '';
+  if (demo) setConn('demo', t('demo'));
+  else setConn(connected ? '' : 'err', connected ? `${t('live')} · ${new Date().toLocaleTimeString(LOCALE())}` : t('stale'));
 }
 
 let fails = 0;
 async function load() {
-  if (demo) { if (!Object.keys(V).length) V = { ...DEMO }; applyFeatures(); setConn('demo', 'Demo-Daten'); render(); return; }
+  if (demo) {
+    if (!Object.keys(V).length) V = { ...DEMO };
+    const keepMsg = F.messages && F.messages.enabled ? F.messages : null;
+    applyFeatures();
+    if (keepMsg) F.messages = keepMsg;
+    liveStatus(true); render(); return;
+  }
   try {
     const r = await fetch(`${CONFIG.api}/api/data`, { cache: 'no-store', signal: AbortSignal.timeout(6000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json();
-    if (!j.ok) throw new Error('der Adapter hat noch keine Daten von der Violet');
+    if (!j.ok) throw new Error(t('noValues'));
     V = { ...j.values, 'info.features': JSON.stringify(j.features || {}) };
     applyFeatures();
     fails = 0;
-    setConn(j.connected ? '' : 'err', j.connected ? `Live · ${new Date().toLocaleTimeString('de-DE')}` : 'Violet zurzeit nicht erreichbar – letzte Werte');
+    liveStatus(j.connected);
     render();
   } catch (e) {
     fails++;
-    const why = e.name === 'TimeoutError' ? 'keine Antwort (Zeitüberschreitung)' : e.message === 'Failed to fetch' ? 'nicht erreichbar' : e.message;
+    const why = e.name === 'TimeoutError' ? t('timeout') : e.message === 'Failed to fetch' ? t('unreachable') : e.message;
     setConn('err', `Violet-Adapter ${CONFIG.api}: ${why}`);
     if (!Object.keys(V).length) showProblem(why);
   }
@@ -523,11 +747,10 @@ async function load() {
 function showProblem(why) {
   $('grid').style.gridTemplateColumns = '1fr';
   $('grid').innerHTML = `<div class="cell ev" style="justify-content:center;flex-direction:column;gap:.3em;min-height:150px;text-align:center">
-    <span style="font-size:1.4em">Keine Daten vom Violet-Adapter</span>
+    <span style="font-size:1.4em">${t('noData')}</span>
     <span class="note" style="font-size:.85em"><b>${esc(CONFIG.api)}</b>: ${esc(why)}</span>
-    <span class="note" style="font-size:.85em">Läuft die Instanz violet.0 und ist in der Konfiguration „Pool-Display bereitstellen“ aktiviert? Test im Browser:
-      <b>${esc(CONFIG.api)}/api/data</b></span>
-    <span class="note" style="font-size:.85em">Vorschau mit Beispielwerten: <b>?demo=1</b> an die Adresse anhängen</span></div>`;
+    <span class="note" style="font-size:.85em">${t('noDataHint')} <b>${esc(CONFIG.api)}/api/data</b></span>
+    <span class="note" style="font-size:.85em">${t('demoHint')}</span></div>`;
   layoutSig = '';
   setTimeout(fit, 0);
 }
@@ -536,14 +759,15 @@ function setConn(cls, txt) { const c = $('conn'); c.className = 'conn ' + cls; c
 
 let toastT;
 function toast(msg) {
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3200);
+  if (!msg) return;
+  const el = $('toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 3200);
 }
 
 function tick() {
   const now = new Date();
-  $('date').textContent = now.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-  $('time').textContent = now.toLocaleTimeString('de-DE') + ' Uhr';
+  $('date').textContent = now.toLocaleDateString(LOCALE(), { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  $('time').textContent = now.toLocaleTimeString(LOCALE()) + t('clockSuffix');
 }
 
 /* feste ProCon-Ansicht (1374 px breit), wird auf das Fenster skaliert */
