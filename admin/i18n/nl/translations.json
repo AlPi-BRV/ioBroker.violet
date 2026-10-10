@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Elektrolyse (zout)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Voer het debiet van de pomp in m³/h in. Met de looptijden van de Violet berekent de adapter de vandaag rondgepompte hoeveelheid water (datapunt pumpe.umwaelzung_heute, in het zwembaddisplay achter de looptijd). Remt de absorber of verwarming het debiet af, vul daar de lagere waarde in – leeg = gelijk aan alleen. Lopen beide tegelijk, dan geldt de lagere waarde.",
   "Extensions and inputs": "Uitbreidingen en ingangen",
   "Filter pressure": "Filterdruk",
   "Filter pump": "Filterpomp",
+  "Filter pump – m³/h": "Filterpomp – m³/h",
   "Flocculant": "Vlokmiddel",
   "Font of the pool display": "Lettertype van het zwembaddisplay",
   "Functions": "Functies",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Verwarming / warmtepomp",
   "Heating, light and accessories": "Verwarming, licht en accessoires",
   "IP address or host name of the Violet": "IP-adres of hostnaam van de Violet",
+  "Level 1 (ECO) – m³/h": "Stand 1 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "Stand 2 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "Stand 3 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Login van de Violet-webinterface (voor alleen lezen meestal niet nodig)",
   "No relay extension selected (tab \"Functions\").": "Geen relaisuitbreiding geselecteerd (tabblad \"Functies\").",
   "Only for speed-controlled pumps with levels 0–3": "Alleen voor toerentalgeregelde pompen met standen 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Zwembaddisplay aanbieden",
   "Pulse 1 – measuring water monitoring": "Puls 1 – meetwaterbewaking",
   "Pulse 2 – delivery rate": "Puls 2 – debiet",
+  "Pump": "Pomp",
   "Pump with speed levels": "Pomp met toerentalstanden",
   "Refill / water level": "Bijvullen / waterpeil",
   "Relay extension 1": "Relaisuitbreiding 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "bijv. luchtvochtigheid",
   "m³/h": "m³/h",
   "pH minus": "pH-min",
-  "pH plus": "pH-plus"
+  "pH plus": "pH-plus",
+  "with absorber – m³/h": "met absorber – m³/h",
+  "with heating – m³/h": "met verwarming – m³/h"
 }

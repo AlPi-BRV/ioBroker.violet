@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "news": {
+      "0.5.2": {
+        "en": "Circulated water volume of the day (new tab \"Pump\": delivery rate per level, with absorber / heating); pool display: humidity stacked under filter pressure",
+        "de": "Umgewälzte Wassermenge des Tages (neuer Reiter „Pumpe“: Fördermenge je Stufe, mit Absorber / Heizung); Pool-Display: Luftfeuchte unter Filterdruck",
+        "ru": "Объём воды, прокачанный за день (новая вкладка «Насос»: производительность по ступеням, с абсорбером / нагревом); дисплей: влажность под давлением фильтра",
+        "pt": "Volume de água circulado no dia (novo separador «Bomba»: caudal por nível, com absorvedor / aquecimento); display: humidade sob a pressão do filtro",
+        "nl": "Rondgepompte hoeveelheid water van de dag (nieuw tabblad „Pomp”: debiet per stand, met absorber / verwarming); display: luchtvochtigheid onder filterdruk",
+        "fr": "Volume d’eau brassé du jour (nouvel onglet « Pompe » : débit par vitesse, avec absorbeur / chauffage) ; affichage : humidité sous la pression du filtre",
+        "it": "Volume d’acqua ricircolato del giorno (nuova scheda «Pompa»: portata per livello, con assorbitore / riscaldamento); display: umidità sotto la pressione del filtro",
+        "es": "Volumen de agua recirculado del día (nueva pestaña «Bomba»: caudal por nivel, con absorbedor / calefacción); pantalla: humedad bajo la presión del filtro",
+        "pl": "Ilość wody przepompowanej w ciągu dnia (nowa zakładka „Pompa”: wydajność na stopień, z absorberem / ogrzewaniem); wyświetlacz: wilgotność pod ciśnieniem filtra",
+        "uk": "Об’єм води, прокачаний за день (нова вкладка «Насос»: продуктивність за ступенями, з абсорбером / нагрівом); дисплей: вологість під тиском фільтра",
+        "zh-cn": "当天循环水量（新增“水泵”选项卡：各档流量，含吸热器 / 加热）；显示屏：湿度显示在过滤压力下方"
+      },
       "0.5.1": {
         "en": "Pool display: colons of temperatures and water values aligned, more space between label and value",
         "de": "Pool-Display: Doppelpunkte bei Temperaturen und Wasserwerten untereinander ausgerichtet, mehr Abstand zwischen Bezeichnung und Wert",
@@ -256,7 +269,19 @@
     "web_enabled": true,
     "port": 8099,
     "display_font": "verdana",
-    "use_messages": true
+    "use_messages": true,
+    "flow_p": 0,
+    "flow_p_solar": 0,
+    "flow_p_heater": 0,
+    "flow_1": 0,
+    "flow_1_solar": 0,
+    "flow_1_heater": 0,
+    "flow_2": 0,
+    "flow_2_solar": 0,
+    "flow_2_heater": 0,
+    "flow_3": 0,
+    "flow_3_solar": 0,
+    "flow_3_heater": 0
   },
   "objects": [],
   "instanceObjects": [
@@ -325,6 +350,21 @@
         "name": {
           "en": "Active functions (for the pool display)",
           "de": "Aktive Funktionen (für das Pool-Display)"
+        },
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.volumeState",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": {
+          "en": "Internal: state of the water volume calculation",
+          "de": "Intern: Zwischenstand der Wassermengen-Berechnung"
         },
         "type": "string",
         "read": true,

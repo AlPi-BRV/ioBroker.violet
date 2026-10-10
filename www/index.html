@@ -318,7 +318,7 @@ const DEMO = {
   'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
-  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
+  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
   'solar.status': 6, 'solar.aktiv': false, 'solar.schalten': 'OFF', 'solar.laufzeit_heute': '00h 00m 00s',
   'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 00m 00s',
@@ -547,7 +547,8 @@ function render() {
       if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const rt = V[`${k}.laufzeit_heute`];
-      setText(`${id}rt`, rt ? `${t('today')} ${String(rt).replace(/ \d+s$/, '')}` : '');
+      const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
+      setText(`${id}rt`, rt ? `${t('today')} ${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
       markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
     if (k === 'pumpe') {

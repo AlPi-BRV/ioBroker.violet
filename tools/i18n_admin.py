@@ -6,6 +6,26 @@ LANGS = ['en', 'de', 'ru', 'pt', 'nl', 'fr', 'it', 'es', 'pl', 'uk', 'zh-cn']
 
 # Schlüssel = englischer Text; Werte in der Reihenfolge: de, ru, pt, nl, fr, it, es, pl, uk, zh-cn
 T = {
+
+    # Pumpe / Wassermenge
+    'Pump': ['Pumpe', 'Насос', 'Bomba', 'Pomp', 'Pompe', 'Pompa', 'Bomba', 'Pompa', 'Насос', '水泵'],
+    'Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.': [
+        'Fördermenge der Pumpe in m³/h eintragen. Der Adapter berechnet daraus mit den Laufzeiten der Violet die heute umgewälzte Wassermenge (Datenpunkt pumpe.umwaelzung_heute, im Pool-Display hinter der Laufzeit). Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert eintragen – leer = wie allein. Laufen beide gleichzeitig, gilt der kleinere Wert.',
+        'Укажите производительность насоса в м³/ч. По времени работы Violet адаптер рассчитает объём воды, прокачанный сегодня (точка данных pumpe.umwaelzung_heute, на дисплее бассейна после времени работы). Если абсорбер или нагрев снижают поток, укажите там меньшее значение – пусто = как без них. Если работают оба, действует меньшее значение.',
+        'Introduza o caudal da bomba em m³/h. Com os tempos de funcionamento da Violet, o adaptador calcula o volume de água circulado hoje (ponto de dados pumpe.umwaelzung_heute, no display da piscina após o tempo de funcionamento). Se o absorvedor ou o aquecimento reduzirem o caudal, introduza aí o valor menor – vazio = igual a sozinha. Se ambos funcionarem ao mesmo tempo, aplica-se o valor menor.',
+        'Voer het debiet van de pomp in m³/h in. Met de looptijden van de Violet berekent de adapter de vandaag rondgepompte hoeveelheid water (datapunt pumpe.umwaelzung_heute, in het zwembaddisplay achter de looptijd). Remt de absorber of verwarming het debiet af, vul daar de lagere waarde in – leeg = gelijk aan alleen. Lopen beide tegelijk, dan geldt de lagere waarde.',
+        "Saisissez le débit de la pompe en m³/h. À partir des durées de fonctionnement de la Violet, l'adaptateur calcule le volume d'eau brassé aujourd'hui (point de données pumpe.umwaelzung_heute, dans l'affichage piscine après la durée). Si l'absorbeur ou le chauffage réduit le débit, saisissez-y la valeur plus faible – vide = comme seule. Si les deux fonctionnent en même temps, la valeur la plus faible s'applique.",
+        "Inserire la portata della pompa in m³/h. Con i tempi di funzionamento della Violet l'adattatore calcola il volume d'acqua ricircolato oggi (punto dati pumpe.umwaelzung_heute, nel display piscina dopo il tempo di funzionamento). Se l'assorbitore o il riscaldamento riducono la portata, inserire lì il valore minore – vuoto = come da sola. Se funzionano entrambi, vale il valore minore.",
+        'Introduzca el caudal de la bomba en m³/h. Con los tiempos de funcionamiento de la Violet, el adaptador calcula el volumen de agua recirculado hoy (punto de datos pumpe.umwaelzung_heute, en la pantalla de la piscina tras el tiempo de funcionamiento). Si el absorbedor o la calefacción reducen el caudal, introduzca allí el valor menor – vacío = igual que sola. Si ambos funcionan a la vez, se aplica el valor menor.',
+        'Podaj wydajność pompy w m³/h. Na podstawie czasów pracy Violet adapter oblicza ilość wody przepompowanej dzisiaj (punkt danych pumpe.umwaelzung_heute, na wyświetlaczu basenu za czasem pracy). Jeśli absorber lub ogrzewanie zmniejszają przepływ, wpisz tam mniejszą wartość – puste = jak sama pompa. Gdy oba działają jednocześnie, obowiązuje mniejsza wartość.',
+        'Вкажіть продуктивність насоса в м³/год. За часом роботи Violet адаптер розрахує об’єм води, прокачаний сьогодні (точка даних pumpe.umwaelzung_heute, на дисплеї басейну після часу роботи). Якщо абсорбер або нагрів зменшують потік, вкажіть там менше значення – порожньо = як без них. Якщо працюють обидва, діє менше значення.',
+        '输入水泵流量（m³/h）。适配器根据 Violet 的运行时间计算今天循环的水量（数据点 pumpe.umwaelzung_heute，泳池显示屏中显示在运行时间之后）。如果吸热器或加热降低流量，请在此填写较小值——留空 = 与单独运行相同。两者同时运行时取较小值。'],
+    'Filter pump – m³/h': ['Filterpumpe – m³/h', 'Фильтрационный насос – м³/ч', 'Bomba de filtração – m³/h', 'Filterpomp – m³/h', 'Pompe de filtration – m³/h', 'Pompa di filtrazione – m³/h', 'Bomba de filtración – m³/h', 'Pompa filtracyjna – m³/h', 'Фільтраційний насос – м³/год', '过滤泵 – m³/h'],
+    'Level 1 (ECO) – m³/h': ['Stufe 1 (ECO) – m³/h', 'Ступень 1 (ECO) – м³/ч', 'Nível 1 (ECO) – m³/h', 'Stand 1 (ECO) – m³/h', 'Vitesse 1 (ECO) – m³/h', 'Livello 1 (ECO) – m³/h', 'Nivel 1 (ECO) – m³/h', 'Stopień 1 (ECO) – m³/h', 'Ступінь 1 (ECO) – м³/год', '1 档 (ECO) – m³/h'],
+    'Level 2 (Normal) – m³/h': ['Stufe 2 (Normal) – m³/h', 'Ступень 2 (Normal) – м³/ч', 'Nível 2 (Normal) – m³/h', 'Stand 2 (Normal) – m³/h', 'Vitesse 2 (Normal) – m³/h', 'Livello 2 (Normal) – m³/h', 'Nivel 2 (Normal) – m³/h', 'Stopień 2 (Normal) – m³/h', 'Ступінь 2 (Normal) – м³/год', '2 档 (Normal) – m³/h'],
+    'Level 3 (Boost) – m³/h': ['Stufe 3 (Boost) – m³/h', 'Ступень 3 (Boost) – м³/ч', 'Nível 3 (Boost) – m³/h', 'Stand 3 (Boost) – m³/h', 'Vitesse 3 (Boost) – m³/h', 'Livello 3 (Boost) – m³/h', 'Nivel 3 (Boost) – m³/h', 'Stopień 3 (Boost) – m³/h', 'Ступінь 3 (Boost) – м³/год', '3 档 (Boost) – m³/h'],
+    'with absorber – m³/h': ['mit Absorber – m³/h', 'с абсорбером – м³/ч', 'com absorvedor – m³/h', 'met absorber – m³/h', 'avec absorbeur – m³/h', 'con assorbitore – m³/h', 'con absorbedor – m³/h', 'z absorberem – m³/h', 'з абсорбером – м³/год', '含吸热器 – m³/h'],
+    'with heating – m³/h': ['mit Heizung – m³/h', 'с нагревом – м³/ч', 'com aquecimento – m³/h', 'met verwarming – m³/h', 'avec chauffage – m³/h', 'con riscaldamento – m³/h', 'con calefacción – m³/h', 'z ogrzewaniem – m³/h', 'з нагрівом – м³/год', '含加热 – m³/h'],
     # Reiter
     'Connection': ['Verbindung', 'Подключение', 'Conexão', 'Verbinding', 'Connexion', 'Connessione', 'Conexión', 'Połączenie', 'Підключення', '连接'],
     'Functions': ['Funktionen', 'Функции', 'Funções', 'Functies', 'Fonctions', 'Funzioni', 'Funciones', 'Funkcje', 'Функції', '功能'],
@@ -242,6 +262,14 @@ for k, key, label, ph, unit in A:
     analog[f'{k}_unit'] = u
     analog[f'{k}_value'] = {'type': 'textSendTo', 'command': 'getAnalog', 'data': {'key': key}, 'container': 'div', 'style': {'paddingTop': 18, 'opacity': 0.85}, **W(6, 3, 3, 3, 3)}
 
+pump = {'hpump': static('Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.')}
+for st, label in [('p', 'Filter pump – m³/h'), ('1', 'Level 1 (ECO) – m³/h'), ('2', 'Level 2 (Normal) – m³/h'), ('3', 'Level 3 (Boost) – m³/h')]:
+    rowHidden = 'data.use_pump_rpm' if st == 'p' else '!data.use_pump_rpm'
+    num = lambda lbl, hid: {'type': 'number', 'label': lbl, 'min': 0, 'max': 200, 'step': 0.1, 'hidden': hid, **W(12, 4, 3, 3, 3)}
+    pump[f'flow_{st}'] = {**num(label, rowHidden), 'newLine': True}
+    pump[f'flow_{st}_solar'] = num('with absorber – m³/h', f'{rowHidden} || !data.use_solar')
+    pump[f'flow_{st}_heater'] = num('with heating – m³/h', f'{rowHidden} || !data.use_heater')
+
 relays = {'hrinfo': static('Give the relays a name, e.g. "Garden light". Named relays appear with their name in ioBroker and in the relay view of the pool display.', 'data.use_ext1 !== true && data.use_ext2 !== true')}
 for e in (1, 2):
     relays[f'hr{e}'] = hdr(f'Relay extension {e}', f'!data.use_ext{e}')
@@ -254,6 +282,7 @@ config = {'i18n': True, 'type': 'tabs', 'items': {
     'tabFunc': {'type': 'panel', 'label': 'Functions', 'items': func},
     'tabTemp': {'type': 'panel', 'label': 'Temperatures', 'hidden': '!data.use_temp', 'items': temps},
     'tabAnalog': {'type': 'panel', 'label': 'Analog', 'hidden': '!data.use_analog', 'items': analog},
+    'tabPump': {'type': 'panel', 'label': 'Pump', 'hidden': '!data.use_pump', 'items': pump},
     'tabRelay': {'type': 'panel', 'label': 'Relays', 'items': relays},
 }}
 

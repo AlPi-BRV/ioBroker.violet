@@ -13,6 +13,7 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 - **Fragebogen in der Konfiguration**: nur genutzte Bereiche werden als Datenpunkte angelegt
 - Eigene Namen für Temperatursensoren, Relais und Analogeingänge – mit Live-Werten in der Konfiguration
 - **Schalten EIN / AUS / AUTO** (Hauptschalter „Schalten erlauben“, standardmäßig aus)
+- **Umgewälzte Wassermenge des Tages** in m³, berechnet aus den Laufzeiten der Violet und der Fördermenge der Pumpe
 - **Meldungen der Violet** (Warnungen, Alarme, Erinnerungen) als Datenpunkt `meldungen.aktiv` und als Hinweis im Pool-Display
 - **Pool-Display** im Stil der alten ProCon.IP-Anzeige, direkt vom Adapter ausgeliefert
 
@@ -29,6 +30,7 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 | Verbindung | IP, Login, Abfrageintervall, „Schalten erlauben“, Pool-Display (Port, Schriftart) |
 | Funktionen | Fragebogen: Was ist an der Violet vorhanden? |
 | Temperaturen | Sensor 1–6 heißen wie in der Violet (Wassertemperatur, Außentemperatur, Absorbertemperatur, Absorber-Rücklauf, Wärmetauscher, Speichertemperatur), ab Sensor 7 frei – mit aktuellem Messwert |
+| Pumpe | Fördermenge in m³/h (je Drehzahlstufe; mit Absorber / Heizung) für die umgewälzte Wassermenge |
 | Analog | ADC1 Filterdruck, ADC2 Pegelsonde, ADC3–6, Impuls 1 Messwasser, Impuls 2 Förderleistung – Name, Einheit, Live-Wert |
 | Relais | Namen der Relais der Erweiterungen |
 
@@ -46,6 +48,16 @@ Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `sc
 - `pumpe.drehzahl_soll` (1 = ECO, 2 = Normal, 3 = Boost) – wird beim Einschalten verwendet, bei laufender Pumpe sofort übernommen
 - „Dauer bei manuell EIN/AUS“ in Minuten, 0 = dauerhaft
 - Der Datenpunkt `schalten` zeigt immer den tatsächlichen Modus der Violet
+
+## Umgewälzte Wassermenge
+
+Im Reiter „Pumpe“ trägst du die Fördermenge der Pumpe in m³/h ein – bei Drehzahlpumpen je Stufe.
+Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert eintragen (leer = wie allein; laufen beide, gilt der kleinere Wert).
+
+- Datenpunkt `pumpe.umwaelzung_heute` (m³), im Pool-Display hinter der Laufzeit: `heute 06h 07m (25,9 m³)`
+- Grundlage sind die Laufzeiten je Stufe, die die Violet selbst zählt – ein Neustart von ioBroker verfälscht nichts
+- Den Abzug für Absorber / Heizung zählt der Adapter bei jeder Abfrage mit; um Mitternacht beginnt alles bei 0
+- Reine Berechnung – an die Violet wird nichts geschrieben
 
 ## Meldungen der Violet
 
