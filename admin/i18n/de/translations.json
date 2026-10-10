@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Elektrolyse (Salz)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Fördermenge der Pumpe in m³/h eintragen. Der Adapter berechnet daraus mit den Laufzeiten der Violet die heute umgewälzte Wassermenge (Datenpunkt pumpe.umwaelzung_heute, im Pool-Display hinter der Laufzeit). Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert eintragen – leer = wie allein. Laufen beide gleichzeitig, gilt der kleinere Wert.",
   "Extensions and inputs": "Erweiterungen und Eingänge",
   "Filter pressure": "Filterdruck",
   "Filter pump": "Filterpumpe",
+  "Filter pump – m³/h": "Filterpumpe – m³/h",
   "Flocculant": "Flockung",
   "Font of the pool display": "Schriftart des Pool-Displays",
   "Functions": "Funktionen",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Heizung / Wärmepumpe",
   "Heating, light and accessories": "Heizen, Licht und Zubehör",
   "IP address or host name of the Violet": "IP-Adresse oder Hostname der Violet",
+  "Level 1 (ECO) – m³/h": "Stufe 1 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "Stufe 2 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "Stufe 3 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Login der Violet-Weboberfläche (für reines Lesen meist nicht nötig)",
   "No relay extension selected (tab \"Functions\").": "Keine Relaiserweiterung ausgewählt (Reiter „Funktionen“).",
   "Only for speed-controlled pumps with levels 0–3": "Nur bei drehzahlgeregelter Pumpe mit Stufen 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Pool-Display bereitstellen",
   "Pulse 1 – measuring water monitoring": "Impuls 1 – Messwasserüberwachung",
   "Pulse 2 – delivery rate": "Impuls 2 – Förderleistung",
+  "Pump": "Pumpe",
   "Pump with speed levels": "Pumpe mit Drehzahlstufen",
   "Refill / water level": "Nachspeisung / Füllstand",
   "Relay extension 1": "Relaiserweiterung 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "z. B. Luftfeuchte",
   "m³/h": "m³/h",
   "pH minus": "pH-minus",
-  "pH plus": "pH-plus"
+  "pH plus": "pH-plus",
+  "with absorber – m³/h": "mit Absorber – m³/h",
+  "with heating – m³/h": "mit Heizung – m³/h"
 }

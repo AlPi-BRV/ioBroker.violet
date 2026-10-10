@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "电解（盐）",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "输入水泵流量（m³/h）。适配器根据 Violet 的运行时间计算今天循环的水量（数据点 pumpe.umwaelzung_heute，泳池显示屏中显示在运行时间之后）。如果吸热器或加热降低流量，请在此填写较小值——留空 = 与单独运行相同。两者同时运行时取较小值。",
   "Extensions and inputs": "扩展与输入",
   "Filter pressure": "过滤器压力",
   "Filter pump": "过滤泵",
+  "Filter pump – m³/h": "过滤泵 – m³/h",
   "Flocculant": "絮凝剂",
   "Font of the pool display": "泳池显示屏字体",
   "Functions": "功能",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "加热 / 热泵",
   "Heating, light and accessories": "加热、灯光与配件",
   "IP address or host name of the Violet": "Violet 的 IP 地址或主机名",
+  "Level 1 (ECO) – m³/h": "1 档 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "2 档 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "3 档 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Violet 网页界面登录名（仅读取时通常不需要）",
   "No relay extension selected (tab \"Functions\").": "未选择继电器扩展（\"功能\"选项卡）。",
   "Only for speed-controlled pumps with levels 0–3": "仅适用于具有 0–3 档的调速泵",
@@ -71,6 +76,7 @@
   "Provide pool display": "提供泳池显示屏",
   "Pulse 1 – measuring water monitoring": "脉冲 1 – 测量水监测",
   "Pulse 2 – delivery rate": "脉冲 2 – 输送量",
+  "Pump": "水泵",
   "Pump with speed levels": "多档速泵",
   "Refill / water level": "补水 / 水位",
   "Relay extension 1": "继电器扩展 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "例如湿度",
   "m³/h": "m³/h",
   "pH minus": "pH 降",
-  "pH plus": "pH 升"
+  "pH plus": "pH 升",
+  "with absorber – m³/h": "含吸热器 – m³/h",
+  "with heating – m³/h": "含加热 – m³/h"
 }

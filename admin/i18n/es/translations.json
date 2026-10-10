@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Electrólisis (sal)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Introduzca el caudal de la bomba en m³/h. Con los tiempos de funcionamiento de la Violet, el adaptador calcula el volumen de agua recirculado hoy (punto de datos pumpe.umwaelzung_heute, en la pantalla de la piscina tras el tiempo de funcionamiento). Si el absorbedor o la calefacción reducen el caudal, introduzca allí el valor menor – vacío = igual que sola. Si ambos funcionan a la vez, se aplica el valor menor.",
   "Extensions and inputs": "Extensiones y entradas",
   "Filter pressure": "Presión del filtro",
   "Filter pump": "Bomba de filtración",
+  "Filter pump – m³/h": "Bomba de filtración – m³/h",
   "Flocculant": "Floculante",
   "Font of the pool display": "Fuente de la pantalla de piscina",
   "Functions": "Funciones",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Calefacción / bomba de calor",
   "Heating, light and accessories": "Calefacción, luz y accesorios",
   "IP address or host name of the Violet": "Dirección IP o nombre de host de la Violet",
+  "Level 1 (ECO) – m³/h": "Nivel 1 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "Nivel 2 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "Nivel 3 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Inicio de sesión de la interfaz web de Violet (normalmente no necesario solo para lectura)",
   "No relay extension selected (tab \"Functions\").": "Ninguna extensión de relés seleccionada (pestaña \"Funciones\").",
   "Only for speed-controlled pumps with levels 0–3": "Solo para bombas de velocidad variable con niveles 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Proporcionar pantalla de piscina",
   "Pulse 1 – measuring water monitoring": "Pulso 1 – control del agua de medición",
   "Pulse 2 – delivery rate": "Pulso 2 – caudal",
+  "Pump": "Bomba",
   "Pump with speed levels": "Bomba con niveles de velocidad",
   "Refill / water level": "Rellenado / nivel de agua",
   "Relay extension 1": "Extensión de relés 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "p. ej. humedad",
   "m³/h": "m³/h",
   "pH minus": "pH menos",
-  "pH plus": "pH más"
+  "pH plus": "pH más",
+  "with absorber – m³/h": "con absorbedor – m³/h",
+  "with heating – m³/h": "con calefacción – m³/h"
 }

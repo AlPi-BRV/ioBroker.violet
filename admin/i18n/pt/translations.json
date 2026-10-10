@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Eletrólise (sal)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Introduza o caudal da bomba em m³/h. Com os tempos de funcionamento da Violet, o adaptador calcula o volume de água circulado hoje (ponto de dados pumpe.umwaelzung_heute, no display da piscina após o tempo de funcionamento). Se o absorvedor ou o aquecimento reduzirem o caudal, introduza aí o valor menor – vazio = igual a sozinha. Se ambos funcionarem ao mesmo tempo, aplica-se o valor menor.",
   "Extensions and inputs": "Extensões e entradas",
   "Filter pressure": "Pressão do filtro",
   "Filter pump": "Bomba de filtro",
+  "Filter pump – m³/h": "Bomba de filtração – m³/h",
   "Flocculant": "Floculante",
   "Font of the pool display": "Fonte do display da piscina",
   "Functions": "Funções",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Aquecimento / bomba de calor",
   "Heating, light and accessories": "Aquecimento, luz e acessórios",
   "IP address or host name of the Violet": "Endereço IP ou nome do host da Violet",
+  "Level 1 (ECO) – m³/h": "Nível 1 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "Nível 2 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "Nível 3 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Login da interface web da Violet (geralmente não necessário apenas para leitura)",
   "No relay extension selected (tab \"Functions\").": "Nenhuma extensão de relés selecionada (aba \"Funções\").",
   "Only for speed-controlled pumps with levels 0–3": "Apenas para bombas com controle de velocidade, níveis 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Disponibilizar display da piscina",
   "Pulse 1 – measuring water monitoring": "Pulso 1 – monitoramento da água de medição",
   "Pulse 2 – delivery rate": "Pulso 2 – vazão",
+  "Pump": "Bomba",
   "Pump with speed levels": "Bomba com níveis de velocidade",
   "Refill / water level": "Reabastecimento / nível de água",
   "Relay extension 1": "Extensão de relés 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "p. ex. umidade",
   "m³/h": "m³/h",
   "pH minus": "pH menos",
-  "pH plus": "pH mais"
+  "pH plus": "pH mais",
+  "with absorber – m³/h": "com absorvedor – m³/h",
+  "with heating – m³/h": "com aquecimento – m³/h"
 }

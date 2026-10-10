@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Электролиз (соль)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Укажите производительность насоса в м³/ч. По времени работы Violet адаптер рассчитает объём воды, прокачанный сегодня (точка данных pumpe.umwaelzung_heute, на дисплее бассейна после времени работы). Если абсорбер или нагрев снижают поток, укажите там меньшее значение – пусто = как без них. Если работают оба, действует меньшее значение.",
   "Extensions and inputs": "Расширения и входы",
   "Filter pressure": "Давление фильтра",
   "Filter pump": "Фильтрационный насос",
+  "Filter pump – m³/h": "Фильтрационный насос – м³/ч",
   "Flocculant": "Флокулянт",
   "Font of the pool display": "Шрифт дисплея бассейна",
   "Functions": "Функции",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Нагрев / тепловой насос",
   "Heating, light and accessories": "Нагрев, свет и аксессуары",
   "IP address or host name of the Violet": "IP-адрес или имя хоста Violet",
+  "Level 1 (ECO) – m³/h": "Ступень 1 (ECO) – м³/ч",
+  "Level 2 (Normal) – m³/h": "Ступень 2 (Normal) – м³/ч",
+  "Level 3 (Boost) – m³/h": "Ступень 3 (Boost) – м³/ч",
   "Login of the Violet web interface (usually not needed for reading only)": "Логин веб-интерфейса Violet (для чтения обычно не нужен)",
   "No relay extension selected (tab \"Functions\").": "Релейное расширение не выбрано (вкладка «Функции»).",
   "Only for speed-controlled pumps with levels 0–3": "Только для насосов с регулировкой скорости, ступени 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Включить дисплей бассейна",
   "Pulse 1 – measuring water monitoring": "Импульс 1 – контроль измерительной воды",
   "Pulse 2 – delivery rate": "Импульс 2 – производительность",
+  "Pump": "Насос",
   "Pump with speed levels": "Насос со ступенями скорости",
   "Refill / water level": "Подпитка / уровень воды",
   "Relay extension 1": "Релейное расширение 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "например влажность",
   "m³/h": "m³/h",
   "pH minus": "pH-минус",
-  "pH plus": "pH-плюс"
+  "pH plus": "pH-плюс",
+  "with absorber – m³/h": "с абсорбером – м³/ч",
+  "with heating – m³/h": "с нагревом – м³/ч"
 }

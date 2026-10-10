@@ -45,9 +45,11 @@
   "EXT2.7": "EXT2.7",
   "EXT2.8": "EXT2.8",
   "Electrolysis (salt)": "Electrolysis (salt)",
+  "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.": "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.",
   "Extensions and inputs": "Extensions and inputs",
   "Filter pressure": "Filter pressure",
   "Filter pump": "Filter pump",
+  "Filter pump – m³/h": "Filter pump – m³/h",
   "Flocculant": "Flocculant",
   "Font of the pool display": "Font of the pool display",
   "Functions": "Functions",
@@ -56,6 +58,9 @@
   "Heating / heat pump": "Heating / heat pump",
   "Heating, light and accessories": "Heating, light and accessories",
   "IP address or host name of the Violet": "IP address or host name of the Violet",
+  "Level 1 (ECO) – m³/h": "Level 1 (ECO) – m³/h",
+  "Level 2 (Normal) – m³/h": "Level 2 (Normal) – m³/h",
+  "Level 3 (Boost) – m³/h": "Level 3 (Boost) – m³/h",
   "Login of the Violet web interface (usually not needed for reading only)": "Login of the Violet web interface (usually not needed for reading only)",
   "No relay extension selected (tab \"Functions\").": "No relay extension selected (tab \"Functions\").",
   "Only for speed-controlled pumps with levels 0–3": "Only for speed-controlled pumps with levels 0–3",
@@ -71,6 +76,7 @@
   "Provide pool display": "Provide pool display",
   "Pulse 1 – measuring water monitoring": "Pulse 1 – measuring water monitoring",
   "Pulse 2 – delivery rate": "Pulse 2 – delivery rate",
+  "Pump": "Pump",
   "Pump with speed levels": "Pump with speed levels",
   "Refill / water level": "Refill / water level",
   "Relay extension 1": "Relay extension 1",
@@ -119,5 +125,7 @@
   "e.g. humidity": "e.g. humidity",
   "m³/h": "m³/h",
   "pH minus": "pH minus",
-  "pH plus": "pH plus"
+  "pH plus": "pH plus",
+  "with absorber – m³/h": "with absorber – m³/h",
+  "with heating – m³/h": "with heating – m³/h"
 }

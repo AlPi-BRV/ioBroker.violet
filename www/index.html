@@ -82,6 +82,14 @@
   .badge.man-on { background: linear-gradient(#4c8af0, var(--manual-on)); }
   .badge.man-off { background: linear-gradient(#d8414a, var(--manual-off)); }
 
+  /* Temperaturen + Wasserwerte: feste Beschriftungsbreite -> Doppelpunkte untereinander */
+  .tw { gap: 1.4em; }
+  .tw .lbl { flex: 0 0 auto; }
+  .lbl .sub { white-space: nowrap; }
+  .vsub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
+  .tw .val { flex: 1 1 auto; min-width: 0; }
+  .tw .badge { flex: 0 0 auto; margin-left: auto; }
+
   /* Relais-Spalte */
   .relay .lbl { flex: 0 0 33%; }
   .state { flex: 0 0 auto; display: flex; align-items: center; gap: .5em; min-width: 5em; }
@@ -310,7 +318,7 @@ const DEMO = {
   'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
-  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
+  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
   'solar.status': 6, 'solar.aktiv': false, 'solar.schalten': 'OFF', 'solar.laufzeit_heute': '00h 00m 00s',
   'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 00m 00s',
@@ -436,16 +444,18 @@ function build() {
   $('botFlow').dataset.name = flow ? flow.name : '';
   $('botPh').style.visibility = has('wasser.ph') ? '' : 'hidden';
   $('botRdx').style.visibility = has('wasser.redox') ? '' : 'hidden';
+  alignLabels();
   setTimeout(fit, 0);
 }
 
 function tempCell(x, r, cls) {
-  return `<div class="${cls}">
+  return `<div class="${cls} tw twT">
     <div class="lbl"><span class="main">${esc(tempName(x.sensor))}:</span><span class="sub" id="tsub${r}"></span></div>
     <div class="val"><span class="big" id="t${r}">–</span><span class="mm" id="tmm${r}"></span></div></div>`;
 }
 
 function waterCell(w, cls) {
+  cls += ' tw twW';
   if (w === 'ph') return `<div class="${cls}"><div class="lbl"><span class="main">pH:</span></div>
     <div class="val"><span class="big" id="ph">–</span><span class="mm" id="phmm"></span><span class="note" id="phdos"></span></div>
     <span class="badge" id="phmode">–</span></div>`;
@@ -454,9 +464,8 @@ function waterCell(w, cls) {
     <span class="badge" id="clmode">–</span></div>`;
   if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span></div>
     <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span><span class="mm" id="clmm"></span></div></div>`;
-  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span></div>
-    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>
-    ${w.note ? `<span class="note" data-note="${w.note.id}" data-name="${esc(w.note.name)}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
+  return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span>${w.note ? `<span class="sub">${esc(w.note.name)}:</span>` : ''}</div>
+    <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>${w.note ? `<span class="vsub" data-note="${w.note.id}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
 }
 
 const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
@@ -527,7 +536,7 @@ function render() {
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
   document.querySelectorAll('[data-note]').forEach((e) => {
     const d = /bar/i.test(e.dataset.unit) ? 2 : 1;
-    e.textContent = `${e.dataset.name}: ${fmt(V[e.dataset.note], d)} ${e.dataset.unit}`;
+    e.textContent = `${fmt(V[e.dataset.note], d)} ${e.dataset.unit}`;
   });
 
   for (const x of R) {
@@ -538,7 +547,8 @@ function render() {
       if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const rt = V[`${k}.laufzeit_heute`];
-      setText(`${id}rt`, rt ? `${t('today')} ${String(rt).replace(/ \d+s$/, '')}` : '');
+      const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
+      setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
       markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
     if (k === 'pumpe') {
@@ -574,6 +584,7 @@ function render() {
   $('fw').textContent = `${t('fw')}: ${V['system.firmware'] ?? '–'}`;
   $('up').textContent = `${t('uptime')}: ${V['system.laufzeit'] ?? '–'}`;
   $('cpu').textContent = `CPU: ${fmt(V['system.cpu_temperatur'], 1)} °C`;
+  alignLabels();
 }
 
 function setText(id, s) { const e = $(id); if (e) e.textContent = s; }
@@ -769,6 +780,17 @@ function tick() {
   $('date').textContent = now.toLocaleDateString(LOCALE(), { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
   $('time').textContent = now.toLocaleTimeString(LOCALE()) + t('clockSuffix');
 }
+
+/* Beschriftungen je Spalte gleich breit -> Doppelpunkte stehen untereinander */
+function alignLabels() {
+  for (const col of ['twT', 'twW']) {
+    const l = [...document.querySelectorAll(`.${col} .lbl`)];
+    l.forEach((e) => { e.style.flexBasis = 'auto'; });
+    const max = Math.max(0, ...l.map((e) => e.offsetWidth));
+    l.forEach((e) => { e.style.flexBasis = max + 'px'; });
+  }
+}
+if (document.fonts) document.fonts.ready.then(alignLabels);
 
 /* feste ProCon-Ansicht (1374 px breit), wird auf das Fenster skaliert */
 function fit() {

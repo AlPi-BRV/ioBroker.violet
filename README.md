@@ -13,6 +13,7 @@ Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module a
 - **Questionnaire in the configuration**: only the areas you actually use are created as data points
 - Own names for temperature sensors, relays and analog inputs – with live values shown in the configuration
 - **Switching ON / OFF / AUTO** (main switch "Allow switching", disabled by default)
+- **Circulated water volume of the day** in m³, calculated from the runtimes of the Violet and the delivery rate of the pump
 - **Violet messages** (warnings, alarms, reminders) as data point `meldungen.aktiv` and as notice in the pool display
 - **Pool display** in the style of the classic ProCon.IP display, served directly by the adapter
 - Data point names, configuration and pool display in German and English; configuration in 11 languages
@@ -48,6 +49,16 @@ With "Allow switching" every selected function gets a data point `schalten`:
 | 2 / 4 | Manual on |
 | 5 | Auto – waiting |
 | 6 | Manual off |
+
+## Circulated water volume
+
+In the tab "Pump" you enter the delivery rate of the pump in m³/h – per speed level for speed-controlled pumps.
+If the absorber or the heating reduces the flow, enter the lower value there (empty = same as alone; if both run, the lower value applies).
+
+- Data point `pumpe.umwaelzung_heute` (m³), in the pool display behind the runtime: `06h 07m (25.9 m³)`
+- Basis: the runtimes per level counted by the Violet itself – an ioBroker restart does not distort the value
+- The reduction by absorber / heating is counted by the adapter at each poll; resets at midnight
+- Only a calculation – nothing is written to the Violet
 
 ## Violet messages
 
@@ -109,6 +120,16 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.5.3 (2026-10-10)
+- Pool display: runtimes without "today" so the line no longer wraps
+
+### 0.5.2 (2026-10-10)
+- Circulated water volume of the day: new tab "Pump" (delivery rate per level, with absorber / heating), data point `pumpe.umwaelzung_heute`, shown in the pool display
+- Pool display: humidity label and value stacked under filter pressure
+
+### 0.5.1 (2026-10-10)
+- Pool display: colons of temperatures and water values aligned, more space between label and value
+
 ### 0.5.0 (2026-10-10)
 - Pool display: larger font and more line spacing, selectable font (Verdana, Arial, system font)
 - Pool display: speed levels in the pump row (active level green), PV indicator, light row with DMX scenes

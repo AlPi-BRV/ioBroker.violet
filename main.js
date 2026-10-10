@@ -13,6 +13,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { buildDefinitions, buildControls, messageDefinitions, modeFromStatus, tempName, setLang, CHANNELS } = require('./lib/datapoints');
+const { VolumeCounter, flowConfig } = require('./lib/volume');
 const { names, pick } = require('./lib/i18n');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
@@ -79,6 +80,17 @@ class Violet extends utils.Adapter {
         }
 
         this.defs = buildDefinitions(this.config);
+        const flows = flowConfig(this.config);
+        if (flows) {
+            let saved = null;
+            try {
+                const st = await this.getStateAsync('info.volumeState');
+                saved = st && st.val ? JSON.parse(st.val) : null;
+            } catch {
+                saved = null;
+            }
+            this.volume = new VolumeCounter(flows, saved);
+        }
         this.msgDefs = messageDefinitions(this.config);
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
         if (this.config.use_pump && this.config.use_pump_rpm && this.config.allow_switching) {
@@ -198,6 +210,13 @@ class Violet extends utils.Adapter {
     }
 
     async processData(data) {
+        if (this.volume) {
+            const v = this.volume.update(data);
+            if (v !== undefined) {
+                data.__VOLUME_TODAY = v;
+                await this.setStateChangedAsync('info.volumeState', JSON.stringify(this.volume.state()), true);
+            }
+        }
         for (const def of this.defs) {
             if (def.when && !def.when(data)) continue;
             let value;
@@ -347,6 +366,7 @@ class Violet extends utils.Adapter {
             violetUrl: this.baseUrl,
             switching: this.controls.length > 0,
             pumpRpm: !!(c.use_pump && c.use_pump_rpm),
+            volume: !!this.volume,
             pv: !!c.use_pv,
             dmx: !!c.use_dmx,
             temps: [],
