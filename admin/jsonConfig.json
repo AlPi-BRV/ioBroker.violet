@@ -1,34 +1,34 @@
 {
-  "i18n": true,
+  "i18n": false,
   "type": "tabs",
   "items": {
     "tabConn": {
       "type": "panel",
-      "label": "Connection",
+      "label": "Verbindung",
       "items": {
         "host": {
           "type": "text",
-          "label": "IP address or host name of the Violet",
-          "tooltip": "e.g. 10.10.3.50 or 10.10.3.50:8080 (without http://)",
+          "label": "IP-Adresse oder Hostname der Violet",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "tooltip": "z. B. 10.10.3.50 oder 10.10.3.50:8080 (ohne http://)"
         },
         "username": {
           "type": "text",
-          "label": "User name",
-          "tooltip": "Login of the Violet web interface (usually not needed for reading only)",
+          "label": "Benutzername",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "tooltip": "Login der Violet-Weboberfläche (für reines Lesen meist nicht nötig)"
         },
         "password": {
           "type": "password",
-          "label": "Password",
+          "label": "Passwort",
           "repeat": false,
           "visible": true,
           "xs": 12,
@@ -39,7 +39,7 @@
         },
         "interval": {
           "type": "number",
-          "label": "Polling interval (seconds)",
+          "label": "Abfrageintervall (Sekunden)",
           "min": 5,
           "max": 3600,
           "newLine": true,
@@ -51,7 +51,7 @@
         },
         "timeout": {
           "type": "number",
-          "label": "Timeout per request (seconds)",
+          "label": "Zeitlimit pro Abfrage (Sekunden)",
           "min": 2,
           "max": 60,
           "xs": 12,
@@ -62,7 +62,7 @@
         },
         "hdrSwitch": {
           "type": "header",
-          "text": "Switching from ioBroker",
+          "text": "Schalten aus ioBroker",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -73,45 +73,45 @@
         },
         "allow_switching": {
           "type": "checkbox",
-          "label": "Allow switching (ON / OFF / AUTO)",
+          "label": "Schalten erlauben (EIN / AUS / AUTO)",
+          "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "newLine": true,
-          "tooltip": "Creates a data point \"schalten\" for each function. Dosing, cover and Violet settings are deliberately not switchable."
+          "tooltip": "Legt pro Funktion einen Datenpunkt „schalten“ an. Dosierung, Abdeckung und Einstellungen der Violet sind bewusst nicht schaltbar."
         },
         "switch_duration": {
           "type": "number",
-          "label": "Duration for manual ON/OFF (minutes)",
+          "label": "Dauer bei manuell EIN/AUS (Minuten)",
           "min": 0,
           "max": 1440,
           "hidden": "!data.allow_switching",
-          "tooltip": "0 = permanently, until switched back to AUTO",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "tooltip": "0 = dauerhaft, bis wieder auf AUTO geschaltet wird"
         },
         "switchNote": {
           "type": "staticText",
-          "text": "User name and password of the Violet are usually required for switching. Not switchable: dosing, cover, settings.",
+          "text": "Zum Schalten werden meist Benutzername und Passwort der Violet benötigt. Nicht schaltbar: Dosierung, Abdeckung, Einstellungen.",
+          "hidden": "!data.allow_switching",
           "newLine": true,
+          "style": {
+            "opacity": 0.75
+          },
           "xs": 12,
           "sm": 12,
           "md": 12,
           "lg": 12,
-          "xl": 12,
-          "hidden": "!data.allow_switching",
-          "style": {
-            "opacity": 0.75
-          }
+          "xl": 12
         },
         "hdrWeb": {
           "type": "header",
-          "text": "Pool display",
+          "text": "Pool-Display",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -122,14 +122,14 @@
         },
         "web_enabled": {
           "type": "checkbox",
-          "label": "Provide pool display",
+          "label": "Pool-Display bereitstellen",
+          "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "newLine": true,
-          "tooltip": "Built-in web server: http://<ioBroker-IP>:<port>/ – use only in your home network, do not expose to the internet"
+          "tooltip": "Eingebauter Webserver: http://<ioBroker-IP>:<Port>/ – nur im eigenen Netz verwenden, nicht ins Internet freigeben"
         },
         "port": {
           "type": "port",
@@ -143,54 +143,29 @@
           "lg": 3,
           "xl": 3
         },
-        "display_font": {
-          "type": "select",
-          "label": "Font of the pool display",
-          "hidden": "!data.web_enabled",
-          "options": [
-            {
-              "label": "Verdana (classic)",
-              "value": "verdana"
-            },
-            {
-              "label": "Arial",
-              "value": "arial"
-            },
-            {
-              "label": "System font",
-              "value": "system"
-            }
-          ],
-          "xs": 12,
-          "sm": 6,
-          "md": 4,
-          "lg": 3,
-          "xl": 3
-        },
         "webNote": {
           "type": "staticText",
-          "text": "Address: http://<ioBroker-IP>:<port>/ – switches in the pool display only if \"Allow switching\" is enabled. Use only in your home network.",
+          "text": "Aufruf: http://<ioBroker-IP>:<Port>/ – Schalter im Pool-Display nur, wenn „Schalten erlauben“ aktiv ist. Nur im Heimnetz nutzen.",
+          "hidden": "!data.web_enabled",
           "newLine": true,
+          "style": {
+            "opacity": 0.75
+          },
           "xs": 12,
           "sm": 12,
           "md": 12,
           "lg": 12,
-          "xl": 12,
-          "hidden": "!data.web_enabled",
-          "style": {
-            "opacity": 0.75
-          }
+          "xl": 12
         }
       }
     },
     "tabFunc": {
       "type": "panel",
-      "label": "Functions",
+      "label": "Funktionen",
       "items": {
         "intro": {
           "type": "staticText",
-          "text": "What do you use on your Violet? Only checked areas are created as data points.",
-          "newLine": true,
+          "text": "Was nutzen Sie an Ihrer Violet? Nur angehakte Bereiche werden als Datenpunkte angelegt.",
           "xs": 12,
           "sm": 12,
           "md": 12,
@@ -199,7 +174,7 @@
         },
         "h1": {
           "type": "header",
-          "text": "Water and filtration",
+          "text": "Wasser und Filterung",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -210,7 +185,7 @@
         },
         "use_water": {
           "type": "checkbox",
-          "label": "Water values (pH, redox, chlorine)",
+          "label": "Wasserwerte (pH, Redox, Chlor)",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -220,7 +195,7 @@
         },
         "use_pump": {
           "type": "checkbox",
-          "label": "Filter pump",
+          "label": "Filterpumpe",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -229,18 +204,18 @@
         },
         "use_pump_rpm": {
           "type": "checkbox",
-          "label": "Pump with speed levels",
+          "label": "Pumpe mit Drehzahlstufen",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "tooltip": "Only for speed-controlled pumps with levels 0–3",
+          "tooltip": "Nur bei drehzahlgeregelter Pumpe mit Stufen 0–3",
           "hidden": "!data.use_pump"
         },
         "use_backwash": {
           "type": "checkbox",
-          "label": "Automatic backwash",
+          "label": "Automatische Rückspülung",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -249,7 +224,7 @@
         },
         "use_refill": {
           "type": "checkbox",
-          "label": "Refill / water level",
+          "label": "Nachspeisung / Füllstand",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -258,7 +233,7 @@
         },
         "h2": {
           "type": "header",
-          "text": "Dosing – which channels are in operation?",
+          "text": "Dosierung – welche Kanäle sind in Betrieb?",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -269,7 +244,7 @@
         },
         "use_dos_cl": {
           "type": "checkbox",
-          "label": "Chlorine (liquid)",
+          "label": "Chlor (flüssig)",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -279,7 +254,7 @@
         },
         "use_dos_elo": {
           "type": "checkbox",
-          "label": "Electrolysis (salt)",
+          "label": "Elektrolyse (Salz)",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -288,7 +263,7 @@
         },
         "use_dos_phm": {
           "type": "checkbox",
-          "label": "pH minus",
+          "label": "pH-minus",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -297,7 +272,7 @@
         },
         "use_dos_php": {
           "type": "checkbox",
-          "label": "pH plus",
+          "label": "pH-plus",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -306,7 +281,7 @@
         },
         "use_dos_floc": {
           "type": "checkbox",
-          "label": "Flocculant",
+          "label": "Flockung",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -315,7 +290,7 @@
         },
         "h3": {
           "type": "header",
-          "text": "Heating, light and accessories",
+          "text": "Heizen, Licht und Zubehör",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -326,7 +301,7 @@
         },
         "use_heater": {
           "type": "checkbox",
-          "label": "Heating / heat pump",
+          "label": "Heizung / Wärmepumpe",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -336,7 +311,7 @@
         },
         "use_solar": {
           "type": "checkbox",
-          "label": "Solar heating",
+          "label": "Solarheizung",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -345,7 +320,7 @@
         },
         "use_pv": {
           "type": "checkbox",
-          "label": "PV surplus mode",
+          "label": "PV-Überschuss-Modus",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -354,7 +329,7 @@
         },
         "use_light": {
           "type": "checkbox",
-          "label": "Pool lighting",
+          "label": "Poolbeleuchtung",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -363,7 +338,7 @@
         },
         "use_dmx": {
           "type": "checkbox",
-          "label": "DMX light scenes",
+          "label": "DMX-Lichtszenen",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -372,7 +347,7 @@
         },
         "use_cover": {
           "type": "checkbox",
-          "label": "Pool cover",
+          "label": "Poolabdeckung",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -381,7 +356,7 @@
         },
         "use_eco": {
           "type": "checkbox",
-          "label": "ECO mode",
+          "label": "ECO-Modus",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -390,7 +365,7 @@
         },
         "h4": {
           "type": "header",
-          "text": "Extensions and inputs",
+          "text": "Erweiterungen und Eingänge",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -401,18 +376,18 @@
         },
         "use_ext1": {
           "type": "checkbox",
-          "label": "Relay extension 1",
+          "label": "Relaiserweiterung 1",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
           "newLine": true,
-          "tooltip": "Relay names in the tab \"Relays\""
+          "tooltip": "Namen der Relais im Reiter „Relais“"
         },
         "use_ext2": {
           "type": "checkbox",
-          "label": "Relay extension 2",
+          "label": "Relaiserweiterung 2",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -421,17 +396,17 @@
         },
         "use_temp": {
           "type": "checkbox",
-          "label": "Temperature sensors",
+          "label": "Temperatursensoren",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "tooltip": "Sensors that are not connected are omitted automatically; names in the tab \"Temperatures\""
+          "tooltip": "Nicht angeschlossene Sensoren werden automatisch weggelassen; Namen im Reiter „Temperaturen“"
         },
         "use_inputs": {
           "type": "checkbox",
-          "label": "Digital inputs",
+          "label": "Digitaleingänge",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -440,17 +415,17 @@
         },
         "use_analog": {
           "type": "checkbox",
-          "label": "Analog / pulse inputs",
+          "label": "Analog-/Impulseingänge",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "tooltip": "e.g. filter pressure, humidity, probe flow – names and units in the tab \"Analog\""
+          "tooltip": "z. B. Filterdruck, Luftfeuchte, Sonden-Anströmung – Namen und Einheiten im Reiter „Analog“"
         },
         "h5": {
           "type": "header",
-          "text": "Scope of data",
+          "text": "Umfang der Daten",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -461,7 +436,7 @@
         },
         "use_minmax": {
           "type": "checkbox",
-          "label": "Daily min/max of measured values",
+          "label": "Tages-Min/Max der Messwerte",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -471,17 +446,17 @@
         },
         "use_details": {
           "type": "checkbox",
-          "label": "Switching times and runtimes",
+          "label": "Schaltzeiten und Laufzeiten",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "tooltip": "Creates 3 additional data points per function"
+          "tooltip": "Erzeugt pro Funktion 3 zusätzliche Datenpunkte"
         },
         "use_system": {
           "type": "checkbox",
-          "label": "System information of the Violet",
+          "label": "Systeminfos der Violet",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -490,35 +465,24 @@
         },
         "use_diag": {
           "type": "checkbox",
-          "label": "Diagnostics (fault counters)",
+          "label": "Diagnose (Fehlerzähler)",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
           "hidden": "!data.use_system && !data.use_temp"
-        },
-        "use_messages": {
-          "type": "checkbox",
-          "label": "Violet messages (warnings, alarms, reminders)",
-          "xs": 12,
-          "sm": 6,
-          "md": 4,
-          "lg": 3,
-          "xl": 3,
-          "tooltip": "Data point meldungen.aktiv and notice in the pool display; acknowledging only affects ioBroker"
         }
       }
     },
     "tabTemp": {
       "type": "panel",
-      "label": "Temperatures",
+      "label": "Temperaturen",
       "hidden": "!data.use_temp",
       "items": {
         "ht": {
           "type": "staticText",
-          "text": "Sensors 1–6 are permanently assigned in the Violet and are named automatically as there (own name optional). From sensor 7 freely nameable. The current value is shown next to each field.",
-          "newLine": true,
+          "text": "Sensor 1–6 sind in der Violet fest belegt und heißen automatisch wie dort (eigener Name optional). Ab Sensor 7 frei benennbar. Neben jedem Feld steht der aktuelle Messwert.",
           "xs": 12,
           "sm": 12,
           "md": 12,
@@ -527,14 +491,14 @@
         },
         "temp1_name": {
           "type": "text",
-          "label": "Sensor 1 – water temperature",
+          "label": "Sensor 1 – Wassertemperatur",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Water temperature"
+          "placeholder": "Wassertemperatur"
         },
         "temp1_value": {
           "type": "textSendTo",
@@ -555,14 +519,14 @@
         },
         "temp2_name": {
           "type": "text",
-          "label": "Sensor 2 – outside temperature",
+          "label": "Sensor 2 – Außentemperatur",
           "newLine": false,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Outside temperature"
+          "placeholder": "Außentemperatur"
         },
         "temp2_value": {
           "type": "textSendTo",
@@ -583,14 +547,14 @@
         },
         "temp3_name": {
           "type": "text",
-          "label": "Sensor 3 – absorber temperature",
+          "label": "Sensor 3 – Absorbertemperatur",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Absorber temperature"
+          "placeholder": "Absorbertemperatur"
         },
         "temp3_value": {
           "type": "textSendTo",
@@ -611,14 +575,14 @@
         },
         "temp4_name": {
           "type": "text",
-          "label": "Sensor 4 – absorber return",
+          "label": "Sensor 4 – Absorber-Rücklauf",
           "newLine": false,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Absorber return"
+          "placeholder": "Absorber-Rücklauf"
         },
         "temp4_value": {
           "type": "textSendTo",
@@ -639,14 +603,14 @@
         },
         "temp5_name": {
           "type": "text",
-          "label": "Sensor 5 – heat exchanger",
+          "label": "Sensor 5 – Wärmetauscher",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Heat exchanger"
+          "placeholder": "Wärmetauscher"
         },
         "temp5_value": {
           "type": "textSendTo",
@@ -667,14 +631,14 @@
         },
         "temp6_name": {
           "type": "text",
-          "label": "Sensor 6 – storage temperature",
+          "label": "Sensor 6 – Speichertemperatur",
           "newLine": false,
           "xs": 12,
           "sm": 6,
           "md": 3,
           "lg": 3,
           "xl": 3,
-          "placeholder": "Storage temperature"
+          "placeholder": "Speichertemperatur"
         },
         "temp6_value": {
           "type": "textSendTo",
@@ -695,7 +659,7 @@
         },
         "temp7_name": {
           "type": "text",
-          "label": "Sensor 7 (free)",
+          "label": "Sensor 7 (frei)",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -722,7 +686,7 @@
         },
         "temp8_name": {
           "type": "text",
-          "label": "Sensor 8 (free)",
+          "label": "Sensor 8 (frei)",
           "newLine": false,
           "xs": 12,
           "sm": 6,
@@ -749,7 +713,7 @@
         },
         "temp9_name": {
           "type": "text",
-          "label": "Sensor 9 (free)",
+          "label": "Sensor 9 (frei)",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -776,7 +740,7 @@
         },
         "temp10_name": {
           "type": "text",
-          "label": "Sensor 10 (free)",
+          "label": "Sensor 10 (frei)",
           "newLine": false,
           "xs": 12,
           "sm": 6,
@@ -803,7 +767,7 @@
         },
         "temp11_name": {
           "type": "text",
-          "label": "Sensor 11 (free)",
+          "label": "Sensor 11 (frei)",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -830,7 +794,7 @@
         },
         "temp12_name": {
           "type": "text",
-          "label": "Sensor 12 (free)",
+          "label": "Sensor 12 (frei)",
           "newLine": false,
           "xs": 12,
           "sm": 6,
@@ -864,8 +828,7 @@
       "items": {
         "ha": {
           "type": "staticText",
-          "text": "The Violet has fixed inputs (see labels). Only inputs with a name are created as data points; empty unit = suggestion in grey. The live value helps with the assignment.",
-          "newLine": true,
+          "text": "Die Violet hat feste Eingänge (siehe Beschriftung). Nur Eingänge mit Namen werden als Datenpunkte angelegt; leere Einheit = Vorschlag in grau. Der Live-Wert hilft bei der Zuordnung.",
           "xs": 12,
           "sm": 12,
           "md": 12,
@@ -874,18 +837,18 @@
         },
         "imp1_name": {
           "type": "text",
-          "label": "Pulse 1 – measuring water monitoring",
+          "label": "Impuls 1 – Messwasserüberwachung",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 4,
           "xl": 4,
-          "placeholder": "Probe flow"
+          "placeholder": "Sonden-Anströmung"
         },
         "imp1_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -918,25 +881,25 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "imp2_name": {
           "type": "text",
-          "label": "Pulse 2 – delivery rate",
+          "label": "Impuls 2 – Förderleistung",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 4,
           "xl": 4,
-          "placeholder": "Delivery rate"
+          "placeholder": "Förderleistung"
         },
         "imp2_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -969,25 +932,25 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc1_name": {
           "type": "text",
-          "label": "ADC1 – filter pressure sensor",
+          "label": "ADC1 – Filterdrucksensor",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 4,
           "xl": 4,
-          "placeholder": "Filter pressure"
+          "placeholder": "Filterdruck"
         },
         "adc1_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1020,25 +983,25 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc2_name": {
           "type": "text",
-          "label": "ADC2 – level probe",
+          "label": "ADC2 – Pegelsonde",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 4,
           "xl": 4,
-          "placeholder": "Water level"
+          "placeholder": "Füllstand"
         },
         "adc2_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1070,14 +1033,14 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc3_name": {
           "type": "text",
-          "label": "ADC3 – analog 4–20 mA",
+          "label": "ADC3 – Analog 4–20 mA",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -1087,7 +1050,7 @@
         },
         "adc3_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1119,14 +1082,14 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc4_name": {
           "type": "text",
-          "label": "ADC4 – analog 4–20 mA",
+          "label": "ADC4 – Analog 4–20 mA",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -1136,7 +1099,7 @@
         },
         "adc4_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1168,25 +1131,25 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc5_name": {
           "type": "text",
-          "label": "ADC5 – analog 0–10 V",
+          "label": "ADC5 – Analog 0–10 V",
           "newLine": true,
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 4,
           "xl": 4,
-          "placeholder": "e.g. humidity"
+          "placeholder": "z. B. Luftfeuchte"
         },
         "adc5_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1218,14 +1181,14 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
         },
         "adc6_name": {
           "type": "text",
-          "label": "ADC6 – analog input 6",
+          "label": "ADC6 – Analogeingang 6",
           "newLine": true,
           "xs": 12,
           "sm": 6,
@@ -1235,7 +1198,7 @@
         },
         "adc6_unit": {
           "type": "autocomplete",
-          "label": "Unit",
+          "label": "Einheit",
           "options": [
             "bar",
             "mbar",
@@ -1267,7 +1230,7 @@
             "opacity": 0.85
           },
           "xs": 6,
-          "sm": 3,
+          "sm": 4,
           "md": 3,
           "lg": 3,
           "xl": 3
@@ -1276,22 +1239,11 @@
     },
     "tabRelay": {
       "type": "panel",
-      "label": "Relays",
+      "label": "Relais",
       "items": {
-        "hrinfo": {
-          "type": "staticText",
-          "text": "Give the relays a name, e.g. \"Garden light\". Named relays appear with their name in ioBroker and in the relay view of the pool display.",
-          "newLine": true,
-          "xs": 12,
-          "sm": 12,
-          "md": 12,
-          "lg": 12,
-          "xl": 12,
-          "hidden": "data.use_ext1 !== true && data.use_ext2 !== true"
-        },
         "hr1": {
           "type": "header",
-          "text": "Relay extension 1",
+          "text": "Relaiserweiterung 1",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -1303,7 +1255,7 @@
         },
         "ext1_1_name": {
           "type": "text",
-          "label": "EXT1.1",
+          "label": "Relais EXT1.1",
           "newLine": true,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1314,7 +1266,7 @@
         },
         "ext1_2_name": {
           "type": "text",
-          "label": "EXT1.2",
+          "label": "Relais EXT1.2",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1325,7 +1277,7 @@
         },
         "ext1_3_name": {
           "type": "text",
-          "label": "EXT1.3",
+          "label": "Relais EXT1.3",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1336,7 +1288,7 @@
         },
         "ext1_4_name": {
           "type": "text",
-          "label": "EXT1.4",
+          "label": "Relais EXT1.4",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1347,7 +1299,7 @@
         },
         "ext1_5_name": {
           "type": "text",
-          "label": "EXT1.5",
+          "label": "Relais EXT1.5",
           "newLine": true,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1358,7 +1310,7 @@
         },
         "ext1_6_name": {
           "type": "text",
-          "label": "EXT1.6",
+          "label": "Relais EXT1.6",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1369,7 +1321,7 @@
         },
         "ext1_7_name": {
           "type": "text",
-          "label": "EXT1.7",
+          "label": "Relais EXT1.7",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1380,7 +1332,7 @@
         },
         "ext1_8_name": {
           "type": "text",
-          "label": "EXT1.8",
+          "label": "Relais EXT1.8",
           "newLine": false,
           "hidden": "!data.use_ext1",
           "xs": 12,
@@ -1391,7 +1343,7 @@
         },
         "hr2": {
           "type": "header",
-          "text": "Relay extension 2",
+          "text": "Relaiserweiterung 2",
           "size": 5,
           "newLine": true,
           "xs": 12,
@@ -1403,7 +1355,7 @@
         },
         "ext2_1_name": {
           "type": "text",
-          "label": "EXT2.1",
+          "label": "Relais EXT2.1",
           "newLine": true,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1414,7 +1366,7 @@
         },
         "ext2_2_name": {
           "type": "text",
-          "label": "EXT2.2",
+          "label": "Relais EXT2.2",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1425,7 +1377,7 @@
         },
         "ext2_3_name": {
           "type": "text",
-          "label": "EXT2.3",
+          "label": "Relais EXT2.3",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1436,7 +1388,7 @@
         },
         "ext2_4_name": {
           "type": "text",
-          "label": "EXT2.4",
+          "label": "Relais EXT2.4",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1447,7 +1399,7 @@
         },
         "ext2_5_name": {
           "type": "text",
-          "label": "EXT2.5",
+          "label": "Relais EXT2.5",
           "newLine": true,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1458,7 +1410,7 @@
         },
         "ext2_6_name": {
           "type": "text",
-          "label": "EXT2.6",
+          "label": "Relais EXT2.6",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1469,7 +1421,7 @@
         },
         "ext2_7_name": {
           "type": "text",
-          "label": "EXT2.7",
+          "label": "Relais EXT2.7",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1480,7 +1432,7 @@
         },
         "ext2_8_name": {
           "type": "text",
-          "label": "EXT2.8",
+          "label": "Relais EXT2.8",
           "newLine": false,
           "hidden": "!data.use_ext2",
           "xs": 12,
@@ -1491,14 +1443,13 @@
         },
         "hrnone": {
           "type": "staticText",
-          "text": "No relay extension selected (tab \"Functions\").",
-          "newLine": true,
+          "text": "Keine Relaiserweiterung ausgewählt (Reiter „Funktionen“).",
+          "hidden": "data.use_ext1 || data.use_ext2",
           "xs": 12,
           "sm": 12,
           "md": 12,
           "lg": 12,
-          "xl": 12,
-          "hidden": "data.use_ext1 || data.use_ext2"
+          "xl": 12
         }
       }
     }
