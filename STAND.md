@@ -26,6 +26,7 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
   - npm install hängt in der Claude-Umgebung → Änderungen an Abhängigkeiten über einmaligen GitHub-Workflow (Commit zurück auf dev); Ergebnisse von Läufen per öffentlicher API: api.github.com/repos/AlPi-BRV/ioBroker.violet/commits/<sha>/check-runs
   - Noch offen (nur Hinweise): i18n-Kurzformat (S5601), CHANGELOG_OLD.md (W6020)
   - Branch-Schutz für main NICHT aktivieren (Claude pusht direkt nach main nach Test-OK)
+- npm-Plan (Alex, 2026-10-11: Adapter reif für Tester, bleibt 0.x): 1) 2FA im npm-Konto alpi-brv 2) Erstveröffentlichung 0.6.7 von Hand auf berry5 (npm pack github:AlPi-BRV/ioBroker.violet#main, npm publish) 3) npm owner add bluefox iobroker.violet 4) Trusted Publisher auf npmjs.com (AlPi-BRV/ioBroker.violet, test-and-release.yml) 5) danach Releases per release-script + Tag 6) PR an ioBroker.repositories (latest) + Forum-Testthread
 - Alex: E8001 About-Text + E8002 Topics im GitHub-Repo erledigt (2026-10-11, ggf. später ergänzen); E2000 npm-Veröffentlichung (npm-Konto alpi-brv vorhanden; 2FA aktivieren; Veröffentlichung später per GitHub Actions / Trusted Publishing statt Token)
 - Status-Codes geklärt (offizielle Beschreibung, docs/getReadings-api.txt): 0 Auto aus, 1 Auto an, 2 Auto durch Regel AUS (z. B. Heizung bei Pumpe aus), 3 Auto durch Notfallregel AN, 4 Manuell an, 5 Aus durch Notfallregel, 6 Manuell aus; DMX nur 0/1/4/6; PVSURPLUS 0 aus, 1 an (Digitaleingang), 2 an (HTTP)
 - Idee: DOS_x_USE (0/1) zeigt, welche Dosierung konfiguriert ist – könnte den Fragebogen vorbelegen

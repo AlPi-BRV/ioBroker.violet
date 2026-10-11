@@ -45,7 +45,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
 
-  # Deploys the final package to npm (only on version tags, e.g. v0.7.0)
+  # Deploys the final package to npm (only on version tags, e.g. v0.7.0).
+  # Uses npm trusted publishing (no token): configure it on npmjs.com for this repo and workflow file.
   deploy:
     needs: [check-and-lint, adapter-tests]
     if: |
@@ -60,5 +61,4 @@ jobs:
       - uses: ioBroker/testing-action-deploy@v1
         with:
           node-version: '22.x'
-          npm-token: ${{ secrets.NPM_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
