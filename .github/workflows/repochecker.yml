@@ -11,9 +11,9 @@ jobs:
   repochecker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
       - name: Run repochecker
         # Does not fail the job: E250 ("not on npm") is expected until the first npm release.
         run: npx -y @iobroker/repochecker https://github.com/${{ github.repository }} ${{ github.ref_name }} || true

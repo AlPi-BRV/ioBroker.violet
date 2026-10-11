@@ -94,8 +94,6 @@ Im Pool-Display erscheint eine neue Meldung als blinkender gelber Punkt in der F
 
 Den Adapter im ioBroker-Admin unter **Adapter** installieren.
 
-Testversionen gibt es als `.tgz`-Datei: Adapter → „Benutzerdefiniert installieren“ → „Aus Datei“ → Datei auswählen → „Installieren“.
-
 Nach einem Update die Instanz neu starten.
 
 ## Häufige Fragen

@@ -1,4 +1,4 @@
-# Erzeugt admin/jsonConfig.json (englische Grundtexte) und admin/i18n/<lang>/translations.json
+# Erzeugt admin/jsonConfig.json (englische Grundtexte) und admin/i18n/<lang>.json
 # Aufruf: python3 tools/i18n_admin.py   (im Adapter-Verzeichnis)
 import json, os
 
@@ -368,7 +368,7 @@ if missing:
 
 json.dump(config, open('admin/jsonConfig.json', 'w'), indent=2, ensure_ascii=False)
 for lang in LANGS:
-    os.makedirs(f'admin/i18n/{lang}', exist_ok=True)
+    os.makedirs('admin/i18n', exist_ok=True)
     data = {s: (tr(s, lang) if s in T else s) for s in sorted(used)}
-    json.dump(data, open(f'admin/i18n/{lang}/translations.json', 'w'), indent=2, ensure_ascii=False)
+    json.dump(data, open(f'admin/i18n/{lang}.json', 'w'), indent=2, ensure_ascii=False)
 print(f'{len(used)} Texte, {len(LANGS)} Sprachen geschrieben')

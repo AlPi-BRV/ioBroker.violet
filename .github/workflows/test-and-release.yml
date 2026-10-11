@@ -25,9 +25,9 @@ jobs:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
     runs-on: ubuntu-latest
     steps:
-      - uses: ioBroker/testing-action-check@v1
+      - uses: ioBroker/testing-action-check@v2
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           lint: true
 
   # Runs adapter tests on all supported node versions and OSes
@@ -37,7 +37,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [22.x, 24.x]
+        node-version: [22.x, 24.x, 26.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: ioBroker/testing-action-adapter@v1
@@ -60,5 +60,5 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           github-token: ${{ secrets.GITHUB_TOKEN }}

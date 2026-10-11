@@ -101,8 +101,6 @@ Served by the adapter itself (built-in web server, no other adapters required):
 
 Install the adapter in the ioBroker admin under **Adapters**.
 
-Test versions are provided as a `.tgz` file: Adapters → "Install from custom URL" → "From file" → select the file → "Install".
-
 Restart the instance after an update.
 
 ## FAQ
@@ -119,6 +117,9 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.9 (2026-10-11)
+- Maintenance according to the ioBroker repository checker: admin >= 7.6.20, tests with Node.js 22/24/26, translation files in short format (admin/i18n/<lang>.json), dependabot settings
+
 ### 0.6.8 (2026-10-11)
 - Fix: water values (and pool temperature) stayed frozen for about 2 hours after the pump started – the Violet writes `PUMP_LAST_ON` in local time; the runtime is now calculated against the Violet clock
 
@@ -154,42 +155,7 @@ Restart the instance after an update.
 - Flocculant (dosed today) shown in the pool display
 - Author contact updated
 
-### 0.5.3 (2026-10-10)
-- Pool display: runtimes without "today" so the line no longer wraps
-
-### 0.5.2 (2026-10-10)
-- Circulated water volume of the day: new tab "Pump" (delivery rate per level, with absorber / heating), data point `pumpe.umwaelzung_heute`, shown in the pool display
-- Pool display: humidity label and value stacked under filter pressure
-
-### 0.5.1 (2026-10-10)
-- Pool display: colons of temperatures and water values aligned, more space between label and value
-
-### 0.5.0 (2026-10-10)
-- Pool display: larger font and more line spacing, selectable font (Verdana, Arial, system font)
-- Pool display: speed levels in the pump row (active level green), PV indicator, light row with DMX scenes
-- Pool display: relay view via button in the header, footer shows "Violet firmware", logo removed
-- Violet messages: data points `meldungen.*`, blinking notice in the pool display, click opens the Violet
-- Data point names in German and English, status texts in the system language
-- Configuration translated into 11 languages, English README, log messages in English
-- DMX scenes now as channels with `status`/`aktiv`/`schalten`
-
-### 0.4.2 (2026-10-09)
-- "Pool dashboard" renamed to "pool display"; README updated
-
-### 0.4.1 (2026-10-09)
-- Official Violet logo (with permission of PoolDigital)
-
-### 0.4.0 (2026-10-09)
-- Built-in web server for the pool display (port 8099)
-
-### 0.3.0 (2026-10-09)
-- Switching ON/OFF/AUTO (main switch in the configuration; dosing and cover not switchable)
-
-### 0.2.0 (2026-10-09)
-- Fixed data point structure, questionnaire in the configuration, names for sensors and relays
-
-### 0.1.0 (2026-10-09)
-- First test version
+Older changes: [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
 
 ## Trademarks
 

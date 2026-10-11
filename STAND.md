@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.8 auf Zweig `dev` (zum Testen), `main` = 0.6.8 (öffentlich, npm über GitHub-Tag)
+Stand: 2026-10-11, Version 0.6.9 auf Zweig `dev` (zum Testen), `main` = 0.6.8 (öffentlich, npm über GitHub-Tag)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -25,6 +25,8 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - www/index.html – Pool-Display (baut sich aus info.features auf; Demo: ?demo=1&lang=de)
 
 ## Offen
+- ioBroker-Bot (Issue #4, prüft main nach npm-Veröffentlichung) – in 0.6.9 umgesetzt: mocha raus, admin 7.6.20, news nur npm-Versionen, Deploy Node 24, Tests Node 22/24/26, testing-action-check@v2, README ohne „custom URL“, dependabot cooldown/ignore @types/node major/cron/limit 15, CHANGELOG_OLD.md, i18n Kurzformat. Nicht umgesetzt: S8913 Automerge für Dependabot. Issue #4 schließt der Bot selbst, wenn behoben
+- package-lock.json nach Änderungen an package.json: einmaligen Workflow wie .github/workflows/update-lock.yml (Inhalt in Git-Historie) pushen, Commit mit [skip ci]
 - Checker-Lauf 0.6.5 (repochecker 5.22.10, GitHub Action) – in 0.6.6 behoben: E0029 Node>=22, E0036 testing 6.3, E1057 admin 7.6.17, E6012/E6013 README-Installation, E9006 .commitinfo, W0034 adapter-core 3.4.3, W5508 xs=12, S8901 dependabot
 - 0.6.7: ESLint/Prettier (@iobroker/eslint-config, Code formatiert, lint 0 Fehler), package-lock.json, release-script (.releaseconfig.json), adapter-dev, @types/node, tsconfig, .vscode/settings.json, test-and-release.yml (Tests Linux/Windows/macOS, Node 22+24: alles grün; Deploy nur bei Tag v*)
   - npm install hängt in der Claude-Umgebung → Änderungen an Abhängigkeiten über einmaligen GitHub-Workflow (Commit zurück auf dev); Ergebnisse von Läufen per öffentlicher API: api.github.com/repos/AlPi-BRV/ioBroker.violet/commits/<sha>/check-runs
