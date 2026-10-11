@@ -127,6 +127,10 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.2 (2026-10-11)
+- Water values (pH, redox, chlorine) frozen while the pump is off (option, data point `wasser.eingefroren`), no red marking without flow
+- Pool display reloads itself after an adapter update
+
 ### 0.6.1 (2026-10-11)
 - Status codes corrected according to the official interface description of PoolDigital: 2 = auto, blocked by rule (was shown as manual on), 5 = off by emergency rule
 

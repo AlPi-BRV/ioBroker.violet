@@ -6,6 +6,8 @@ LANGS = ['en', 'de', 'ru', 'pt', 'nl', 'fr', 'it', 'es', 'pl', 'uk', 'zh-cn']
 
 # Schlüssel = englischer Text; Werte in der Reihenfolge: de, ru, pt, nl, fr, it, es, pl, uk, zh-cn
 T = {
+    'Freeze water values while the pump is off': ['Wasserwerte bei stehender Pumpe einfrieren', 'Замораживать показатели воды при выключенном насосе', 'Congelar valores da água com a bomba parada', 'Waterwaarden bevriezen bij stilstaande pomp', "Figer les valeurs de l'eau pompe arrêtée", "Congela i valori dell'acqua a pompa ferma", 'Congelar valores del agua con la bomba parada', 'Zamrażaj parametry wody przy zatrzymanej pompie', 'Заморожувати показники води при зупиненому насосі', '水泵停止时冻结水质数值'],
+    'Electrodes only measure correctly with flow. With the pump off the last valid values are kept (marked with * in the pool display, no red marking).': ['Elektroden messen nur mit Anströmung richtig. Bei stehender Pumpe bleiben die letzten gültigen Werte stehen (im Pool-Display mit * markiert, keine rote Markierung).', 'Электроды измеряют правильно только при протоке. При выключенном насосе сохраняются последние верные значения (на дисплее отмечены *, без красной подсветки).', 'Os elétrodos só medem corretamente com caudal. Com a bomba parada mantêm-se os últimos valores válidos (marcados com * no display, sem marcação vermelha).', 'Elektroden meten alleen correct met doorstroming. Bij stilstaande pomp blijven de laatste geldige waarden staan (in het display met * gemarkeerd, geen rode markering).', "Les électrodes ne mesurent correctement qu'avec un débit. Pompe arrêtée, les dernières valeurs valides sont conservées (marquées * sur l'affichage, sans rouge).", 'Gli elettrodi misurano correttamente solo con flusso. A pompa ferma restano gli ultimi valori validi (contrassegnati con * nel display, senza rosso).', 'Los electrodos solo miden bien con caudal. Con la bomba parada se mantienen los últimos valores válidos (marcados con * en la pantalla, sin rojo).', 'Elektrody mierzą poprawnie tylko przy przepływie. Przy zatrzymanej pompie pozostają ostatnie poprawne wartości (oznaczone * na wyświetlaczu, bez czerwieni).', 'Електроди вимірюють правильно лише з протоком. При зупиненому насосі зберігаються останні правильні значення (на дисплеї позначено *, без червоного).', '电极只有在有水流时才能正确测量。水泵停止时保留最后的有效值（显示屏中以 * 标记，不标红）。'],
 
     # 0.6.0
     'pH electrode': ['pH-Elektrode', 'pH-электрод', 'Elétrodo de pH', 'pH-elektrode', 'Électrode pH', 'Elettrodo pH', 'Electrodo de pH', 'Elektroda pH', 'pH-електрод', 'pH 电极'],
@@ -244,6 +246,7 @@ func = {
     'use_ph': cb('pH electrode', newLine=True),
     'use_redox': cb('Redox electrode'),
     'use_chlor_el': cb('Chlorine electrode', 'Optional, not a standard electrode'),
+    'water_freeze': cb('Freeze water values while the pump is off', 'Electrodes only measure correctly with flow. With the pump off the last valid values are kept (marked with * in the pool display, no red marking).', '!data.use_ph && !data.use_redox && !data.use_chlor_el'),
     'use_pump': cb('Filter pump', newLine=True),
     'use_pump_rpm': cb('Pump with speed levels', 'Only for speed-controlled pumps with levels 0–3', '!data.use_pump'),
     'use_backwash': cb('Automatic backwash', newLine=True),

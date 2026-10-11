@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "news": {
+      "0.6.2": {
+        "en": "Water values frozen while the pump is off (option), no red marking without flow; pool display reloads itself after an update",
+        "de": "Wasserwerte bei stehender Pumpe eingefroren (Option), ohne Anströmung keine rote Markierung; Pool-Display lädt sich nach einem Update selbst neu",
+        "ru": "Показатели воды замораживаются при выключенном насосе (опция), без протока нет красной подсветки; дисплей перезагружается после обновления",
+        "pt": "Valores da água congelados com a bomba parada (opção), sem caudal sem marcação vermelha; o display recarrega após uma atualização",
+        "nl": "Waterwaarden bevroren bij stilstaande pomp (optie), zonder doorstroming geen rode markering; display herlaadt zich na een update",
+        "fr": "Valeurs de l’eau figées pompe arrêtée (option), pas de rouge sans débit ; l’affichage se recharge après une mise à jour",
+        "it": "Valori dell’acqua congelati a pompa ferma (opzione), senza flusso nessun rosso; il display si ricarica dopo un aggiornamento",
+        "es": "Valores del agua congelados con la bomba parada (opción), sin caudal sin rojo; la pantalla se recarga tras una actualización",
+        "pl": "Parametry wody zamrożone przy zatrzymanej pompie (opcja), bez przepływu bez czerwieni; wyświetlacz przeładowuje się po aktualizacji",
+        "uk": "Показники води заморожуються при зупиненому насосі (опція), без протоку без червоного; дисплей перезавантажується після оновлення",
+        "zh-cn": "水泵停止时冻结水质数值（可选），无水流时不标红；更新后显示屏自动刷新"
+      },
       "0.6.1": {
         "en": "Status codes corrected according to the official PoolDigital interface description: 2 = auto, blocked by rule; 5 = off by emergency rule",
         "de": "Status-Codes nach offizieller Schnittstellenbeschreibung von PoolDigital korrigiert: 2 = Automatik, durch Regel gesperrt; 5 = Aus durch Notfallregel",
@@ -236,6 +249,7 @@
     "use_ph": true,
     "use_redox": true,
     "use_chlor_el": false,
+    "water_freeze": true,
     "use_pump": true,
     "use_pump_rpm": false,
     "use_backwash": false,

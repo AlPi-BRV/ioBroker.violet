@@ -237,6 +237,17 @@
           "xl": 3,
           "tooltip": "Optional, not a standard electrode"
         },
+        "water_freeze": {
+          "type": "checkbox",
+          "label": "Freeze water values while the pump is off",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Electrodes only measure correctly with flow. With the pump off the last valid values are kept (marked with * in the pool display, no red marking).",
+          "hidden": "!data.use_ph && !data.use_redox && !data.use_chlor_el"
+        },
         "use_pump": {
           "type": "checkbox",
           "label": "Filter pump",

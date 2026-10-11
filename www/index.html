@@ -345,6 +345,7 @@ if (params.get('ohne')) {
 }
 
 let V = {};
+let loadedVersion = '';
 let F = { temps: [], relays: [], analog: [], messages: { enabled: false }, ranges: {}, rows: [], hero: [], vrelays: [] };
 let layoutSig = '';
 let relayView = false;
@@ -494,6 +495,8 @@ function tempText(n, d, unit = '°') {
 function rangeMark(elId, valId, key) {
   const e = $(elId), r = F.ranges[key];
   if (!e) return;
+  // ohne Anströmung (Pumpe aus / Werte eingefroren) keine Bewertung
+  if (V['wasser.eingefroren'] === true || V['pumpe.aktiv'] === false) { e.classList.remove('bad'); return; }
   const v = Number(V[valId]);
   const lo = r && r[0] !== null && r[0] !== undefined ? r[0] : null;
   const hi = r && r[1] !== null && r[1] !== undefined ? r[1] : null;
@@ -564,7 +567,8 @@ function render() {
     }
   }
 
-  setText('ph', fmt(V['wasser.ph'], 2)); setHtml('phmm', mm('wasser.ph', 2));
+  const star = V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : '';
+  setHtml('ph', fmt(V['wasser.ph'], 2) + star); setHtml('phmm', mm('wasser.ph', 2));
   rangeMark('ph', 'wasser.ph', 'ph'); rangeMark('rdx', 'wasser.redox', 'redox'); rangeMark('cl', 'wasser.chlor', 'chlor');
   rangeMark('botPh', 'wasser.ph', 'ph'); rangeMark('botRdx', 'wasser.redox', 'redox');
   if (has('dosierung.flockung.tagesmenge')) {
@@ -573,10 +577,10 @@ function render() {
   }
   setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('phmode', 'dosierung.ph_minus.status');
-  setText('rdx', fmt(V['wasser.redox'], 1)); setHtml('rdxmm', mm('wasser.redox', 1));
+  setHtml('rdx', fmt(V['wasser.redox'], 1) + star); setHtml('rdxmm', mm('wasser.redox', 1));
   setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('clmode', 'dosierung.chlor.status');
-  setText('cl', fmt(V['wasser.chlor'], 2)); setHtml('clmm', mm('wasser.chlor', 2));
+  setHtml('cl', fmt(V['wasser.chlor'], 2) + star); setHtml('clmm', mm('wasser.chlor', 2));
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
   document.querySelectorAll('[data-note]').forEach((e) => {
     const d = /bar/i.test(e.dataset.unit) ? 2 : 1;
@@ -621,8 +625,8 @@ function render() {
   const hw = $('hero').dataset.w, ha = $('hero').dataset.a;
   if (hw) $('heroWater').innerHTML = tempText(hw, 2);
   if (ha) $('heroAir').innerHTML = tempText(ha, 2);
-  $('botPh').textContent = `pH: ${fmt(V['wasser.ph'], 2)}`;
-  $('botRdx').textContent = `RedOx: ${fmt(V['wasser.redox'], 1)}`;
+  $('botPh').innerHTML = `pH: ${fmt(V['wasser.ph'], 2)}${V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : ''}`;
+  $('botRdx').innerHTML = `RedOx: ${fmt(V['wasser.redox'], 1)}${V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : ''}`;
   const fl = $('botFlow');
   if (fl.dataset.id) fl.textContent = `${fl.dataset.name}: ${fmt(V[fl.dataset.id], 2)} cm/s`;
   $('fw').textContent = `${t('fw')}: ${V['system.firmware'] ?? '–'}`;
@@ -748,10 +752,14 @@ $('conn').addEventListener('click', () => { if ($('conn').classList.contains('ms
 function applyFeatures() {
   try {
     const f = JSON.parse(V['info.features'] || '{}');
+    // neue Adapter-Version installiert → Seite neu laden, damit das Display aktuell ist
+    if (f.version && loadedVersion && f.version !== loadedVersion) { location.reload(); return; }
+    if (f.version) loadedVersion = f.version;
     F = {
       temps: f.temps || [], relays: f.relays || [], analog: f.analog || [],
       switching: !!f.switching, pumpRpm: !!f.pumpRpm, pv: !!f.pv, dmx: !!f.dmx,
       violetUrl: f.violetUrl || '', messages: f.messages || { enabled: false }, font: f.font || 'verdana', lang: f.lang,
+      waterFreeze: !!f.waterFreeze, version: f.version || '',
       ranges: f.ranges || {}, rows: f.rows || [], hero: f.hero || [], vrelays: f.vrelays || [], t1Pool: !!f.t1Pool,
     };
     if (!params.get('lang') && f.lang) LANG = String(f.lang).slice(0, 2) === 'de' ? 'de' : 'en';

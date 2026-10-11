@@ -94,6 +94,7 @@ class Violet extends utils.Adapter {
             if (this.config[k] === undefined) this.config[k] = v;
         }
 
+        this.version = require('./io-package.json').common.version;
         this.config.use_water = !!(this.config.use_ph || this.config.use_redox || this.config.use_chlor_el);
         this.defs = buildDefinitions(this.config);
         const flows = flowConfig(this.config);
@@ -153,6 +154,15 @@ class Violet extends utils.Adapter {
         if (this.config.temp1_pump_only && this.config.use_temp) {
             const st = await this.getStateAsync('temperatur.sensor1_pool');
             this.t1 = { value: st && typeof st.val === 'number' ? st.val : null };
+        }
+
+        // Elektroden bei stehender Pumpe einfrieren: Startwerte aus den vorhandenen Datenpunkten
+        if (this.config.water_freeze && this.config.use_water) {
+            this.wfreeze = {};
+            for (const [k, id] of [['pH_value', 'wasser.ph'], ['orp_value', 'wasser.redox'], ['pot_value', 'wasser.chlor']]) {
+                const st = await this.getStateAsync(id);
+                this.wfreeze[k] = st && typeof st.val === 'number' ? st.val : null;
+            }
         }
 
         // virtuelle Relais: fremde Datenpunkte (true/false), nur EIN/AUS
@@ -251,15 +261,31 @@ class Violet extends utils.Adapter {
     }
 
     async processData(data) {
-        if (this.t1) {
-            // läuft die Pumpe seit mindestens 3 Minuten, ist der Messwert realistisch
-            const raw = parseFloat(data.onewire1_value);
-            const running = pumpRunning(data);
+        // läuft die Pumpe seit mindestens 3 Minuten, sind Fühler in der Verrohrung und Elektroden realistisch
+        const running = pumpRunning(data);
+        if (running && !this.pumpSince) {
             const lastOn = parseFloat(data.PUMP_LAST_ON);
-            const since = lastOn > 0 ? (lastOn > 1e12 ? lastOn : lastOn * 1000) : this.t1.since || Date.now();
-            if (running && !this.t1.since) this.t1.since = since;
-            if (!running) this.t1.since = 0;
-            const settled = running && Date.now() - this.t1.since >= 3 * 60 * 1000;
+            this.pumpSince = lastOn > 0 ? (lastOn > 1e12 ? lastOn : lastOn * 1000) : Date.now();
+        }
+        if (!running) this.pumpSince = 0;
+        const settled = running && Date.now() - this.pumpSince >= 3 * 60 * 1000;
+        data.__PUMP_RUNNING = running;
+
+        if (this.wfreeze) {
+            // Elektroden messen nur mit Anströmung: bei stehender Pumpe letzte gültige Werte behalten
+            for (const k of ['pH_value', 'orp_value', 'pot_value']) {
+                const raw = parseFloat(data[k]);
+                if (settled || this.wfreeze[k] === undefined || this.wfreeze[k] === null) {
+                    if (Number.isFinite(raw)) this.wfreeze[k] = raw;
+                } else {
+                    data[k] = this.wfreeze[k];
+                }
+            }
+            data.__WATER_FROZEN = !settled;
+        }
+
+        if (this.t1) {
+            const raw = parseFloat(data.onewire1_value);
             if (Number.isFinite(raw) && (settled || this.t1.value === null)) this.t1.value = Math.round(raw * 100) / 100;
             if (this.t1.value !== null) {
                 data.__T1_POOL = this.t1.value;
@@ -424,6 +450,8 @@ class Violet extends utils.Adapter {
             pumpRpm: !!(c.use_pump && c.use_pump_rpm),
             volume: !!this.volume,
             t1Pool: !!this.t1,
+            waterFreeze: !!this.wfreeze,
+            version: this.version,
             ranges: {
                 ph: [num(c.range_ph_min), num(c.range_ph_max)],
                 redox: [num(c.range_redox_min), num(c.range_redox_max)],
