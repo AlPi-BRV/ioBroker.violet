@@ -304,11 +304,11 @@ A = [('imp1', 'IMP1_value', 'Pulse 1 – measuring water monitoring', 'Probe flo
 for k, key, label, ph, unit in A:
     n = {'type': 'text', 'label': label, 'newLine': True, **W(12, 6, 4, 4, 4)}
     if ph: n['placeholder'] = ph
-    u = {'type': 'autocomplete', 'label': 'Unit', 'options': units, 'freeSolo': True, **W(6, 3, 2, 2, 2)}
+    u = {'type': 'autocomplete', 'label': 'Unit', 'options': units, 'freeSolo': True, **W(12, 6, 2, 2, 2)}
     if unit: u['placeholder'] = unit
     analog[f'{k}_name'] = n
     analog[f'{k}_unit'] = u
-    analog[f'{k}_value'] = {'type': 'textSendTo', 'command': 'getAnalog', 'data': {'key': key}, 'container': 'div', 'style': {'paddingTop': 18, 'opacity': 0.85}, **W(6, 3, 3, 3, 3)}
+    analog[f'{k}_value'] = {'type': 'textSendTo', 'command': 'getAnalog', 'data': {'key': key}, 'container': 'div', 'style': {'paddingTop': 18, 'opacity': 0.85}, **W(12, 6, 3, 3, 3)}
 
 pump = {'hpump': static('Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.')}
 for st, label in [('p', 'Filter pump – m³/h'), ('1', 'Level 1 (ECO) – m³/h'), ('2', 'Level 2 (Normal) – m³/h'), ('3', 'Level 3 (Boost) – m³/h')]:
@@ -332,7 +332,7 @@ relays['hrnone'] = static('No relay extension selected (tab "Functions").', 'dat
 
 disp = {'hrange': hdr('Optimal ranges – values outside are shown in red (empty = no check)')}
 for k, lbl, nl in [('range_ph_min', 'pH from', True), ('range_ph_max', 'pH to', False), ('range_redox_min', 'Redox from (mV)', True), ('range_redox_max', 'Redox to (mV)', False), ('range_cl_min', 'Chlorine from (mg/l)', True), ('range_cl_max', 'Chlorine to (mg/l)', False)]:
-    disp[k] = {'type': 'number', 'label': lbl, 'min': 0, 'max': 2000, 'step': 0.01, 'newLine': nl, **W(6, 4, 3, 3, 3)}
+    disp[k] = {'type': 'number', 'label': lbl, 'min': 0, 'max': 2000, 'step': 0.01, 'newLine': nl, **W(12, 6, 3, 3, 3)}
 disp['hrows'] = hdr('Temperature rows of the pool display', '!data.use_temp')
 disp['hrowsinfo'] = static('Per row a main sensor and a small second line. The lists show name and current value (instance must be running). All rows empty = automatic.', '!data.use_temp', True)
 for n in range(1, 5):

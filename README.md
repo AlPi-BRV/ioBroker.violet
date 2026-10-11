@@ -99,19 +99,11 @@ Served by the adapter itself (built-in web server, no other adapters required):
 
 ## Installation
 
-**In the ioBroker admin** (recommended): Adapters → GitHub icon ("Install from custom URL")
+Install the adapter in the ioBroker admin under **Adapters**.
 
-- **From GitHub:** `https://github.com/AlPi-BRV/ioBroker.violet`
-- **From file:** select the `.tgz` file → "Install"
+Test versions are provided as a `.tgz` file: Adapters → "Install from custom URL" → "From file" → select the file → "Install".
 
 Restart the instance after an update.
-
-**Alternatively via shell:**
-
-```bash
-cd /opt/iobroker
-iobroker url https://github.com/AlPi-BRV/ioBroker.violet
-```
 
 ## FAQ
 
@@ -127,6 +119,9 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.6 (2026-10-11)
+- Repository checker: Node.js 22 required, dependencies updated (adapter-core 3.4.3, admin 7.6.17), installation notes adjusted, admin layout on small screens
+
 ### 0.6.5 (2026-10-11)
 - Repository checker: old news entries removed from io-package.json (max. 7), obsolete `common.main` removed
 

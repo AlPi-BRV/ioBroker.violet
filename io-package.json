@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.5",
+    "version": "0.6.6",
     "news": {
+      "0.6.6": {
+        "en": "Node.js 22 required; dependencies updated; installation notes; admin layout on small screens",
+        "de": "Node.js 22 erforderlich; Abhängigkeiten aktualisiert; Installationshinweise; Admin-Layout auf kleinen Bildschirmen",
+        "ru": "Требуется Node.js 22; зависимости обновлены; указания по установке; вид настроек на маленьких экранах",
+        "pt": "Node.js 22 necessário; dependências atualizadas; notas de instalação; layout do admin em ecrãs pequenos",
+        "nl": "Node.js 22 vereist; afhankelijkheden bijgewerkt; installatie-instructies; admin-indeling op kleine schermen",
+        "fr": "Node.js 22 requis ; dépendances mises à jour ; notes d’installation ; mise en page admin sur petits écrans",
+        "it": "Node.js 22 richiesto; dipendenze aggiornate; note di installazione; layout admin su schermi piccoli",
+        "es": "Node.js 22 requerido; dependencias actualizadas; notas de instalación; diseño del admin en pantallas pequeñas",
+        "pl": "Wymagany Node.js 22; zaktualizowane zależności; wskazówki instalacji; układ admina na małych ekranach",
+        "uk": "Потрібен Node.js 22; залежності оновлено; вказівки щодо встановлення; вигляд налаштувань на малих екранах",
+        "zh-cn": "需要 Node.js 22；更新依赖项；安装说明；小屏幕上的管理界面布局"
+      },
       "0.6.5": {
         "en": "Repository checker: old news entries removed (max. 7), obsolete \"common.main\" removed",
         "de": "Repository-Prüfung: alte Änderungshinweise entfernt (max. 7), veraltetes „common.main“ entfernt",
@@ -80,19 +93,6 @@
         "pl": "Nowa zakładka „Wyświetlacz” (zakresy optymalne, wiersze temperatur, duży wskaźnik), wirtualne przekaźniki, temperatura wody zamrożona przy zatrzymanej pompie, wybór elektrod, flokulant na wyświetlaczu, chlor lub elektroliza",
         "uk": "Нова вкладка «Дисплей» (оптимальні діапазони, рядки температур, велика індикація), віртуальні реле, температура води заморожується при зупиненому насосі, вибір електродів, флокулянт на дисплеї, хлор або електроліз",
         "zh-cn": "新增“显示屏”选项卡（最佳范围、温度行、大显示），虚拟继电器，水泵停止时冻结水温，可选电极，显示屏显示絮凝剂，氯或电解二选一"
-      },
-      "0.5.3": {
-        "en": "Pool display: runtimes without \"today\" so the line no longer wraps",
-        "de": "Pool-Display: Laufzeiten ohne „heute“, damit die Zeile nicht mehr umbricht",
-        "ru": "Дисплей: время работы без «сегодня», строка больше не переносится",
-        "pt": "Display: tempos de funcionamento sem «hoje», a linha já não quebra",
-        "nl": "Display: looptijden zonder „vandaag”, de regel loopt niet meer door",
-        "fr": "Affichage : durées sans « aujourd’hui », la ligne ne passe plus à la ligne",
-        "it": "Display: tempi di funzionamento senza «oggi», la riga non va più a capo",
-        "es": "Pantalla: tiempos de funcionamiento sin «hoy», la línea ya no se divide",
-        "pl": "Wyświetlacz: czasy pracy bez „dzisiaj”, wiersz już się nie łamie",
-        "uk": "Дисплей: час роботи без «сьогодні», рядок більше не переноситься",
-        "zh-cn": "显示屏：运行时间去掉“今天”，不再换行"
       }
     },
     "titleLang": {
@@ -152,7 +152,7 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=7.0.0"
+        "admin": ">=7.6.17"
       }
     ],
     "messagebox": true,

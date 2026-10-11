@@ -92,10 +92,9 @@ Im Pool-Display erscheint eine neue Meldung als blinkender gelber Punkt in der F
 
 ## Installation
 
-**Im ioBroker-Admin** (empfohlen): Adapter → GitHub-Symbol („Benutzerdefiniert installieren“)
+Den Adapter im ioBroker-Admin unter **Adapter** installieren.
 
-- **Von GitHub:** `https://github.com/AlPi-BRV/ioBroker.violet`
-- **Aus Datei:** die `.tgz`-Datei auswählen → „Installieren“
+Testversionen gibt es als `.tgz`-Datei: Adapter → „Benutzerdefiniert installieren“ → „Aus Datei“ → Datei auswählen → „Installieren“.
 
 Nach einem Update die Instanz neu starten.
 
