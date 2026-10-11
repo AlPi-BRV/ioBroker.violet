@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.7 auf Zweig `dev` (zum Testen), `main` = 0.6.7 (öffentlich)
+Stand: 2026-10-11, Version 0.6.8 auf Zweig `dev` (zum Testen), `main` = 0.6.7 (öffentlich)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -9,6 +9,9 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Entwicklung auf `dev`; nach `main` erst nach Alex' Test-OK
 - Konfiguration wird erzeugt: `python3 tools/i18n_admin.py` (jsonConfig + 11 Sprachen)
 - Versionswechsel: io-package.json (version + news in 11 Sprachen), package.json, README-Changelog
+
+## Wissen
+- Violet: *_LAST_ON/*_LAST_OFF sind Ortszeit als Unix-Epoch (nicht echtes UTC) → Laufzeit immer gegen die Violet-Uhr (Felder date + time) rechnen (0.6.8)
 
 ## Grundsätze (von Alex festgelegt)
 - Adapter liest und schaltet, konfiguriert die Violet NIE (keine Sollwerte, Kalibrierung, Fördermengen, Zeitpläne)

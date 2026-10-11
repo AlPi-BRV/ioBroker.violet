@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.7",
+    "version": "0.6.8",
     "news": {
+      "0.6.8": {
+        "en": "Fix: water values stayed frozen for about 2 hours after the pump started (time zone in PUMP_LAST_ON)",
+        "de": "Korrektur: Wasserwerte blieben nach Pumpenstart rund 2 Stunden eingefroren (Zeitzone in PUMP_LAST_ON)",
+        "ru": "Исправлено: показатели воды оставались замороженными ~2 часа после запуска насоса (часовой пояс в PUMP_LAST_ON)",
+        "pt": "Correção: valores da água ficavam congelados cerca de 2 horas após ligar a bomba (fuso horário em PUMP_LAST_ON)",
+        "nl": "Oplossing: waterwaarden bleven na het starten van de pomp ca. 2 uur bevroren (tijdzone in PUMP_LAST_ON)",
+        "fr": "Correctif : valeurs de l’eau figées env. 2 heures après le démarrage de la pompe (fuseau horaire dans PUMP_LAST_ON)",
+        "it": "Correzione: valori dell’acqua congelati per circa 2 ore dopo l’avvio della pompa (fuso orario in PUMP_LAST_ON)",
+        "es": "Corrección: los valores del agua quedaban congelados unas 2 horas tras arrancar la bomba (zona horaria en PUMP_LAST_ON)",
+        "pl": "Poprawka: wartości wody pozostawały zamrożone ok. 2 godziny po uruchomieniu pompy (strefa czasowa w PUMP_LAST_ON)",
+        "uk": "Виправлено: показники води залишалися замороженими ~2 години після запуску насоса (часовий пояс у PUMP_LAST_ON)",
+        "zh-cn": "修复：水泵启动后水质值约 2 小时保持冻结（PUMP_LAST_ON 中的时区）"
+      },
       "0.6.7": {
         "en": "Code formatted to ioBroker standard (ESLint/Prettier), automatic tests on GitHub",
         "de": "Code nach ioBroker-Standard formatiert (ESLint/Prettier), automatische Tests auf GitHub",
@@ -80,19 +93,6 @@
         "pl": "Parametry wody zamrożone przy zatrzymanej pompie (opcja), bez przepływu bez czerwieni; wyświetlacz przeładowuje się po aktualizacji",
         "uk": "Показники води заморожуються при зупиненому насосі (опція), без протоку без червоного; дисплей перезавантажується після оновлення",
         "zh-cn": "水泵停止时冻结水质数值（可选），无水流时不标红；更新后显示屏自动刷新"
-      },
-      "0.6.1": {
-        "en": "Status codes corrected according to the official PoolDigital interface description: 2 = auto, blocked by rule; 5 = off by emergency rule",
-        "de": "Status-Codes nach offizieller Schnittstellenbeschreibung von PoolDigital korrigiert: 2 = Automatik, durch Regel gesperrt; 5 = Aus durch Notfallregel",
-        "ru": "Коды состояния исправлены по официальному описанию PoolDigital: 2 = авто, заблокировано правилом; 5 = выкл. аварийным правилом",
-        "pt": "Códigos de estado corrigidos segundo a descrição oficial da PoolDigital: 2 = auto, bloqueado por regra; 5 = desligado por regra de emergência",
-        "nl": "Statuscodes gecorrigeerd volgens de officiële beschrijving van PoolDigital: 2 = auto, geblokkeerd door regel; 5 = uit door noodregel",
-        "fr": "Codes d’état corrigés selon la description officielle de PoolDigital : 2 = auto, bloqué par règle ; 5 = arrêt par règle d’urgence",
-        "it": "Codici di stato corretti secondo la descrizione ufficiale di PoolDigital: 2 = auto, bloccato da regola; 5 = spento da regola di emergenza",
-        "es": "Códigos de estado corregidos según la descripción oficial de PoolDigital: 2 = auto, bloqueado por regla; 5 = apagado por regla de emergencia",
-        "pl": "Kody stanu poprawione wg oficjalnego opisu PoolDigital: 2 = auto, zablokowane regułą; 5 = wył. regułą awaryjną",
-        "uk": "Коди стану виправлено за офіційним описом PoolDigital: 2 = авто, заблоковано правилом; 5 = вимк. аварійним правилом",
-        "zh-cn": "根据 PoolDigital 官方接口说明修正状态码：2 = 自动，被规则阻止；5 = 紧急规则关闭"
       }
     },
     "titleLang": {

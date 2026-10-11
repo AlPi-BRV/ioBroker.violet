@@ -119,6 +119,9 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.8 (2026-10-11)
+- Fix: water values (and pool temperature) stayed frozen for about 2 hours after the pump started – the Violet writes `PUMP_LAST_ON` in local time; the runtime is now calculated against the Violet clock
+
 ### 0.6.7 (2026-10-11)
 - Code formatted to the ioBroker standard (ESLint/Prettier), no functional changes
 - Automatic tests on GitHub (test-and-release workflow), release script prepared

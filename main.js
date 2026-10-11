@@ -36,6 +36,45 @@ function pumpRunning(d) {
     return [1, 3, 4].includes(parseInt(d.PUMP, 10));
 }
 
+/**
+ * Current Violet clock as epoch seconds, built from "date" (TT.MM.YYYY) and "time" (HH:MM:SS).
+ * The Violet writes its *_LAST_ON values in the same local-time-as-UTC convention,
+ * so the difference between both is the real runtime regardless of the time zone.
+ *
+ * @param {Record<string, any>} d getReadings data
+ * @returns {number|null} seconds or null if not available
+ */
+function violetClock(d) {
+    const dm = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(String(d.date || '').trim());
+    const tm = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(String(d.time || '').trim());
+    if (!dm || !tm) {
+        return null;
+    }
+    return Date.UTC(+dm[3], +dm[2] - 1, +dm[1], +tm[1], +tm[2], +tm[3]) / 1000;
+}
+
+/**
+ * Seconds the filter pump has been running.
+ * Uses PUMP_LAST_ON against the Violet clock; falls back to the adapter's own timer.
+ *
+ * @param {Record<string, any>} d getReadings data
+ * @param {number} since time (ms) at which the adapter first saw the pump running
+ * @returns {number} seconds
+ */
+function pumpRunSeconds(d, since) {
+    const own = since ? (Date.now() - since) / 1000 : 0;
+    const lastOn = parseFloat(d.PUMP_LAST_ON);
+    const now = violetClock(d);
+    if (lastOn > 0 && now !== null) {
+        const sec = now - lastOn;
+        // a value in the future would be implausible (e.g. clock not set) – then the own timer applies
+        if (sec >= 0) {
+            return Math.max(sec, own);
+        }
+    }
+    return own;
+}
+
 class Violet extends utils.Adapter {
     constructor(options = {}) {
         super({ ...options, name: 'violet' });
@@ -309,13 +348,12 @@ class Violet extends utils.Adapter {
         // läuft die Pumpe seit mindestens 3 Minuten, sind Fühler in der Verrohrung und Elektroden realistisch
         const running = pumpRunning(data);
         if (running && !this.pumpSince) {
-            const lastOn = parseFloat(data.PUMP_LAST_ON);
-            this.pumpSince = lastOn > 0 ? (lastOn > 1e12 ? lastOn : lastOn * 1000) : Date.now();
+            this.pumpSince = Date.now();
         }
         if (!running) {
             this.pumpSince = 0;
         }
-        const settled = running && Date.now() - this.pumpSince >= 3 * 60 * 1000;
+        const settled = running && pumpRunSeconds(data, this.pumpSince) >= 3 * 60;
         data.__PUMP_RUNNING = running;
 
         if (this.wfreeze) {
