@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.6 auf Zweig `dev` (zum Testen), `main` = 0.6.4 (öffentlich)
+Stand: 2026-10-11, Version 0.6.6 auf Zweig `dev` (zum Testen), `main` = 0.6.6 (öffentlich)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -36,4 +36,6 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
   - news in io-package.json: höchstens 7 Einträge behalten (vollständige Historie im README-Changelog)
   - Hinweis: npm-Registry ist aus der Claude-Umgebung zeitweise nicht erreichbar – Tests ggf. nur über GitHub Actions prüfbar
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
+- Idee (Alex): Display-Schrift mit kleinerem Komma suchen
+- Idee (Alex): Versionsnummer des Adapters in der Fußzeile des Pool-Displays
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“
