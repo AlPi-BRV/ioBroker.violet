@@ -88,6 +88,7 @@
   .tw .lbl { flex: 0 0 auto; }
   .lbl .sub { white-space: nowrap; }
   .bad { color: var(--bad) !important; }
+  .hero .star { font-size: .3em; }
   .star { font-size: .5em; vertical-align: super; margin-left: .05em; opacity: .85; }
   .vsub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
   .tw .val { flex: 1 1 auto; min-width: 0; }
@@ -95,7 +96,8 @@
 
   /* Relais-Spalte */
   .relay .lbl { flex: 0 0 33%; }
-  .state { flex: 0 0 auto; display: flex; align-items: center; gap: .5em; min-width: 5em; }
+  .state { flex: 0 0 5em; display: flex; align-items: center; gap: .5em; width: 5em; white-space: nowrap; }
+  .state .long { font-size: .62em; letter-spacing: .02em; }
   .ctrl { display: flex; flex-direction: column; align-items: flex-start; gap: .4em; }
   .ctrl .line { display: flex; align-items: center; gap: .5em; }
   .lamp {
@@ -594,6 +596,7 @@ function render() {
       const lamp = $(`${id}lamp`);
       if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
+      const tx = $(`${id}txt`); if (tx) tx.classList.toggle('long', code === 2 || code === 5);
       const rt = V[`${k}.laufzeit_heute`];
       const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
       setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');

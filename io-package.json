@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "news": {
+      "0.6.3": {
+        "en": "Pool display: smaller \"blocked\" text, switches no longer shift; smaller * in the large display",
+        "de": "Pool-Display: „GESPERRT“ kleiner, Schalter verschieben sich nicht mehr; kleinerer * in der großen Anzeige",
+        "ru": "Дисплей: текст «заблокировано» меньше, переключатели не смещаются; меньшая * в крупной индикации",
+        "pt": "Display: texto «bloqueado» menor, os botões já não se deslocam; * menor na indicação grande",
+        "nl": "Display: tekst „geblokkeerd” kleiner, schakelaars verschuiven niet meer; kleinere * in de grote weergave",
+        "fr": "Affichage : texte « bloqué » plus petit, les boutons ne se décalent plus ; * plus petit dans le grand affichage",
+        "it": "Display: testo «bloccato» più piccolo, i pulsanti non si spostano più; * più piccolo nell’indicazione grande",
+        "es": "Pantalla: texto «bloqueado» más pequeño, los botones ya no se desplazan; * más pequeño en la indicación grande",
+        "pl": "Wyświetlacz: mniejszy tekst „zablokowane”, przyciski się nie przesuwają; mniejsza * w dużym wskaźniku",
+        "uk": "Дисплей: менший текст «заблоковано», перемикачі не зсуваються; менша * у великій індикації",
+        "zh-cn": "显示屏：“已阻止”文字缩小，开关不再移位；大显示中的 * 缩小"
+      },
       "0.6.2": {
         "en": "Water values frozen while the pump is off (option), no red marking without flow; pool display reloads itself after an update",
         "de": "Wasserwerte bei stehender Pumpe eingefroren (Option), ohne Anströmung keine rote Markierung; Pool-Display lädt sich nach einem Update selbst neu",

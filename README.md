@@ -127,6 +127,9 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.3 (2026-10-11)
+- Pool display: smaller "blocked" text so the switches no longer shift; smaller * in the large display
+
 ### 0.6.2 (2026-10-11)
 - Water values (pH, redox, chlorine) frozen while the pump is off (option, data point `wasser.eingefroren`), no red marking without flow
 - Pool display reloads itself after an adapter update
