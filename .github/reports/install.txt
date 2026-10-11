@@ -1,0 +1,20 @@
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@8.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 655 packages in 31s
+iobroker.violet@0.6.6 /home/runner/work/ioBroker.violet/ioBroker.violet
+├── @alcalzone/release-script-plugin-iobroker@5.2.0
+├── @alcalzone/release-script-plugin-license@5.2.2
+├── @alcalzone/release-script-plugin-manual-review@5.2.0
+├── @alcalzone/release-script@5.2.1
+├── @iobroker/adapter-core@3.4.3
+├── @iobroker/adapter-dev@1.5.0
+├── @iobroker/eslint-config@2.3.4
+├── @iobroker/testing@6.3.0
+├── @tsconfig/node22@22.0.6
+├── @types/node@22.20.5
+└── mocha@10.8.2
+

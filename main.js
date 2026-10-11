@@ -12,17 +12,27 @@ const utils = require('@iobroker/adapter-core');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const { buildDefinitions, buildControls, messageDefinitions, modeFromStatus, tempName, setLang, CHANNELS } = require('./lib/datapoints');
+const {
+    buildDefinitions,
+    buildControls,
+    messageDefinitions,
+    modeFromStatus,
+    tempName,
+    setLang,
+    CHANNELS,
+} = require('./lib/datapoints');
 const { VolumeCounter, flowConfig } = require('./lib/volume');
 const { names, pick } = require('./lib/i18n');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
 
-const num = (v) => (v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
+const num = v => (v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
 
 /** Läuft die Filterpumpe? Bei Drehzahlpumpen über die Stufen, sonst über den Status */
 function pumpRunning(d) {
-    if (d.PUMP_RPM_0 !== undefined) return [1, 2, 3].some((s) => parseInt(d[`PUMP_RPM_${s}`], 10) === 1);
+    if (d.PUMP_RPM_0 !== undefined) {
+        return [1, 2, 3].some(s => parseInt(d[`PUMP_RPM_${s}`], 10) === 1);
+    }
     return [1, 3, 4].includes(parseInt(d.PUMP, 10));
 }
 
@@ -65,7 +75,10 @@ class Violet extends utils.Adapter {
         }
         setLang(this.lang);
 
-        const host = (this.config.host || '').trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+        const host = (this.config.host || '')
+            .trim()
+            .replace(/^https?:\/\//i, '')
+            .replace(/\/+$/, '');
         if (!host) {
             this.log.error('No IP address of the Violet configured – please enter it in the instance settings.');
             return;
@@ -91,7 +104,9 @@ class Violet extends utils.Adapter {
         }
         const defaults = require('./io-package.json').native;
         for (const [k, v] of Object.entries(defaults)) {
-            if (this.config[k] === undefined) this.config[k] = v;
+            if (this.config[k] === undefined) {
+                this.config[k] = v;
+            }
         }
 
         this.version = require('./io-package.json').common.version;
@@ -133,11 +148,17 @@ class Violet extends utils.Adapter {
 
         await this.cleanup();
 
-        for (const c of this.controls) await this.prepareObject(c);
-        for (const m of this.msgDefs) await this.prepareObject(m);
-        if (this.controls.some((c) => c.speed)) {
+        for (const c of this.controls) {
+            await this.prepareObject(c);
+        }
+        for (const m of this.msgDefs) {
+            await this.prepareObject(m);
+        }
+        if (this.controls.some(c => c.speed)) {
             const cur = await this.getStateAsync('pumpe.drehzahl_soll');
-            if (!cur || cur.val === null) await this.setStateAsync('pumpe.drehzahl_soll', 2, true);
+            if (!cur || cur.val === null) {
+                await this.setStateAsync('pumpe.drehzahl_soll', 2, true);
+            }
             this.cache['pumpe.drehzahl_soll'] = cur && cur.val !== null ? cur.val : 2;
         }
         if (this.controls.length) {
@@ -159,7 +180,11 @@ class Violet extends utils.Adapter {
         // Elektroden bei stehender Pumpe einfrieren: Startwerte aus den vorhandenen Datenpunkten
         if (this.config.water_freeze && this.config.use_water) {
             this.wfreeze = {};
-            for (const [k, id] of [['pH_value', 'wasser.ph'], ['orp_value', 'wasser.redox'], ['pot_value', 'wasser.chlor']]) {
+            for (const [k, id] of [
+                ['pH_value', 'wasser.ph'],
+                ['orp_value', 'wasser.redox'],
+                ['pot_value', 'wasser.chlor'],
+            ]) {
                 const st = await this.getStateAsync(id);
                 this.wfreeze[k] = st && typeof st.val === 'number' ? st.val : null;
             }
@@ -170,8 +195,12 @@ class Violet extends utils.Adapter {
         if (this.config.use_vrel) {
             for (let n = 1; n <= 8; n++) {
                 const oid = String(this.config[`vrel${n}_oid`] || '').trim();
-                if (!oid) continue;
-                const name = String(this.config[`vrel${n}_name`] || '').trim() || `${this.t('Virtuelles Relais', 'Virtual relay')} ${n}`;
+                if (!oid) {
+                    continue;
+                }
+                const name =
+                    String(this.config[`vrel${n}_name`] || '').trim() ||
+                    `${this.t('Virtuelles Relais', 'Virtual relay')} ${n}`;
                 this.vrel.push({ id: `vrelais.${n}`, n, name, oid });
                 try {
                     const st = await this.getForeignStateAsync(oid);
@@ -181,10 +210,14 @@ class Violet extends utils.Adapter {
                 }
                 this.subscribeForeignStates(oid);
             }
-            if (this.vrel.length) this.log.info(`${this.vrel.length} virtual relays configured`);
+            if (this.vrel.length) {
+                this.log.info(`${this.vrel.length} virtual relays configured`);
+            }
         }
 
-        if (this.config.web_enabled) this.startWebServer();
+        if (this.config.web_enabled) {
+            this.startWebServer();
+        }
 
         this.log.info(`Polling ${this.baseUrl} every ${this.interval / 1000} s`);
         await this.poll();
@@ -192,18 +225,22 @@ class Violet extends utils.Adapter {
 
     /** Entfernt alles, was laut Konfiguration nicht mehr gebraucht wird */
     async cleanup() {
-        const wanted = new Set([...this.defs, ...this.controls, ...this.msgDefs].map((d) => d.id));
+        const wanted = new Set([...this.defs, ...this.controls, ...this.msgDefs].map(d => d.id));
         const wantedChannels = new Set();
         for (const id of wanted) {
             const parts = id.split('.');
-            for (let i = 1; i < parts.length; i++) wantedChannels.add(parts.slice(0, i).join('.'));
+            for (let i = 1; i < parts.length; i++) {
+                wantedChannels.add(parts.slice(0, i).join('.'));
+            }
         }
 
         const objs = await this.getAdapterObjectsAsync();
         let removed = 0;
         for (const fullId of Object.keys(objs)) {
             const id = fullId.substring(this.namespace.length + 1);
-            if (!id || id === 'info' || id.startsWith('info.')) continue;
+            if (!id || id === 'info' || id.startsWith('info.')) {
+                continue;
+            }
             const type = objs[fullId].type;
             if (type === 'state' && !wanted.has(id)) {
                 await this.delObjectAsync(id);
@@ -212,11 +249,15 @@ class Violet extends utils.Adapter {
                 await this.delObjectAsync(id);
             }
         }
-        if (removed) this.log.info(`${removed} data points no longer needed were removed`);
+        if (removed) {
+            this.log.info(`${removed} data points no longer needed were removed`);
+        }
     }
 
     async poll() {
-        if (this.polling) return;
+        if (this.polling) {
+            return;
+        }
         this.polling = true;
         try {
             const res = await fetch(`${this.baseUrl}/getReadings?ALL`, {
@@ -245,7 +286,9 @@ class Violet extends utils.Adapter {
             }
             this.failCount = 0;
 
-            if (this.msgDefs.length) await this.pollMessages(data);
+            if (this.msgDefs.length) {
+                await this.pollMessages(data);
+            }
         } catch (err) {
             this.failCount++;
             const msg = err.name === 'TimeoutError' ? `timeout after ${this.timeout / 1000} s` : err.message;
@@ -256,7 +299,9 @@ class Violet extends utils.Adapter {
         }
 
         this.polling = false;
-        if (this.pollTimer) this.clearTimeout(this.pollTimer);
+        if (this.pollTimer) {
+            this.clearTimeout(this.pollTimer);
+        }
         this.pollTimer = this.setTimeout(() => this.poll(), this.interval);
     }
 
@@ -267,7 +312,9 @@ class Violet extends utils.Adapter {
             const lastOn = parseFloat(data.PUMP_LAST_ON);
             this.pumpSince = lastOn > 0 ? (lastOn > 1e12 ? lastOn : lastOn * 1000) : Date.now();
         }
-        if (!running) this.pumpSince = 0;
+        if (!running) {
+            this.pumpSince = 0;
+        }
         const settled = running && Date.now() - this.pumpSince >= 3 * 60 * 1000;
         data.__PUMP_RUNNING = running;
 
@@ -276,7 +323,9 @@ class Violet extends utils.Adapter {
             for (const k of ['pH_value', 'orp_value', 'pot_value']) {
                 const raw = parseFloat(data[k]);
                 if (settled || this.wfreeze[k] === undefined || this.wfreeze[k] === null) {
-                    if (Number.isFinite(raw)) this.wfreeze[k] = raw;
+                    if (Number.isFinite(raw)) {
+                        this.wfreeze[k] = raw;
+                    }
                 } else {
                     data[k] = this.wfreeze[k];
                 }
@@ -286,7 +335,9 @@ class Violet extends utils.Adapter {
 
         if (this.t1) {
             const raw = parseFloat(data.onewire1_value);
-            if (Number.isFinite(raw) && (settled || this.t1.value === null)) this.t1.value = Math.round(raw * 100) / 100;
+            if (Number.isFinite(raw) && (settled || this.t1.value === null)) {
+                this.t1.value = Math.round(raw * 100) / 100;
+            }
             if (this.t1.value !== null) {
                 data.__T1_POOL = this.t1.value;
                 data.__T1_FROZEN = !settled;
@@ -300,7 +351,9 @@ class Violet extends utils.Adapter {
             }
         }
         for (const def of this.defs) {
-            if (def.when && !def.when(data)) continue;
+            if (def.when && !def.when(data)) {
+                continue;
+            }
             let value;
             try {
                 value = def.get(data);
@@ -308,7 +361,9 @@ class Violet extends utils.Adapter {
                 this.log.debug(`Value for ${def.id} not readable: ${e.message}`);
                 continue;
             }
-            if (value === undefined) continue; // Schlüssel liefert diese Violet nicht
+            if (value === undefined) {
+                continue;
+            } // Schlüssel liefert diese Violet nicht
 
             if (!this.prepared.has(def.id)) {
                 await this.prepareObject(def);
@@ -319,7 +374,9 @@ class Violet extends utils.Adapter {
 
         // Rückmeldung: aktuellen Modus in die Schalt-Datenpunkte spiegeln
         for (const c of this.controls) {
-            if (!c.func) continue;
+            if (!c.func) {
+                continue;
+            }
             const mode = modeFromStatus(data[c.statusKey], c.onOffOnly);
             if (mode) {
                 await this.setStateChangedAsync(c.id, mode, true);
@@ -338,7 +395,9 @@ class Violet extends utils.Adapter {
      * ------------------------------------------------------------------ */
     async pollMessages(data) {
         const now = Date.now();
-        if (this.msg.lastPoll && now - this.msg.lastPoll < NOTIFY_INTERVAL) return;
+        if (this.msg.lastPoll && now - this.msg.lastPoll < NOTIFY_INTERVAL) {
+            return;
+        }
         this.msg.lastPoll = now;
 
         let entries = null;
@@ -350,7 +409,9 @@ class Violet extends utils.Adapter {
                 });
                 if (res.ok) {
                     entries = this.parseNotifications(JSON.parse(await res.text()));
-                    if (this.msg.supported === null) this.log.info('Violet messages are read via getNotifications');
+                    if (this.msg.supported === null) {
+                        this.log.info('Violet messages are read via getNotifications');
+                    }
                     this.msg.supported = true;
                 } else if (res.status === 404 || res.status === 400) {
                     this.msg.supported = false;
@@ -362,9 +423,18 @@ class Violet extends utils.Adapter {
         }
         if (!entries) {
             const id = data && data.last_error_id;
-            entries = id !== undefined && id !== null && String(id) !== '0'
-                ? [{ sig: `E${id}`, date: '', time: '', type: 'ERROR', text: this.t(`Fehlernummer ${id}`, `Error number ${id}`) }]
-                : [];
+            entries =
+                id !== undefined && id !== null && String(id) !== '0'
+                    ? [
+                          {
+                              sig: `E${id}`,
+                              date: '',
+                              time: '',
+                              type: 'ERROR',
+                              text: this.t(`Fehlernummer ${id}`, `Error number ${id}`),
+                          },
+                      ]
+                    : [];
         }
         this.msg.entries = entries;
 
@@ -376,14 +446,16 @@ class Violet extends utils.Adapter {
         }
         let count = 0;
         if (newest && newest.sig !== this.msg.acked) {
-            const idx = entries.findIndex((e) => e.sig === this.msg.acked);
+            const idx = entries.findIndex(e => e.sig === this.msg.acked);
             count = idx === -1 ? Math.min(entries.length, 99) : idx;
         }
         await this.writeMessageStates(count);
     }
 
     parseNotifications(json) {
-        if (!json || typeof json !== 'object') return [];
+        if (!json || typeof json !== 'object') {
+            return [];
+        }
         const list = Object.entries(json)
             .filter(([, v]) => v && typeof v === 'object' && (v.TEXT || v.text))
             .map(([k, v]) => {
@@ -395,7 +467,9 @@ class Violet extends utils.Adapter {
                 const m = date.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/) || null;
                 const iso = m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : date;
                 const parsed = Date.parse(`${iso}T${time || '00:00:00'}`);
-                if (Number.isFinite(parsed)) ts = parsed;
+                if (Number.isFinite(parsed)) {
+                    ts = parsed;
+                }
                 return { key: Number(k) || 0, ts, date, time, type, text, sig: `${date} ${time}|${text}` };
             });
         list.sort((a, b) => b.ts - a.ts || b.key - a.key);
@@ -412,7 +486,9 @@ class Violet extends utils.Adapter {
             'meldungen.text': newest ? newest.text : '',
             'meldungen.zeit': newest ? `${newest.date} ${newest.time}`.trim() : '',
             'meldungen.typ': newest ? newest.type : '',
-            'meldungen.liste': JSON.stringify(this.msg.entries.slice(0, 20).map(({ date, time, type, text }) => ({ date, time, type, text }))),
+            'meldungen.liste': JSON.stringify(
+                this.msg.entries.slice(0, 20).map(({ date, time, type, text }) => ({ date, time, type, text })),
+            ),
         };
         for (const [id, v] of Object.entries(vals)) {
             await this.setStateChangedAsync(id, v, true);
@@ -426,13 +502,22 @@ class Violet extends utils.Adapter {
     messageInfo() {
         const n = this.msg.entries[0];
         return this.msgDefs.length
-            ? { enabled: true, active: this.msg.active, count: this.msg.count, text: n ? n.text : '', time: n ? `${n.date} ${n.time}`.trim() : '', type: n ? n.type : '' }
+            ? {
+                  enabled: true,
+                  active: this.msg.active,
+                  count: this.msg.count,
+                  text: n ? n.text : '',
+                  time: n ? `${n.date} ${n.time}`.trim() : '',
+                  type: n ? n.type : '',
+              }
             : { enabled: false };
     }
 
     async acknowledgeMessages(source) {
         const newest = this.msg.entries[0];
-        if (!newest) return;
+        if (!newest) {
+            return;
+        }
         this.msg.acked = newest.sig;
         await this.setStateAsync('meldungen.quittiert', newest.sig, true);
         await this.writeMessageStates(0);
@@ -457,26 +542,32 @@ class Violet extends utils.Adapter {
                 redox: [num(c.range_redox_min), num(c.range_redox_max)],
                 chlor: [num(c.range_cl_min), num(c.range_cl_max)],
             },
-            rows: [1, 2, 3, 4].map((n) => ({ sensor: Number(c[`disp_row${n}`]) || 0, sub: Number(c[`disp_row${n}_sub`]) || 0 })).filter((r) => r.sensor || r.sub),
+            rows: [1, 2, 3, 4]
+                .map(n => ({ sensor: Number(c[`disp_row${n}`]) || 0, sub: Number(c[`disp_row${n}_sub`]) || 0 }))
+                .filter(r => r.sensor || r.sub),
             hero: [Number(c.disp_hero_left) || 0, Number(c.disp_hero_right) || 0],
-            vrelays: (this.vrel || []).map((v) => ({ id: v.id, name: v.name })),
+            vrelays: (this.vrel || []).map(v => ({ id: v.id, name: v.name })),
             pv: !!c.use_pv,
             dmx: !!c.use_dmx,
             temps: [],
             relays: [],
             analog: this.defs
-                .filter((d) => d.id.startsWith('analog.'))
-                .map((d) => ({ id: d.id, name: pick(d.name, this.lang), unit: d.unit || '' })),
+                .filter(d => d.id.startsWith('analog.'))
+                .map(d => ({ id: d.id, name: pick(d.name, this.lang), unit: d.unit || '' })),
             messages: this.messageInfo(),
         };
         if (c.use_temp) {
             for (let i = 1; i <= 12; i++) {
                 const st = data[`onewire${i}_state`];
-                if (st !== undefined && st !== 'NO_SENSOR_CONFIGURED') features.temps.push({ n: i, name: pick(tempName(c, i), this.lang) });
+                if (st !== undefined && st !== 'NO_SENSOR_CONFIGURED') {
+                    features.temps.push({ n: i, name: pick(tempName(c, i), this.lang) });
+                }
             }
         }
         for (const e of [1, 2]) {
-            if (!c[`use_ext${e}`]) continue;
+            if (!c[`use_ext${e}`]) {
+                continue;
+            }
             for (let r = 1; r <= 8; r++) {
                 const own = String(c[`ext${e}_${r}_name`] || '').trim();
                 features.relays.push({ id: `relais.ext${e}_${r}`, name: own || `EXT${e}.${r}`, named: !!own });
@@ -491,7 +582,9 @@ class Violet extends utils.Adapter {
         const parts = def.id.split('.');
         for (let i = 1; i < parts.length; i++) {
             const ch = parts.slice(0, i).join('.');
-            if (this.prepared.has(ch)) continue;
+            if (this.prepared.has(ch)) {
+                continue;
+            }
             await this.extendObjectAsync(ch, {
                 type: 'channel',
                 common: { name: names(CHANNELS[ch] || this.channelName(ch)) },
@@ -507,10 +600,18 @@ class Violet extends utils.Adapter {
             read: def.read !== false,
             write: def.write === true,
         };
-        if (def.min !== undefined) common.min = def.min;
-        if (def.max !== undefined) common.max = def.max;
-        if (def.unit) common.unit = def.unit;
-        if (def.states) common.states = def.states;
+        if (def.min !== undefined) {
+            common.min = def.min;
+        }
+        if (def.max !== undefined) {
+            common.max = def.max;
+        }
+        if (def.unit) {
+            common.unit = def.unit;
+        }
+        if (def.states) {
+            common.states = def.states;
+        }
 
         await this.extendObjectAsync(def.id, { type: 'state', common, native: {} });
         this.prepared.add(def.id);
@@ -524,13 +625,17 @@ class Violet extends utils.Adapter {
             return own ? `${own} (EXT${m[1]}.${m[2]})` : `Relais EXT${m[1]}.${m[2]}`;
         }
         const d = ch.match(/^dmx\.szene(\d+)$/);
-        if (d) return `DMX-Szene ${d[1]}`;
+        if (d) {
+            return `DMX-Szene ${d[1]}`;
+        }
         return ch.split('.').pop();
     }
 
     /** Anfragen aus der Konfigurationsseite (z. B. aktuelle Temperatur neben dem Namensfeld) */
     onMessage(obj) {
-        if (!obj || !obj.callback) return;
+        if (!obj || !obj.callback) {
+            return;
+        }
         let reply = '';
         if (obj.command === 'getTemp') {
             const i = parseInt(obj.message && obj.message.sensor, 10);
@@ -549,9 +654,13 @@ class Violet extends utils.Adapter {
         const list = [{ label: this.t('– leer / automatisch –', '– empty / automatic –'), value: 0 }];
         for (let i = 1; i <= 12; i++) {
             const st = d[`onewire${i}_state`];
-            if (this.lastData && (st === undefined || st === 'NO_SENSOR_CONFIGURED')) continue;
+            if (this.lastData && (st === undefined || st === 'NO_SENSOR_CONFIGURED')) {
+                continue;
+            }
             const v = parseFloat(d[`onewire${i}_value`]);
-            const val = Number.isFinite(v) ? `  (${v.toLocaleString(this.lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C)` : '';
+            const val = Number.isFinite(v)
+                ? `  (${v.toLocaleString(this.lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C)`
+                : '';
             list.push({ label: `${i}: ${pick(tempName(this.config, i), this.lang)}${val}`, value: i });
         }
         return list;
@@ -559,49 +668,80 @@ class Violet extends utils.Adapter {
 
     describeSensor(i) {
         const d = this.lastData;
-        if (!d) return this.t('⏳ noch keine Daten – IP gespeichert und Instanz gestartet?', '⏳ no data yet – IP saved and instance started?');
+        if (!d) {
+            return this.t(
+                '⏳ noch keine Daten – IP gespeichert und Instanz gestartet?',
+                '⏳ no data yet – IP saved and instance started?',
+            );
+        }
         const state = d[`onewire${i}_state`];
-        if (state === undefined) return this.t('– nicht vorhanden', '– not available');
-        if (state === 'NO_SENSOR_CONFIGURED') return this.t('– nicht angeschlossen', '– not connected');
+        if (state === undefined) {
+            return this.t('– nicht vorhanden', '– not available');
+        }
+        if (state === 'NO_SENSOR_CONFIGURED') {
+            return this.t('– nicht angeschlossen', '– not connected');
+        }
         const loc = this.lang === 'de' ? 'de-DE' : 'en-GB';
-        const fmt = (v) => {
+        const fmt = v => {
             const n = parseFloat(v);
-            return Number.isFinite(n) ? n.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '?';
+            return Number.isFinite(n)
+                ? n.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+                : '?';
         };
         let text = `🌡 ${fmt(d[`onewire${i}_value`])} °C   (${this.t('heute', 'today')} ${fmt(d[`onewire${i}_value_min`])} – ${fmt(d[`onewire${i}_value_max`])})`;
-        if (state !== 'OK') text += `   ⚠ ${state}`;
+        if (state !== 'OK') {
+            text += `   ⚠ ${state}`;
+        }
         return text;
     }
 
     describeAnalog(key) {
         const d = this.lastData;
-        if (!d) return this.t('⏳ noch keine Daten', '⏳ no data yet');
-        if (!key || d[key] === undefined) return this.t('– nicht vorhanden', '– not available');
+        if (!d) {
+            return this.t('⏳ noch keine Daten', '⏳ no data yet');
+        }
+        if (!key || d[key] === undefined) {
+            return this.t('– nicht vorhanden', '– not available');
+        }
         const n = parseFloat(d[key]);
         const now = this.t('aktuell', 'current');
-        if (!Number.isFinite(n)) return `${now}: ${d[key]}`;
+        if (!Number.isFinite(n)) {
+            return `${now}: ${d[key]}`;
+        }
         return `${now}: ${n.toLocaleString(this.lang === 'de' ? 'de-DE' : 'en-GB', { maximumFractionDigits: 2 })}`;
     }
 
     /** Schaltwunsch aus ioBroker (ack=false) */
     async onStateChange(fullId, state) {
-        if (!state) return;
-        if (!fullId.startsWith(`${this.namespace}.`)) {
-            // Rückmeldung eines virtuellen Relais (fremder Datenpunkt)
-            for (const v of this.vrel || []) if (v.oid === fullId) this.cache[v.id] = !!state.val;
+        if (!state) {
             return;
         }
-        if (state.ack) return;
+        if (!fullId.startsWith(`${this.namespace}.`)) {
+            // Rückmeldung eines virtuellen Relais (fremder Datenpunkt)
+            for (const v of this.vrel || []) {
+                if (v.oid === fullId) {
+                    this.cache[v.id] = !!state.val;
+                }
+            }
+            return;
+        }
+        if (state.ack) {
+            return;
+        }
         const id = fullId.substring(this.namespace.length + 1);
 
         if (id === 'meldungen.quittieren') {
-            if (state.val) await this.acknowledgeMessages('data point');
+            if (state.val) {
+                await this.acknowledgeMessages('data point');
+            }
             await this.setStateAsync(id, false, true);
             return;
         }
 
-        const c = this.controls.find((x) => x.id === id);
-        if (!c) return;
+        const c = this.controls.find(x => x.id === id);
+        if (!c) {
+            return;
+        }
 
         if (c.speed) {
             const speed = parseInt(state.val, 10);
@@ -613,7 +753,9 @@ class Violet extends utils.Adapter {
             this.cache[id] = speed;
             // läuft die Pumpe gerade manuell, neue Drehzahl sofort übernehmen
             const mode = modeFromStatus(this.lastData && this.lastData.PUMP);
-            if (mode === 'ON') await this.queueCommand('PUMP', 'ON', this.switchDuration, speed, 'pumpe.schalten');
+            if (mode === 'ON') {
+                await this.queueCommand('PUMP', 'ON', this.switchDuration, speed, 'pumpe.schalten');
+            }
             return;
         }
 
@@ -647,10 +789,16 @@ class Violet extends utils.Adapter {
                 signal: AbortSignal.timeout(this.timeout),
             });
             const text = (await res.text()).trim();
-            if (res.status === 401) throw new Error('access denied – check user name/password in the configuration');
-            if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+            if (res.status === 401) {
+                throw new Error('access denied – check user name/password in the configuration');
+            }
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status} ${res.statusText}`);
+            }
             const first = text.split(/\r?\n/)[0].trim().toUpperCase();
-            if (first !== 'OK') throw new Error(`Violet answered: ${text.replace(/\s+/g, ' ').substring(0, 200)}`);
+            if (first !== 'OK') {
+                throw new Error(`Violet answered: ${text.replace(/\s+/g, ' ').substring(0, 200)}`);
+            }
             this.log.debug(`Violet answer: ${text.replace(/\s+/g, ' ')}`);
             await this.setStateAsync(id, action, true);
         } catch (err) {
@@ -658,7 +806,9 @@ class Violet extends utils.Adapter {
             this.log.warn(`Switching command ${cmd} failed: ${msg}`);
         }
         // Zustand kurz danach neu einlesen, damit Status/Rückmeldung stimmen
-        if (this.pollTimer) this.clearTimeout(this.pollTimer);
+        if (this.pollTimer) {
+            this.clearTimeout(this.pollTimer);
+        }
         this.pollTimer = this.setTimeout(() => this.poll(), 1500);
     }
 
@@ -675,7 +825,11 @@ class Violet extends utils.Adapter {
         this.server = http.createServer(async (req, res) => {
             const url = new URL(req.url, 'http://x');
             const send = (code, body, type = 'application/json; charset=utf-8') => {
-                res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' });
+                res.writeHead(code, {
+                    'Content-Type': type,
+                    'Cache-Control': 'no-store',
+                    'Access-Control-Allow-Origin': '*',
+                });
                 res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
             };
             try {
@@ -683,30 +837,52 @@ class Violet extends utils.Adapter {
                     return send(200, fs.readFileSync(page), 'text/html; charset=utf-8');
                 }
                 if (url.pathname === '/api/data') {
-                    if (this.features) this.features.messages = this.messageInfo();
-                    return send(200, { ok: !!this.lastData, connected: this.failCount === 0 && !!this.lastData, features: this.features || null, values: this.cache, ts: Date.now() });
+                    if (this.features) {
+                        this.features.messages = this.messageInfo();
+                    }
+                    return send(200, {
+                        ok: !!this.lastData,
+                        connected: this.failCount === 0 && !!this.lastData,
+                        features: this.features || null,
+                        values: this.cache,
+                        ts: Date.now(),
+                    });
                 }
                 if (url.pathname === '/api/ack') {
-                    if (!this.msgDefs.length) return send(403, { ok: false, error: 'messages disabled' });
+                    if (!this.msgDefs.length) {
+                        return send(403, { ok: false, error: 'messages disabled' });
+                    }
                     await this.acknowledgeMessages(`pool display ${req.socket.remoteAddress}`);
                     return send(200, { ok: true });
                 }
                 if (url.pathname === '/api/set') {
                     const id = url.searchParams.get('id') || '';
                     const value = url.searchParams.get('value');
-                    const v = (this.vrel || []).find((x) => x.id === id);
+                    const v = (this.vrel || []).find(x => x.id === id);
                     if (v) {
-                        if (!this.config.allow_switching) return send(403, { ok: false, error: 'switching disabled' });
+                        if (!this.config.allow_switching) {
+                            return send(403, { ok: false, error: 'switching disabled' });
+                        }
                         const on = String(value).toUpperCase() === 'ON';
-                        this.log.info(`Pool display (${req.socket.remoteAddress}): virtual relay ${v.name} (${v.oid}) = ${on}`);
+                        this.log.info(
+                            `Pool display (${req.socket.remoteAddress}): virtual relay ${v.name} (${v.oid}) = ${on}`,
+                        );
                         await this.setForeignStateAsync(v.oid, on, false);
                         this.cache[v.id] = on;
                         return send(200, { ok: true });
                     }
-                    const c = this.controls.find((x) => x.id === id);
-                    if (!c) return send(403, { ok: false, error: 'This data point is not switchable (switching enabled?)' });
+                    const c = this.controls.find(x => x.id === id);
+                    if (!c) {
+                        return send(403, {
+                            ok: false,
+                            error: 'This data point is not switchable (switching enabled?)',
+                        });
+                    }
                     this.log.info(`Pool display (${req.socket.remoteAddress}): ${id} = ${value}`);
-                    await this.onStateChange(`${this.namespace}.${id}`, { val: c.speed ? Number(value) : value, ack: false });
+                    await this.onStateChange(`${this.namespace}.${id}`, {
+                        val: c.speed ? Number(value) : value,
+                        ack: false,
+                    });
                     return send(200, { ok: true });
                 }
                 send(404, { ok: false, error: 'not found' });
@@ -714,14 +890,18 @@ class Violet extends utils.Adapter {
                 send(500, { ok: false, error: e.message });
             }
         });
-        this.server.on('error', (e) => this.log.error(`Pool display could not be started on port ${port}: ${e.message}`));
+        this.server.on('error', e => this.log.error(`Pool display could not be started on port ${port}: ${e.message}`));
         this.server.listen(port, () => this.log.info(`Pool display available at http://<ioBroker-IP>:${port}/`));
     }
 
     onUnload(callback) {
         try {
-            if (this.server) this.server.close();
-            if (this.pollTimer) this.clearTimeout(this.pollTimer);
+            if (this.server) {
+                this.server.close();
+            }
+            if (this.pollTimer) {
+                this.clearTimeout(this.pollTimer);
+            }
             this.setState('info.connection', false, true);
         } finally {
             callback();
@@ -730,7 +910,7 @@ class Violet extends utils.Adapter {
 }
 
 if (require.main !== module) {
-    module.exports = (options) => new Violet(options);
+    module.exports = options => new Violet(options);
 } else {
     new Violet();
 }

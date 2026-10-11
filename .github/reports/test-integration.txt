@@ -1,0 +1,109 @@
+
+> iobroker.violet@0.6.6 test:integration
+> mocha test/integration.js
+
+
+Running tests in /tmp/test-iobroker.violet
+
+
+
+  Adapter integration tests
+
+added 232 packages, and audited 233 packages in 20s
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+15 vulnerabilities (2 moderate, 13 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+up to date, audited 233 packages in 529ms
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+15 vulnerabilities (2 moderate, 13 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+added 24 packages, and audited 257 packages in 928ms
+
+26 packages are looking for funding
+  run `npm fund` for details
+
+17 vulnerabilities (2 moderate, 15 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+Server Data File: /tmp/test-iobroker.violet/iobroker-data/objects.jsonl
+Server  Redis inMem-objects listening on port 19001
+ Redis Objects: Use Redis connection: 127.0.0.1:19001
+ Objects client ready ... initialize now
+ Objects client initialize lua scripts
+ Objects connected to redis: 127.0.0.1:19001
+ Redis Objects: Use Redis connection: 127.0.0.1:19001
+ Objects client ready ... initialize now
+ Objects create System PubSub Client
+ Objects client initialize lua scripts
+ Objects connected to redis: 127.0.0.1:19001
+Server Data File: /tmp/test-iobroker.violet/iobroker-data/states.jsonl
+Server  Redis inMem-states listening on port 19000
+ Redis States: Use Redis connection: 127.0.0.1:19000
+ States connected to redis: 127.0.0.1:19000
+ Redis States: Use Redis connection: 127.0.0.1:19000
+ States create System PubSub Client
+ States connected to redis: 127.0.0.1:19000
+    Adapter startup
+Server Data File: /tmp/test-iobroker.violet/iobroker-data/objects.jsonl
+Server  Redis inMem-objects listening on port 19001
+ Redis Objects: Use Redis connection: 127.0.0.1:19001
+ Objects client ready ... initialize now
+ Objects client initialize lua scripts
+ Objects connected to redis: 127.0.0.1:19001
+ Redis Objects: Use Redis connection: 127.0.0.1:19001
+ Objects client ready ... initialize now
+ Objects create System PubSub Client
+ Objects client initialize lua scripts
+ Objects connected to redis: 127.0.0.1:19001
+Server Data File: /tmp/test-iobroker.violet/iobroker-data/states.jsonl
+Server  Redis inMem-states listening on port 19000
+ Redis States: Use Redis connection: 127.0.0.1:19000
+ States connected to redis: 127.0.0.1:19000
+ Redis States: Use Redis connection: 127.0.0.1:19000
+ States create System PubSub Client
+ States connected to redis: 127.0.0.1:19000
+2026-10-11 05:57:38.897  - [32minfo[39m: violet.0 (2679) starting. Version 0.6.6 in /tmp/test-iobroker.violet/node_modules/iobroker.violet, node: v22.23.3, js-controller: 8.0.0-alpha.5-20261004-d0887094b
+2026-10-11 05:57:38.911  - [31merror[39m: violet.0 (2679) No IP address of the Violet configured – please enter it in the instance settings.
+The adapter started successfully.
+      ✔ The adapter starts (5487ms)
+2026-10-11 05:57:43.909  - [32minfo[39m: violet.0 (2679) Got terminate signal TERMINATE_YOURSELF
+2026-10-11 05:57:43.910  - [32minfo[39m: violet.0 (2679) terminating
+2026-10-11 05:57:43.910  - [32minfo[39m: violet.0 (2679) Terminated (ADAPTER_REQUESTED_TERMINATION): Without reason
+2026-10-11 05:57:44.410  - [32minfo[39m: violet.0 (2679) terminating
+2026-10-11 05:57:44.411  - [32minfo[39m: violet.0 (2679) terminating
+
+
+  1 passing (30s)
+
+EXIT CODE 0
