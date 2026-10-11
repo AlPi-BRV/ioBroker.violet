@@ -1,4 +1,4 @@
-# One-off helper: updates package-lock.json after package.json changes
+# One-off helper (run): updates package-lock.json after package.json changes
 # (npm is not usable from the development environment). Removed again afterwards.
 name: Update package-lock (one-off)
 
