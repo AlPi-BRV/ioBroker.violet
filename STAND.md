@@ -23,6 +23,11 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 ## Offen
 - Status-Codes geklärt (offizielle Beschreibung, docs/getReadings-api.txt): 0 Auto aus, 1 Auto an, 2 Auto durch Regel AUS (z. B. Heizung bei Pumpe aus), 3 Auto durch Notfallregel AN, 4 Manuell an, 5 Aus durch Notfallregel, 6 Manuell aus; DMX nur 0/1/4/6; PVSURPLUS 0 aus, 1 an (Digitaleingang), 2 an (HTTP)
 - Idee: DOS_x_USE (0/1) zeigt, welche Dosierung konfiguriert ist – könnte den Fragebogen vorbelegen
-- Repository-Aufnahme: Adapter-Checker (adapter-check.iobroker.in) brach mit E031 (keine devDependencies) ab → Testgerüst (test/, @iobroker/testing, mocha) auf dev ergänzt; nächster Checker-Lauf zeigt weitere Punkte. Noch offen: GitHub-Workflow, ESLint, npm-Veröffentlichung
+- Repository-Aufnahme (latest), Checkliste nach github.com/ioBroker/ioBroker.repositories:
+  - erledigt: Name/Titel/Typ/Autoren/Lizenz, englische README mit Changelog + Herstellerlink, jsonConfig, info.connection, port, Rollen, adapter.setTimeout, Compact-Modus
+  - auf dev, noch ungeprüft: devDependencies (@iobroker/testing, mocha), test/package.js + test/integration.js, Node >= 20
+  - offen: GitHub Actions (test-and-release), ESLint (@iobroker/eslint-config), Release-Script (@alcalzone/release-script), Passwort verschlüsseln (encryptedNative/protectedNative), Topics im GitHub-Repo (Alex), npm-Veröffentlichung + bluefox als Owner (Alex' npm-Konto), später Forum-Testthread für stable
+  - Adapter-Checker: adapter-check.iobroker.in (Zweig wählbar); brach auf main mit E031 (keine devDependencies) ab
+  - Hinweis: npm-Registry ist aus der Claude-Umgebung zeitweise nicht erreichbar – Tests ggf. nur über GitHub Actions prüfbar
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“
