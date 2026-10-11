@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "news": {
+      "0.6.1": {
+        "en": "Status codes corrected according to the official PoolDigital interface description: 2 = auto, blocked by rule; 5 = off by emergency rule",
+        "de": "Status-Codes nach offizieller Schnittstellenbeschreibung von PoolDigital korrigiert: 2 = Automatik, durch Regel gesperrt; 5 = Aus durch Notfallregel",
+        "ru": "Коды состояния исправлены по официальному описанию PoolDigital: 2 = авто, заблокировано правилом; 5 = выкл. аварийным правилом",
+        "pt": "Códigos de estado corrigidos segundo a descrição oficial da PoolDigital: 2 = auto, bloqueado por regra; 5 = desligado por regra de emergência",
+        "nl": "Statuscodes gecorrigeerd volgens de officiële beschrijving van PoolDigital: 2 = auto, geblokkeerd door regel; 5 = uit door noodregel",
+        "fr": "Codes d’état corrigés selon la description officielle de PoolDigital : 2 = auto, bloqué par règle ; 5 = arrêt par règle d’urgence",
+        "it": "Codici di stato corretti secondo la descrizione ufficiale di PoolDigital: 2 = auto, bloccato da regola; 5 = spento da regola di emergenza",
+        "es": "Códigos de estado corregidos según la descripción oficial de PoolDigital: 2 = auto, bloqueado por regla; 5 = apagado por regla de emergencia",
+        "pl": "Kody stanu poprawione wg oficjalnego opisu PoolDigital: 2 = auto, zablokowane regułą; 5 = wył. regułą awaryjną",
+        "uk": "Коди стану виправлено за офіційним описом PoolDigital: 2 = авто, заблоковано правилом; 5 = вимк. аварійним правилом",
+        "zh-cn": "根据 PoolDigital 官方接口说明修正状态码：2 = 自动，被规则阻止；5 = 紧急规则关闭"
+      },
       "0.6.0": {
         "en": "New tab \"Display\" (optimal ranges, temperature rows, large display), virtual relays, water temperature frozen while the pump is off, electrodes selectable, flocculant in the display, chlorine or electrolysis",
         "de": "Neuer Reiter „Display“ (Optimalbereiche, Temperaturzeilen, große Anzeige), virtuelle Relais, Wassertemperatur bei stehender Pumpe eingefroren, Elektroden wählbar, Flockung im Display, Chlor oder Elektrolyse",

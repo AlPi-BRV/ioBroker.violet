@@ -48,10 +48,14 @@ With "Allow switching" every selected function gets a data point `schalten`:
 | Code | Meaning |
 |---|---|
 | 0 | Auto – off |
-| 1 / 3 | Auto – on |
-| 2 / 4 | Manual on |
-| 5 | Auto – waiting |
+| 1 | Auto – on |
+| 2 | Auto – off, blocked by a control rule (e.g. heating while the pump is off) |
+| 3 | Auto – on, forced by an emergency rule |
+| 4 | Manual on |
+| 5 | Off by an emergency rule |
 | 6 | Manual off |
+
+Source: interface description of PoolDigital (getReadings, revision 14.07.2024).
 
 ## Circulated water volume
 
@@ -123,6 +127,9 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.1 (2026-10-11)
+- Status codes corrected according to the official interface description of PoolDigital: 2 = auto, blocked by rule (was shown as manual on), 5 = off by emergency rule
+
 ### 0.6.0 (2026-10-11)
 - New tab "Display": optimal ranges (values outside in red), temperature rows and large display freely assignable
 - Virtual relays (other devices, ON/OFF only) in the relay view of the pool display

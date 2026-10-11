@@ -245,7 +245,7 @@ const TXT = {
   de: {
     temps: 'TEMPERATUREN', water: 'WASSERWERTE', relays: 'RELAISSTATUS', relayView: 'RELAIS',
     btnRelays: 'Relais', btnTemps: 'Temperaturen',
-    off: 'AUS', on: 'EIN', wait: 'WARTET', auto: 'AUTO',
+    off: 'AUS', on: 'EIN', wait: 'WARTET', blocked: 'GESPERRT', emergOff: 'NOT-AUS', auto: 'AUTO',
     pump: 'Filterpumpe', solar: 'Absorber', heater: 'Heizung', light: 'Licht', eco: 'ECO-Modus',
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
@@ -263,7 +263,7 @@ const TXT = {
   en: {
     temps: 'TEMPERATURES', water: 'WATER VALUES', relays: 'RELAY STATUS', relayView: 'RELAYS',
     btnRelays: 'Relays', btnTemps: 'Temperatures',
-    off: 'OFF', on: 'ON', wait: 'WAIT', auto: 'AUTO',
+    off: 'OFF', on: 'ON', wait: 'WAIT', blocked: 'BLOCKED', emergOff: 'EMERG. OFF', auto: 'AUTO',
     pump: 'Filter pump', solar: 'Absorber', heater: 'Heating', light: 'Light', eco: 'ECO mode',
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
@@ -283,7 +283,7 @@ let LANG = (params.get('lang') || navigator.language || 'de').slice(0, 2).toLowe
 const t = (k) => (TXT[LANG] && k in TXT[LANG] ? TXT[LANG][k] : k in TXT.en ? TXT.en[k] : k);
 const LOCALE = () => (LANG === 'de' ? 'de-DE' : 'en-GB');
 
-const STATUS_TXT = () => ({ 0: t('off'), 1: t('on'), 2: t('on'), 3: t('on'), 4: t('on'), 5: t('wait'), 6: t('off') });
+const STATUS_TXT = () => ({ 0: t('off'), 1: t('on'), 2: t('blocked'), 3: t('on'), 4: t('on'), 5: t('emergOff'), 6: t('off') });
 const STAGES = { 1: 'ECO', 2: 'Normal', 3: 'Boost' };
 // mögliche Funktionen in der Relais-Spalte (erscheinen nur, wenn vorhanden)
 const FUNCS = [
@@ -559,7 +559,7 @@ function render() {
       }
       const code = Number(V[`${r.id}.status`]);
       const lamp = $(`${kid(r.id)}lamp`);
-      if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${r.id}.aktiv`] === true ? ' on' : '');
+      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${r.id}.aktiv`] === true ? ' on' : '');
       markSeg(document.querySelector(`.seg[data-key="${r.id}"]`), V[`${r.id}.schalten`] ?? modeFromCode(code), has(`${r.id}.schalten`));
     }
   }
@@ -588,7 +588,7 @@ function render() {
     if (k !== 'licht' || x.light) {
       const code = Number(V[`${k}.status`]);
       const lamp = $(`${id}lamp`);
-      if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
+      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const rt = V[`${k}.laufzeit_heute`];
       const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
@@ -634,7 +634,7 @@ function render() {
 function setText(id, s) { const e = $(id); if (e) e.textContent = s; }
 function setHtml(id, s) { const e = $(id); if (e) e.innerHTML = s; }
 const mm = (id, d) => (has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], d)}</span><span class="hi">${fmt(V[`${id}_max`], d)}</span>` : '');
-const modeFromCode = (c) => (c === 2 || c === 4 ? 'ON' : c === 6 ? 'OFF' : 'AUTO');
+const modeFromCode = (c) => (c === 4 ? 'ON' : c === 6 ? 'OFF' : 'AUTO');
 
 function dosBadge(el, id) {
   const e = $(el);

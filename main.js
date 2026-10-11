@@ -23,7 +23,7 @@ const num = (v) => (v === null || v === undefined || v === '' || !Number.isFinit
 /** Läuft die Filterpumpe? Bei Drehzahlpumpen über die Stufen, sonst über den Status */
 function pumpRunning(d) {
     if (d.PUMP_RPM_0 !== undefined) return [1, 2, 3].some((s) => parseInt(d[`PUMP_RPM_${s}`], 10) === 1);
-    return [1, 2, 3, 4].includes(parseInt(d.PUMP, 10));
+    return [1, 3, 4].includes(parseInt(d.PUMP, 10));
 }
 
 class Violet extends utils.Adapter {

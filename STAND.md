@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.0 auf Zweig `dev` (zum Testen), `main` = 0.5.3 (öffentlich)
+Stand: 2026-10-11, Version 0.6.1 auf Zweig `dev` (zum Testen), `main` = 0.5.3 (öffentlich)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -21,6 +21,7 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - www/index.html – Pool-Display (baut sich aus info.features auf; Demo: ?demo=1&lang=de)
 
 ## Offen
-- BUG Status-Codes: Heizung auf AUTO → Violet meldet 2, Display zeigt EIN. Die Code-Bedeutung (0 Auto aus, 1/3 Auto an, 2/4 Manuell an, 5 wartet, 6 Manuell aus) war eine Annahme, nicht von PoolDigital belegt. Alex prüft an der Violet, was 1–4 wirklich bedeuten.
+- Status-Codes geklärt (offizielle Beschreibung, docs/getReadings-api.txt): 0 Auto aus, 1 Auto an, 2 Auto durch Regel AUS (z. B. Heizung bei Pumpe aus), 3 Auto durch Notfallregel AN, 4 Manuell an, 5 Aus durch Notfallregel, 6 Manuell aus; DMX nur 0/1/4/6; PVSURPLUS 0 aus, 1 an (Digitaleingang), 2 an (HTTP)
+- Idee: DOS_x_USE (0/1) zeigt, welche Dosierung konfiguriert ist – könnte den Fragebogen vorbelegen
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“
