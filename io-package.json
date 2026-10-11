@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.4",
+    "version": "0.6.5",
     "news": {
+      "0.6.5": {
+        "en": "Repository checker: old news entries removed (max. 7), obsolete \"common.main\" removed",
+        "de": "Repository-Prüfung: alte Änderungshinweise entfernt (max. 7), veraltetes „common.main“ entfernt",
+        "ru": "Проверка репозитория: старые записи новостей удалены (макс. 7), устаревший «common.main» удалён",
+        "pt": "Verificação do repositório: notícias antigas removidas (máx. 7), «common.main» obsoleto removido",
+        "nl": "Repository-controle: oude nieuwsitems verwijderd (max. 7), verouderd „common.main” verwijderd",
+        "fr": "Contrôle du dépôt : anciennes nouveautés supprimées (max. 7), « common.main » obsolète supprimé",
+        "it": "Controllo repository: vecchie novità rimosse (max. 7), «common.main» obsoleto rimosso",
+        "es": "Comprobación del repositorio: noticias antiguas eliminadas (máx. 7), «common.main» obsoleto eliminado",
+        "pl": "Kontrola repozytorium: usunięto stare wpisy nowości (maks. 7), usunięto przestarzałe „common.main”",
+        "uk": "Перевірка репозиторію: старі записи новин видалено (макс. 7), застарілий «common.main» видалено",
+        "zh-cn": "仓库检查：删除旧的更新说明（最多 7 条），删除已弃用的“common.main”"
+      },
       "0.6.4": {
         "en": "Pool display: relay view keeps the size (up to 3 relays per cell), lamps aligned; \"Virtual relays (other ioBroker devices)\"",
         "de": "Pool-Display: Relais-Ansicht behält die Größe (bis zu 3 Relais je Zelle), Lämpchen ausgerichtet; „Virtuelle Relais (andere ioBroker-Geräte)“",
@@ -80,97 +93,6 @@
         "pl": "Wyświetlacz: czasy pracy bez „dzisiaj”, wiersz już się nie łamie",
         "uk": "Дисплей: час роботи без «сьогодні», рядок більше не переноситься",
         "zh-cn": "显示屏：运行时间去掉“今天”，不再换行"
-      },
-      "0.5.2": {
-        "en": "Circulated water volume of the day (new tab \"Pump\": delivery rate per level, with absorber / heating); pool display: humidity stacked under filter pressure",
-        "de": "Umgewälzte Wassermenge des Tages (neuer Reiter „Pumpe“: Fördermenge je Stufe, mit Absorber / Heizung); Pool-Display: Luftfeuchte unter Filterdruck",
-        "ru": "Объём воды, прокачанный за день (новая вкладка «Насос»: производительность по ступеням, с абсорбером / нагревом); дисплей: влажность под давлением фильтра",
-        "pt": "Volume de água circulado no dia (novo separador «Bomba»: caudal por nível, com absorvedor / aquecimento); display: humidade sob a pressão do filtro",
-        "nl": "Rondgepompte hoeveelheid water van de dag (nieuw tabblad „Pomp”: debiet per stand, met absorber / verwarming); display: luchtvochtigheid onder filterdruk",
-        "fr": "Volume d’eau brassé du jour (nouvel onglet « Pompe » : débit par vitesse, avec absorbeur / chauffage) ; affichage : humidité sous la pression du filtre",
-        "it": "Volume d’acqua ricircolato del giorno (nuova scheda «Pompa»: portata per livello, con assorbitore / riscaldamento); display: umidità sotto la pressione del filtro",
-        "es": "Volumen de agua recirculado del día (nueva pestaña «Bomba»: caudal por nivel, con absorbedor / calefacción); pantalla: humedad bajo la presión del filtro",
-        "pl": "Ilość wody przepompowanej w ciągu dnia (nowa zakładka „Pompa”: wydajność na stopień, z absorberem / ogrzewaniem); wyświetlacz: wilgotność pod ciśnieniem filtra",
-        "uk": "Об’єм води, прокачаний за день (нова вкладка «Насос»: продуктивність за ступенями, з абсорбером / нагрівом); дисплей: вологість під тиском фільтра",
-        "zh-cn": "当天循环水量（新增“水泵”选项卡：各档流量，含吸热器 / 加热）；显示屏：湿度显示在过滤压力下方"
-      },
-      "0.5.1": {
-        "en": "Pool display: colons of temperatures and water values aligned, more space between label and value",
-        "de": "Pool-Display: Doppelpunkte bei Temperaturen und Wasserwerten untereinander ausgerichtet, mehr Abstand zwischen Bezeichnung und Wert",
-        "ru": "Дисплей бассейна: двоеточия температур и показателей воды выровнены, больше расстояние между названием и значением",
-        "pt": "Display da piscina: dois-pontos de temperaturas e valores da água alinhados, mais espaço entre rótulo e valor",
-        "nl": "Zwembaddisplay: dubbele punten van temperaturen en waterwaarden uitgelijnd, meer ruimte tussen label en waarde",
-        "fr": "Affichage piscine : deux-points des températures et des valeurs de l’eau alignés, plus d’espace entre libellé et valeur",
-        "it": "Display piscina: due punti di temperature e valori dell’acqua allineati, più spazio tra etichetta e valore",
-        "es": "Pantalla de piscina: dos puntos de temperaturas y valores del agua alineados, más espacio entre etiqueta y valor",
-        "pl": "Wyświetlacz basenu: dwukropki temperatur i parametrów wody wyrównane, więcej odstępu między opisem a wartością",
-        "uk": "Дисплей басейну: двокрапки температур і показників води вирівняні, більша відстань між назвою та значенням",
-        "zh-cn": "泳池显示屏：温度和水质数值的冒号对齐，标签与数值间距加大"
-      },
-      "0.5.0": {
-        "en": "Pool display: larger font, selectable font, speed levels in the pump row, light with DMX scenes, PV indicator, relay view, Violet messages; translations for 11 languages",
-        "de": "Pool-Display: größere Schrift, wählbare Schriftart, Drehzahlstufen in der Pumpenzeile, Licht mit DMX-Szenen, PV-Anzeige, Relais-Ansicht, Meldungen der Violet; Übersetzungen in 11 Sprachen",
-        "ru": "Дисплей бассейна: крупнее шрифт, выбор шрифта, ступени скорости в строке насоса, свет со сценами DMX, индикатор PV, вид реле, сообщения Violet; переводы на 11 языков",
-        "pt": "Display da piscina: fonte maior, fonte selecionável, níveis de velocidade na linha da bomba, luz com cenas DMX, indicador FV, vista de relés, mensagens da Violet; traduções em 11 idiomas",
-        "nl": "Zwembaddisplay: groter lettertype, kiesbaar lettertype, toerentalstanden in de pompregel, licht met DMX-scènes, PV-indicator, relaisweergave, Violet-meldingen; vertalingen in 11 talen",
-        "fr": "Affichage piscine : police plus grande et sélectionnable, vitesses dans la ligne de la pompe, éclairage avec scènes DMX, indicateur PV, vue relais, messages de la Violet ; traductions en 11 langues",
-        "it": "Display piscina: carattere più grande e selezionabile, livelli di velocità nella riga della pompa, luce con scene DMX, indicatore FV, vista relè, messaggi della Violet; traduzioni in 11 lingue",
-        "es": "Pantalla de piscina: fuente más grande y seleccionable, niveles de velocidad en la fila de la bomba, luz con escenas DMX, indicador FV, vista de relés, mensajes de la Violet; traducciones a 11 idiomas",
-        "pl": "Wyświetlacz basenu: większa i wybieralna czcionka, stopnie prędkości w wierszu pompy, światło ze scenami DMX, wskaźnik PV, widok przekaźników, komunikaty Violet; tłumaczenia na 11 języków",
-        "uk": "Дисплей басейну: більший шрифт, вибір шрифту, ступені швидкості в рядку насоса, світло зі сценами DMX, індикатор PV, вигляд реле, повідомлення Violet; переклади 11 мовами",
-        "zh-cn": "泳池显示屏：更大且可选字体、泵行显示档速、灯光及 DMX 场景、光伏指示、继电器视图、Violet 消息；11 种语言翻译"
-      },
-      "0.4.2": {
-        "en": "Pool dashboard renamed to pool display; README updated",
-        "de": "Pool-Dashboard heißt jetzt Pool-Display; README überarbeitet",
-        "ru": "Панель переименована в дисплей бассейна; README обновлён",
-        "pt": "Painel renomeado para display da piscina; README atualizado",
-        "nl": "Dashboard hernoemd naar zwembaddisplay; README bijgewerkt",
-        "fr": "Tableau de bord renommé en affichage piscine ; README mis à jour",
-        "it": "Dashboard rinominata in display piscina; README aggiornato",
-        "es": "Panel renombrado a pantalla de piscina; README actualizado",
-        "pl": "Panel przemianowany na wyświetlacz basenu; zaktualizowano README",
-        "uk": "Панель перейменовано на дисплей басейну; README оновлено",
-        "zh-cn": "仪表板更名为泳池显示屏；更新 README"
-      },
-      "0.4.1": {
-        "en": "Official Violet logo (with permission of PoolDigital)",
-        "de": "Offizielles Violet-Logo (mit Genehmigung von PoolDigital)",
-        "ru": "Официальный логотип Violet (с разрешения PoolDigital)",
-        "pt": "Logotipo oficial da Violet (com permissão da PoolDigital)",
-        "nl": "Officieel Violet-logo (met toestemming van PoolDigital)",
-        "fr": "Logo officiel Violet (avec l'autorisation de PoolDigital)",
-        "it": "Logo ufficiale Violet (con autorizzazione di PoolDigital)",
-        "es": "Logotipo oficial de Violet (con permiso de PoolDigital)",
-        "pl": "Oficjalne logo Violet (za zgodą PoolDigital)",
-        "uk": "Офіційний логотип Violet (з дозволу PoolDigital)",
-        "zh-cn": "官方 Violet 标志（经 PoolDigital 许可）"
-      },
-      "0.4.0": {
-        "en": "Built-in web server for the pool display (port 8099)",
-        "de": "Eingebauter Webserver für das Pool-Display (Port 8099)",
-        "ru": "Встроенный веб-сервер для дисплея бассейна (порт 8099)",
-        "pt": "Servidor web integrado para o display da piscina (porta 8099)",
-        "nl": "Ingebouwde webserver voor het zwembaddisplay (poort 8099)",
-        "fr": "Serveur web intégré pour l'affichage piscine (port 8099)",
-        "it": "Server web integrato per il display piscina (porta 8099)",
-        "es": "Servidor web integrado para la pantalla de piscina (puerto 8099)",
-        "pl": "Wbudowany serwer WWW dla wyświetlacza basenu (port 8099)",
-        "uk": "Вбудований вебсервер для дисплея басейну (порт 8099)",
-        "zh-cn": "泳池显示屏内置 Web 服务器（端口 8099）"
-      },
-      "0.3.0": {
-        "en": "Switching ON/OFF/AUTO (main switch in the configuration; dosing and cover not switchable)",
-        "de": "Schalten EIN/AUS/AUTO (Hauptschalter in der Konfiguration; Dosierung und Abdeckung nicht schaltbar)",
-        "ru": "Переключение ВКЛ/ВЫКЛ/АВТО (главный выключатель в настройках; дозирование и накрытие не переключаются)",
-        "pt": "Comutação LIGA/DESLIGA/AUTO (interruptor principal na configuração; dosagem e cobertura não comutáveis)",
-        "nl": "Schakelen AAN/UIT/AUTO (hoofdschakelaar in de configuratie; dosering en afdekking niet schakelbaar)",
-        "fr": "Commutation MARCHE/ARRÊT/AUTO (interrupteur principal dans la configuration ; dosage et couverture non commutables)",
-        "it": "Commutazione ON/OFF/AUTO (interruttore principale nella configurazione; dosaggio e copertura non commutabili)",
-        "es": "Conmutación ENC./APAG./AUTO (interruptor principal en la configuración; dosificación y cubierta no conmutables)",
-        "pl": "Przełączanie WŁ/WYŁ/AUTO (główny przełącznik w konfiguracji; dozowanie i przykrycie nieprzełączalne)",
-        "uk": "Перемикання УВІМК/ВИМК/АВТО (головний вимикач у налаштуваннях; дозування та накриття не перемикаються)",
-        "zh-cn": "开/关/自动切换（配置中的总开关；加药和泳池盖不可切换）"
       }
     },
     "titleLang": {
@@ -210,7 +132,6 @@
       "dosing"
     ],
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "violet.png",
     "extIcon": "https://raw.githubusercontent.com/AlPi-BRV/ioBroker.violet/main/admin/violet.png",
     "readme": "https://github.com/AlPi-BRV/ioBroker.violet/blob/main/README.md",

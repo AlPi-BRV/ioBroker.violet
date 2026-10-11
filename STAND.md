@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.4 auf Zweig `dev` (zum Testen), `main` = 0.6.4 (öffentlich)
+Stand: 2026-10-11, Version 0.6.5 auf Zweig `dev` (zum Testen), `main` = 0.6.4 (öffentlich)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -27,7 +27,9 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
   - erledigt: Name/Titel/Typ/Autoren/Lizenz, englische README mit Changelog + Herstellerlink, jsonConfig, info.connection, port, Rollen, adapter.setTimeout, Compact-Modus
   - auf dev, noch ungeprüft: devDependencies (@iobroker/testing, mocha), test/package.js + test/integration.js, Node >= 20
   - offen: GitHub Actions (test-and-release), ESLint (@iobroker/eslint-config), Release-Script (@alcalzone/release-script), Passwort verschlüsseln (encryptedNative/protectedNative), Topics im GitHub-Repo (Alex), npm-Veröffentlichung + bluefox als Owner (Alex' npm-Konto), später Forum-Testthread für stable
-  - Adapter-Checker: adapter-check.iobroker.in (Zweig wählbar); brach auf main mit E031 (keine devDependencies) ab
+  - Adapter-Checker: adapter-check.iobroker.in (Zweig wählbar); auf main E031 (keine devDependencies) – auf dev behoben
+  - Checker-Lauf auf dev (0.6.4): W132 (zu viele news) und W184 (common.main) in 0.6.5 behoben; E250 (nicht auf npm) und W401 (nicht in latest) erwartet; E999 = Checker konnte repo.iobroker.live/sources-dist-latest.json nicht laden (404, Serverproblem) und brach in M400 ab → spätere Prüfungen (README, Code, Workflows) noch nicht gelaufen, erneut prüfen
+  - news in io-package.json: höchstens 7 Einträge behalten (vollständige Historie im README-Changelog)
   - Hinweis: npm-Registry ist aus der Claude-Umgebung zeitweise nicht erreichbar – Tests ggf. nur über GitHub Actions prüfbar
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“
