@@ -1,0 +1,61 @@
+# One-off helper: installs the ioBroker dev tooling, writes package-lock.json,
+# formats the code (ESLint/Prettier) and commits the result back to dev.
+# Reports are written to .github/reports/ so they can be read without the Actions log.
+# Will be removed again once the tooling is in place.
+name: Setup tooling (one-off)
+
+on:
+  push:
+    branches: [dev]
+    paths: ['.github/workflows/setup-tooling.yml', '.github/setup-tooling.trigger']
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: dev
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Install dev tooling
+        run: |
+          mkdir -p .github/reports
+          npm install --no-audit --no-fund --save-dev \
+            @iobroker/eslint-config@latest \
+            @iobroker/adapter-dev@latest \
+            @alcalzone/release-script@latest \
+            @alcalzone/release-script-plugin-iobroker@latest \
+            @alcalzone/release-script-plugin-license@latest \
+            @alcalzone/release-script-plugin-manual-review@latest \
+            @types/node@22 \
+            @tsconfig/node22@latest > .github/reports/install.txt 2>&1
+          npm ls --depth=0 >> .github/reports/install.txt 2>&1 || true
+      - name: Format (eslint --fix)
+        run: npx eslint --fix . > .github/reports/fix.txt 2>&1 || true
+      - name: Lint report
+        run: |
+          set +e
+          npm run lint > .github/reports/lint.txt 2>&1
+          echo "EXIT CODE $?" >> .github/reports/lint.txt
+      - name: Package test report
+        run: |
+          set +e
+          npm run test:package > .github/reports/test-package.txt 2>&1
+          echo "EXIT CODE $?" >> .github/reports/test-package.txt
+      - name: Integration test report
+        run: |
+          set +e
+          npm run test:integration > .github/reports/test-integration.txt 2>&1
+          echo "EXIT CODE $?" >> .github/reports/test-integration.txt
+      - name: Commit result to dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Tooling: dev dependencies, package-lock.json, formatting, reports"
+          git push origin HEAD:dev
