@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.4 auf Zweig `dev` (zum Testen), `main` = 0.5.3 (öffentlich)
+Stand: 2026-10-11, Version 0.6.4 auf Zweig `dev` (zum Testen), `main` = 0.6.4 (öffentlich)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -23,5 +23,6 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 ## Offen
 - Status-Codes geklärt (offizielle Beschreibung, docs/getReadings-api.txt): 0 Auto aus, 1 Auto an, 2 Auto durch Regel AUS (z. B. Heizung bei Pumpe aus), 3 Auto durch Notfallregel AN, 4 Manuell an, 5 Aus durch Notfallregel, 6 Manuell aus; DMX nur 0/1/4/6; PVSURPLUS 0 aus, 1 an (Digitaleingang), 2 an (HTTP)
 - Idee: DOS_x_USE (0/1) zeigt, welche Dosierung konfiguriert ist – könnte den Fragebogen vorbelegen
+- Repository-Aufnahme: Adapter-Checker (adapter-check.iobroker.in) brach mit E031 (keine devDependencies) ab → Testgerüst (test/, @iobroker/testing, mocha) auf dev ergänzt; nächster Checker-Lauf zeigt weitere Punkte. Noch offen: GitHub-Workflow, ESLint, npm-Veröffentlichung
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“

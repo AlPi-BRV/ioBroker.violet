@@ -25,10 +25,19 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3"
+  },
+  "devDependencies": {
+    "@iobroker/testing": "^5.0.4",
+    "mocha": "^10.8.2"
+  },
+  "scripts": {
+    "test:package": "mocha test/package.js",
+    "test:integration": "mocha test/integration.js",
+    "test": "npm run test:package"
   },
   "homepage": "https://github.com/AlPi-BRV/ioBroker.violet",
   "repository": {
