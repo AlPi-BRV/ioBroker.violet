@@ -2,6 +2,11 @@
 
 # ioBroker.violet – Anleitung
 
+[![NPM version](https://img.shields.io/npm/v/iobroker.violet.svg)](https://www.npmjs.com/package/iobroker.violet)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.violet.svg)](https://www.npmjs.com/package/iobroker.violet)
+[![Test and Release](https://github.com/AlPi-BRV/ioBroker.violet/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/AlPi-BRV/ioBroker.violet/actions/workflows/test-and-release.yml)
+[![License](https://img.shields.io/github/license/AlPi-BRV/ioBroker.violet)](../../LICENSE)
+
 Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und Relais-Erweiterungen).
 
 🇬🇧 [English README](../../README.md)
