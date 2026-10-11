@@ -13,6 +13,9 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 - **Fragebogen in der Konfiguration**: nur genutzte Bereiche werden als Datenpunkte angelegt
 - Eigene Namen für Temperatursensoren, Relais und Analogeingänge – mit Live-Werten in der Konfiguration
 - **Schalten EIN / AUS / AUTO** (Hauptschalter „Schalten erlauben“, standardmäßig aus)
+- **Einstellungen fürs Pool-Display** (Reiter „Display“): Optimalbereiche für pH, Redox und Chlor (Werte außerhalb rot), Zuordnung der Temperaturzeilen und der großen Anzeige
+- **Virtuelle Relais**: bis zu 8 ioBroker-Datenpunkte (true/false) anderer Geräte, schaltbar in der Relais-Ansicht des Pool-Displays
+- **Wassertemperatur in der Verrohrung**: optional eingefrorener Wert bei stehender Pumpe (`temperatur.sensor1_pool`, im Display mit * markiert)
 - **Umgewälzte Wassermenge des Tages** in m³, berechnet aus den Laufzeiten der Violet und der Fördermenge der Pumpe
 - **Meldungen der Violet** (Warnungen, Alarme, Erinnerungen) als Datenpunkt `meldungen.aktiv` und als Hinweis im Pool-Display
 - **Pool-Display** im Stil der alten ProCon.IP-Anzeige, direkt vom Adapter ausgeliefert
@@ -30,9 +33,10 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 | Verbindung | IP, Login, Abfrageintervall, „Schalten erlauben“, Pool-Display (Port, Schriftart) |
 | Funktionen | Fragebogen: Was ist an der Violet vorhanden? |
 | Temperaturen | Sensor 1–6 heißen wie in der Violet (Wassertemperatur, Außentemperatur, Absorbertemperatur, Absorber-Rücklauf, Wärmetauscher, Speichertemperatur), ab Sensor 7 frei – mit aktuellem Messwert |
+| Display | Optimalbereiche, Temperaturzeilen, große Anzeige |
 | Pumpe | Fördermenge in m³/h (je Drehzahlstufe; mit Absorber / Heizung) für die umgewälzte Wassermenge |
 | Analog | ADC1 Filterdruck, ADC2 Pegelsonde, ADC3–6, Impuls 1 Messwasser, Impuls 2 Förderleistung – Name, Einheit, Live-Wert |
-| Relais | Namen der Relais der Erweiterungen |
+| Relais | Namen der Relais der Erweiterungen, virtuelle Relais (Name + Datenpunkt) |
 
 ## Schalten
 

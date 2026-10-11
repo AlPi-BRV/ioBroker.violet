@@ -208,15 +208,34 @@
           "lg": 12,
           "xl": 12
         },
-        "use_water": {
+        "use_ph": {
           "type": "checkbox",
-          "label": "Water values (pH, redox, chlorine)",
+          "label": "pH electrode",
           "xs": 12,
           "sm": 6,
           "md": 4,
           "lg": 3,
           "xl": 3,
           "newLine": true
+        },
+        "use_redox": {
+          "type": "checkbox",
+          "label": "Redox electrode",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_chlor_el": {
+          "type": "checkbox",
+          "label": "Chlorine electrode",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3,
+          "tooltip": "Optional, not a standard electrode"
         },
         "use_pump": {
           "type": "checkbox",
@@ -225,7 +244,8 @@
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "newLine": true
         },
         "use_pump_rpm": {
           "type": "checkbox",
@@ -245,7 +265,8 @@
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "newLine": true
         },
         "use_refill": {
           "type": "checkbox",
@@ -275,7 +296,9 @@
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "newLine": true
+          "newLine": true,
+          "tooltip": "Either chlorine or electrolysis",
+          "disabled": "data.use_dos_elo"
         },
         "use_dos_elo": {
           "type": "checkbox",
@@ -284,7 +307,9 @@
           "sm": 6,
           "md": 4,
           "lg": 3,
-          "xl": 3
+          "xl": 3,
+          "tooltip": "Either chlorine or electrolysis",
+          "disabled": "data.use_dos_cl"
         },
         "use_dos_phm": {
           "type": "checkbox",
@@ -413,6 +438,15 @@
         "use_ext2": {
           "type": "checkbox",
           "label": "Relay extension 2",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "use_vrel": {
+          "type": "checkbox",
+          "label": "Virtual relays (other devices)",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -854,6 +888,17 @@
           "md": 3,
           "lg": 3,
           "xl": 3
+        },
+        "temp1_pump_only": {
+          "type": "checkbox",
+          "label": "Water temperature (sensor 1) is only realistic while the pump runs",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "newLine": true,
+          "tooltip": "Sensor in the pump piping: with the pump off the value is frozen (data point temperatur.sensor1_pool), marked with * in the pool display"
         }
       }
     },
@@ -1451,6 +1496,243 @@
         }
       }
     },
+    "tabDisplay": {
+      "type": "panel",
+      "label": "Display",
+      "hidden": "!data.web_enabled",
+      "items": {
+        "hrange": {
+          "type": "header",
+          "text": "Optimal ranges – values outside are shown in red (empty = no check)",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "range_ph_min": {
+          "type": "number",
+          "label": "pH from",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": true,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "range_ph_max": {
+          "type": "number",
+          "label": "pH to",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": false,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "range_redox_min": {
+          "type": "number",
+          "label": "Redox from (mV)",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": true,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "range_redox_max": {
+          "type": "number",
+          "label": "Redox to (mV)",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": false,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "range_cl_min": {
+          "type": "number",
+          "label": "Chlorine from (mg/l)",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": true,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "range_cl_max": {
+          "type": "number",
+          "label": "Chlorine to (mg/l)",
+          "min": 0,
+          "max": 2000,
+          "step": 0.01,
+          "newLine": false,
+          "xs": 6,
+          "sm": 4,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "hrows": {
+          "type": "header",
+          "text": "Temperature rows of the pool display",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_temp"
+        },
+        "hrowsinfo": {
+          "type": "staticText",
+          "text": "Per row a main sensor and a small second line. The lists show name and current value (instance must be running). All rows empty = automatic.",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_temp",
+          "style": {
+            "opacity": 0.75
+          }
+        },
+        "disp_row1": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 1 – main sensor",
+          "newLine": true,
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row1_sub": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 1 – second line",
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row2": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 2 – main sensor",
+          "newLine": true,
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row2_sub": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 2 – second line",
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row3": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 3 – main sensor",
+          "newLine": true,
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row3_sub": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 3 – second line",
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row4": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 4 – main sensor",
+          "newLine": true,
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_row4_sub": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Row 4 – second line",
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_hero_left": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Large display left",
+          "newLine": true,
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "disp_hero_right": {
+          "type": "selectSendTo",
+          "command": "getSensorList",
+          "label": "Large display right",
+          "hidden": "!data.use_temp",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        }
+      }
+    },
     "tabRelay": {
       "type": "panel",
       "label": "Relays",
@@ -1666,6 +1948,200 @@
           "lg": 3,
           "xl": 3
         },
+        "hrv": {
+          "type": "header",
+          "text": "Virtual relays (other devices)",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_vrel"
+        },
+        "hrvinfo": {
+          "type": "staticText",
+          "text": "For devices not connected to the Violet (e.g. garden light via another adapter): name + ioBroker data point (true/false). Only ON/OFF, no automatic. Switchable in the pool display if \"Allow switching\" is enabled.",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_vrel",
+          "style": {
+            "opacity": 0.75
+          }
+        },
+        "vrel1_name": {
+          "type": "text",
+          "label": "Virtual relay 1 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel1_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel2_name": {
+          "type": "text",
+          "label": "Virtual relay 2 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel2_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel3_name": {
+          "type": "text",
+          "label": "Virtual relay 3 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel3_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel4_name": {
+          "type": "text",
+          "label": "Virtual relay 4 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel4_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel5_name": {
+          "type": "text",
+          "label": "Virtual relay 5 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel5_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel6_name": {
+          "type": "text",
+          "label": "Virtual relay 6 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel6_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel7_name": {
+          "type": "text",
+          "label": "Virtual relay 7 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel7_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "vrel8_name": {
+          "type": "text",
+          "label": "Virtual relay 8 – name",
+          "newLine": true,
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "vrel8_oid": {
+          "type": "objectId",
+          "label": "Data point (true/false)",
+          "hidden": "!data.use_vrel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
         "hrnone": {
           "type": "staticText",
           "text": "No relay extension selected (tab \"Functions\").",
@@ -1675,7 +2151,7 @@
           "md": 12,
           "lg": 12,
           "xl": 12,
-          "hidden": "data.use_ext1 || data.use_ext2"
+          "hidden": "data.use_ext1 || data.use_ext2 || data.use_vrel"
         }
       }
     }

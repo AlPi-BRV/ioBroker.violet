@@ -7,6 +7,46 @@ LANGS = ['en', 'de', 'ru', 'pt', 'nl', 'fr', 'it', 'es', 'pl', 'uk', 'zh-cn']
 # Schlüssel = englischer Text; Werte in der Reihenfolge: de, ru, pt, nl, fr, it, es, pl, uk, zh-cn
 T = {
 
+    # 0.6.0
+    'pH electrode': ['pH-Elektrode', 'pH-электрод', 'Elétrodo de pH', 'pH-elektrode', 'Électrode pH', 'Elettrodo pH', 'Electrodo de pH', 'Elektroda pH', 'pH-електрод', 'pH 电极'],
+    'Redox electrode': ['Redox-Elektrode', 'Редокс-электрод', 'Elétrodo redox', 'Redox-elektrode', 'Électrode redox', 'Elettrodo redox', 'Electrodo redox', 'Elektroda redox', 'Редокс-електрод', '氧化还原电极'],
+    'Chlorine electrode': ['Chlor-Elektrode', 'Хлорный электрод', 'Elétrodo de cloro', 'Chloorelektrode', 'Électrode chlore', 'Elettrodo cloro', 'Electrodo de cloro', 'Elektroda chlorowa', 'Хлорний електрод', '氯电极'],
+    'Optional, not a standard electrode': ['Optional, keine Standard-Elektrode', 'Опционально, не стандартный электрод', 'Opcional, não é um elétrodo padrão', 'Optioneel, geen standaardelektrode', 'Optionnelle, pas une électrode standard', 'Opzionale, non è un elettrodo standard', 'Opcional, no es un electrodo estándar', 'Opcjonalna, nie jest standardową elektrodą', 'Опційно, не стандартний електрод', '可选，非标准电极'],
+    'Either chlorine or electrolysis': ['Entweder Chlor oder Elektrolyse', 'Либо хлор, либо электролиз', 'Ou cloro ou eletrólise', 'Óf chloor óf elektrolyse', 'Soit chlore, soit électrolyse', 'O cloro o elettrolisi', 'O cloro o electrólisis', 'Albo chlor, albo elektroliza', 'Або хлор, або електроліз', '氯或电解二选一'],
+    'Virtual relays (other devices)': ['Virtuelle Relais (andere Geräte)', 'Виртуальные реле (другие устройства)', 'Relés virtuais (outros dispositivos)', 'Virtuele relais (andere apparaten)', 'Relais virtuels (autres appareils)', 'Relè virtuali (altri dispositivi)', 'Relés virtuales (otros dispositivos)', 'Wirtualne przekaźniki (inne urządzenia)', 'Віртуальні реле (інші пристрої)', '虚拟继电器（其他设备）'],
+    'Water temperature (sensor 1) is only realistic while the pump runs': ['Wassertemperatur (Sensor 1) wird nur bei laufender Pumpe realistisch gemessen', 'Температура воды (датчик 1) реальна только при работающем насосе', 'A temperatura da água (sensor 1) só é realista com a bomba a funcionar', 'Watertemperatuur (sensor 1) is alleen realistisch als de pomp draait', "La température de l'eau (capteur 1) n'est réaliste que pompe en marche", "La temperatura dell'acqua (sensore 1) è realistica solo con la pompa in funzione", 'La temperatura del agua (sensor 1) solo es realista con la bomba en marcha', 'Temperatura wody (czujnik 1) jest realna tylko przy pracującej pompie', 'Температура води (датчик 1) реальна лише під час роботи насоса', '水温（传感器 1）仅在水泵运行时准确'],
+    'Sensor in the pump piping: with the pump off the value is frozen (data point temperatur.sensor1_pool), marked with * in the pool display': ['Fühler in der Verrohrung: bei ausgeschalteter Pumpe wird der Wert eingefroren (Datenpunkt temperatur.sensor1_pool), im Pool-Display mit * markiert', 'Датчик в трубопроводе: при выключенном насосе значение замораживается (точка данных temperatur.sensor1_pool), на дисплее отмечено *', 'Sensor na tubagem: com a bomba desligada o valor é congelado (ponto de dados temperatur.sensor1_pool), marcado com * no display', 'Sensor in de leidingen: bij uitgeschakelde pomp wordt de waarde bevroren (datapunt temperatur.sensor1_pool), in het display met * gemarkeerd', 'Capteur dans la tuyauterie : pompe arrêtée, la valeur est figée (point de données temperatur.sensor1_pool), marquée * sur l’affichage', 'Sensore nelle tubazioni: a pompa spenta il valore viene congelato (punto dati temperatur.sensor1_pool), contrassegnato con * nel display', 'Sensor en la tubería: con la bomba apagada el valor se congela (punto de datos temperatur.sensor1_pool), marcado con * en la pantalla', 'Czujnik w rurach: przy wyłączonej pompie wartość jest zamrażana (punkt danych temperatur.sensor1_pool), oznaczona * na wyświetlaczu', 'Датчик у трубопроводі: при вимкненому насосі значення заморожується (точка даних temperatur.sensor1_pool), на дисплеї позначено *', '传感器位于管道中：水泵关闭时数值冻结（数据点 temperatur.sensor1_pool），在显示屏中以 * 标记'],
+    'Display': ['Display', 'Дисплей', 'Display', 'Display', 'Affichage', 'Display', 'Pantalla', 'Wyświetlacz', 'Дисплей', '显示屏'],
+    'Optimal ranges – values outside are shown in red (empty = no check)': ['Optimalbereiche – Werte außerhalb werden rot angezeigt (leer = keine Prüfung)', 'Оптимальные диапазоны – значения вне диапазона красные (пусто = без проверки)', 'Intervalos ideais – valores fora são mostrados a vermelho (vazio = sem verificação)', 'Optimale bereiken – waarden daarbuiten worden rood weergegeven (leeg = geen controle)', 'Plages optimales – les valeurs hors plage sont en rouge (vide = pas de contrôle)', 'Intervalli ottimali – i valori fuori sono mostrati in rosso (vuoto = nessun controllo)', 'Rangos óptimos – los valores fuera se muestran en rojo (vacío = sin comprobación)', 'Zakresy optymalne – wartości poza zakresem na czerwono (puste = bez sprawdzania)', 'Оптимальні діапазони – значення поза ними червоні (порожньо = без перевірки)', '最佳范围 – 超出范围的数值显示为红色（留空 = 不检查）'],
+    'pH from': ['pH von', 'pH от', 'pH de', 'pH van', 'pH de', 'pH da', 'pH desde', 'pH od', 'pH від', 'pH 从'],
+    'pH to': ['pH bis', 'pH до', 'pH até', 'pH tot', 'pH à', 'pH a', 'pH hasta', 'pH do', 'pH до', 'pH 到'],
+    'Redox from (mV)': ['Redox von (mV)', 'Редокс от (мВ)', 'Redox de (mV)', 'Redox van (mV)', 'Redox de (mV)', 'Redox da (mV)', 'Redox desde (mV)', 'Redox od (mV)', 'Редокс від (мВ)', '氧化还原 从 (mV)'],
+    'Redox to (mV)': ['Redox bis (mV)', 'Редокс до (мВ)', 'Redox até (mV)', 'Redox tot (mV)', 'Redox à (mV)', 'Redox a (mV)', 'Redox hasta (mV)', 'Redox do (mV)', 'Редокс до (мВ)', '氧化还原 到 (mV)'],
+    'Chlorine from (mg/l)': ['Chlor von (mg/l)', 'Хлор от (мг/л)', 'Cloro de (mg/l)', 'Chloor van (mg/l)', 'Chlore de (mg/l)', 'Cloro da (mg/l)', 'Cloro desde (mg/l)', 'Chlor od (mg/l)', 'Хлор від (мг/л)', '氯 从 (mg/l)'],
+    'Chlorine to (mg/l)': ['Chlor bis (mg/l)', 'Хлор до (мг/л)', 'Cloro até (mg/l)', 'Chloor tot (mg/l)', 'Chlore à (mg/l)', 'Cloro a (mg/l)', 'Cloro hasta (mg/l)', 'Chlor do (mg/l)', 'Хлор до (мг/л)', '氯 到 (mg/l)'],
+    'Temperature rows of the pool display': ['Temperaturzeilen des Pool-Displays', 'Строки температур на дисплее', 'Linhas de temperatura do display', 'Temperatuurregels van het display', "Lignes de température de l'affichage", 'Righe temperatura del display', 'Filas de temperatura de la pantalla', 'Wiersze temperatur wyświetlacza', 'Рядки температур дисплея', '显示屏温度行'],
+    'Per row a main sensor and a small second line. The lists show name and current value (instance must be running). All rows empty = automatic.': ['Je Zeile ein Hauptfühler und eine kleine zweite Zeile. Die Listen zeigen Name und aktuellen Wert (Instanz muss laufen). Alle Zeilen leer = automatisch.', 'В каждой строке основной датчик и малая вторая строка. Списки показывают имя и текущее значение (экземпляр должен работать). Все пусто = автоматически.', 'Por linha um sensor principal e uma segunda linha pequena. As listas mostram nome e valor atual (a instância tem de estar a correr). Tudo vazio = automático.', 'Per regel een hoofdsensor en een kleine tweede regel. De lijsten tonen naam en actuele waarde (instantie moet draaien). Alles leeg = automatisch.', "Par ligne un capteur principal et une petite deuxième ligne. Les listes affichent nom et valeur actuelle (l'instance doit tourner). Tout vide = automatique.", "Per riga un sensore principale e una piccola seconda riga. Gli elenchi mostrano nome e valore attuale (l'istanza deve essere in esecuzione). Tutto vuoto = automatico.", 'Por fila un sensor principal y una segunda línea pequeña. Las listas muestran nombre y valor actual (la instancia debe estar en marcha). Todo vacío = automático.', 'W każdym wierszu czujnik główny i mała druga linia. Listy pokazują nazwę i bieżącą wartość (instancja musi działać). Wszystko puste = automatycznie.', 'У кожному рядку основний датчик і мала другий рядок. Списки показують назву й поточне значення (екземпляр має працювати). Усе порожньо = автоматично.', '每行一个主传感器和一行小字。列表显示名称和当前值（实例必须运行）。全部留空 = 自动。'],
+    'Large display left': ['Große Anzeige links', 'Крупная индикация слева', 'Indicação grande à esquerda', 'Grote weergave links', 'Grand affichage à gauche', 'Indicazione grande a sinistra', 'Indicación grande izquierda', 'Duży wskaźnik po lewej', 'Велика індикація зліва', '左侧大显示'],
+    'Large display right': ['Große Anzeige rechts', 'Крупная индикация справа', 'Indicação grande à direita', 'Grote weergave rechts', 'Grand affichage à droite', 'Indicazione grande a destra', 'Indicación grande derecha', 'Duży wskaźnik po prawej', 'Велика індикація справа', '右侧大显示'],
+    'For devices not connected to the Violet (e.g. garden light via another adapter): name + ioBroker data point (true/false). Only ON/OFF, no automatic. Switchable in the pool display if "Allow switching" is enabled.': ['Für Geräte, die nicht an der Violet hängen (z. B. Gartenlicht über einen anderen Adapter): Name + ioBroker-Datenpunkt (true/false). Nur EIN/AUS, keine Automatik. Im Pool-Display schaltbar, wenn „Schalten erlauben“ aktiv ist.', 'Для устройств, не подключённых к Violet (напр. садовый свет через другой адаптер): имя + точка данных ioBroker (true/false). Только ВКЛ/ВЫКЛ, без автоматики. Переключается на дисплее, если включено «Разрешить переключение».', 'Para dispositivos não ligados à Violet (p. ex. luz do jardim via outro adaptador): nome + ponto de dados ioBroker (true/false). Só LIGAR/DESLIGAR, sem automático. Comutável no display se «Permitir comutação» estiver ativo.', 'Voor apparaten die niet op de Violet zijn aangesloten (bv. tuinverlichting via een andere adapter): naam + ioBroker-datapunt (true/false). Alleen AAN/UIT, geen automatiek. Schakelbaar in het display als „Schakelen toestaan” actief is.', "Pour les appareils non reliés à la Violet (p. ex. éclairage du jardin via un autre adaptateur) : nom + point de données ioBroker (true/false). Seulement MARCHE/ARRÊT, pas d'automatique. Commutable sur l'affichage si « Autoriser la commutation » est activé.", "Per dispositivi non collegati alla Violet (es. luce del giardino tramite un altro adattatore): nome + punto dati ioBroker (true/false). Solo ON/OFF, nessun automatico. Commutabile nel display se «Consenti commutazione» è attivo.", 'Para dispositivos no conectados a la Violet (p. ej. luz del jardín mediante otro adaptador): nombre + punto de datos ioBroker (true/false). Solo ENC/APAG, sin automático. Conmutable en la pantalla si «Permitir conmutación» está activo.', 'Dla urządzeń niepodłączonych do Violet (np. oświetlenie ogrodu przez inny adapter): nazwa + punkt danych ioBroker (true/false). Tylko WŁ/WYŁ, bez automatyki. Przełączalne na wyświetlaczu, gdy włączono „Zezwól na przełączanie”.', 'Для пристроїв, не підключених до Violet (напр. садове світло через інший адаптер): назва + точка даних ioBroker (true/false). Лише УВІМК/ВИМК, без автоматики. Перемикається на дисплеї, якщо ввімкнено «Дозволити перемикання».', '用于未连接到 Violet 的设备（例如通过其他适配器控制的花园灯）：名称 + ioBroker 数据点 (true/false)。仅开/关，无自动。若启用“允许切换”，可在显示屏中切换。'],
+    'Data point (true/false)': ['Datenpunkt (true/false)', 'Точка данных (true/false)', 'Ponto de dados (true/false)', 'Datapunt (true/false)', 'Point de données (true/false)', 'Punto dati (true/false)', 'Punto de datos (true/false)', 'Punkt danych (true/false)', 'Точка даних (true/false)', '数据点 (true/false)'],
+    'Row 1 – main sensor': ['Zeile 1 – Hauptfühler', 'Строка 1 – основной датчик', 'Linha 1 – sensor principal', 'Regel 1 – hoofdsensor', 'Ligne 1 – capteur principal', 'Riga 1 – sensore principale', 'Fila 1 – sensor principal', 'Wiersz 1 – czujnik główny', 'Рядок 1 – основний датчик', '第 1 行 – 主传感器'],
+    'Row 1 – second line': ['Zeile 1 – zweite Zeile', 'Строка 1 – вторая строка', 'Linha 1 – segunda linha', 'Regel 1 – tweede regel', 'Ligne 1 – deuxième ligne', 'Riga 1 – seconda riga', 'Fila 1 – segunda línea', 'Wiersz 1 – druga linia', 'Рядок 1 – другий рядок', '第 1 行 – 第二行'],
+    'Row 2 – main sensor': ['Zeile 2 – Hauptfühler', 'Строка 2 – основной датчик', 'Linha 2 – sensor principal', 'Regel 2 – hoofdsensor', 'Ligne 2 – capteur principal', 'Riga 2 – sensore principale', 'Fila 2 – sensor principal', 'Wiersz 2 – czujnik główny', 'Рядок 2 – основний датчик', '第 2 行 – 主传感器'],
+    'Row 2 – second line': ['Zeile 2 – zweite Zeile', 'Строка 2 – вторая строка', 'Linha 2 – segunda linha', 'Regel 2 – tweede regel', 'Ligne 2 – deuxième ligne', 'Riga 2 – seconda riga', 'Fila 2 – segunda línea', 'Wiersz 2 – druga linia', 'Рядок 2 – другий рядок', '第 2 行 – 第二行'],
+    'Row 3 – main sensor': ['Zeile 3 – Hauptfühler', 'Строка 3 – основной датчик', 'Linha 3 – sensor principal', 'Regel 3 – hoofdsensor', 'Ligne 3 – capteur principal', 'Riga 3 – sensore principale', 'Fila 3 – sensor principal', 'Wiersz 3 – czujnik główny', 'Рядок 3 – основний датчик', '第 3 行 – 主传感器'],
+    'Row 3 – second line': ['Zeile 3 – zweite Zeile', 'Строка 3 – вторая строка', 'Linha 3 – segunda linha', 'Regel 3 – tweede regel', 'Ligne 3 – deuxième ligne', 'Riga 3 – seconda riga', 'Fila 3 – segunda línea', 'Wiersz 3 – druga linia', 'Рядок 3 – другий рядок', '第 3 行 – 第二行'],
+    'Row 4 – main sensor': ['Zeile 4 – Hauptfühler', 'Строка 4 – основной датчик', 'Linha 4 – sensor principal', 'Regel 4 – hoofdsensor', 'Ligne 4 – capteur principal', 'Riga 4 – sensore principale', 'Fila 4 – sensor principal', 'Wiersz 4 – czujnik główny', 'Рядок 4 – основний датчик', '第 4 行 – 主传感器'],
+    'Row 4 – second line': ['Zeile 4 – zweite Zeile', 'Строка 4 – вторая строка', 'Linha 4 – segunda linha', 'Regel 4 – tweede regel', 'Ligne 4 – deuxième ligne', 'Riga 4 – seconda riga', 'Fila 4 – segunda línea', 'Wiersz 4 – druga linia', 'Рядок 4 – другий рядок', '第 4 行 – 第二行'],
+    'Virtual relay 1 – name': ['Virtuelles Relais 1 – Name', 'Виртуальное реле 1 – имя', 'Relé virtual 1 – nome', 'Virtueel relais 1 – naam', 'Relais virtuel 1 – nom', 'Relè virtuale 1 – nome', 'Relé virtual 1 – nombre', 'Przekaźnik wirtualny 1 – nazwa', 'Віртуальне реле 1 – назва', '虚拟继电器 1 – 名称'],
+    'Virtual relay 2 – name': ['Virtuelles Relais 2 – Name', 'Виртуальное реле 2 – имя', 'Relé virtual 2 – nome', 'Virtueel relais 2 – naam', 'Relais virtuel 2 – nom', 'Relè virtuale 2 – nome', 'Relé virtual 2 – nombre', 'Przekaźnik wirtualny 2 – nazwa', 'Віртуальне реле 2 – назва', '虚拟继电器 2 – 名称'],
+    'Virtual relay 3 – name': ['Virtuelles Relais 3 – Name', 'Виртуальное реле 3 – имя', 'Relé virtual 3 – nome', 'Virtueel relais 3 – naam', 'Relais virtuel 3 – nom', 'Relè virtuale 3 – nome', 'Relé virtual 3 – nombre', 'Przekaźnik wirtualny 3 – nazwa', 'Віртуальне реле 3 – назва', '虚拟继电器 3 – 名称'],
+    'Virtual relay 4 – name': ['Virtuelles Relais 4 – Name', 'Виртуальное реле 4 – имя', 'Relé virtual 4 – nome', 'Virtueel relais 4 – naam', 'Relais virtuel 4 – nom', 'Relè virtuale 4 – nome', 'Relé virtual 4 – nombre', 'Przekaźnik wirtualny 4 – nazwa', 'Віртуальне реле 4 – назва', '虚拟继电器 4 – 名称'],
+    'Virtual relay 5 – name': ['Virtuelles Relais 5 – Name', 'Виртуальное реле 5 – имя', 'Relé virtual 5 – nome', 'Virtueel relais 5 – naam', 'Relais virtuel 5 – nom', 'Relè virtuale 5 – nome', 'Relé virtual 5 – nombre', 'Przekaźnik wirtualny 5 – nazwa', 'Віртуальне реле 5 – назва', '虚拟继电器 5 – 名称'],
+    'Virtual relay 6 – name': ['Virtuelles Relais 6 – Name', 'Виртуальное реле 6 – имя', 'Relé virtual 6 – nome', 'Virtueel relais 6 – naam', 'Relais virtuel 6 – nom', 'Relè virtuale 6 – nome', 'Relé virtual 6 – nombre', 'Przekaźnik wirtualny 6 – nazwa', 'Віртуальне реле 6 – назва', '虚拟继电器 6 – 名称'],
+    'Virtual relay 7 – name': ['Virtuelles Relais 7 – Name', 'Виртуальное реле 7 – имя', 'Relé virtual 7 – nome', 'Virtueel relais 7 – naam', 'Relais virtuel 7 – nom', 'Relè virtuale 7 – nome', 'Relé virtual 7 – nombre', 'Przekaźnik wirtualny 7 – nazwa', 'Віртуальне реле 7 – назва', '虚拟继电器 7 – 名称'],
+    'Virtual relay 8 – name': ['Virtuelles Relais 8 – Name', 'Виртуальное реле 8 – имя', 'Relé virtual 8 – nome', 'Virtueel relais 8 – naam', 'Relais virtuel 8 – nom', 'Relè virtuale 8 – nome', 'Relé virtual 8 – nombre', 'Przekaźnik wirtualny 8 – nazwa', 'Віртуальне реле 8 – назва', '虚拟继电器 8 – 名称'],
+
     # Pumpe / Wassermenge
     'Pump': ['Pumpe', 'Насос', 'Bomba', 'Pomp', 'Pompe', 'Pompa', 'Bomba', 'Pompa', 'Насос', '水泵'],
     'Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.': [
@@ -201,14 +241,16 @@ conn = {
 func = {
     'intro': static('What do you use on your Violet? Only checked areas are created as data points.'),
     'h1': hdr('Water and filtration'),
-    'use_water': cb('Water values (pH, redox, chlorine)', newLine=True),
-    'use_pump': cb('Filter pump'),
+    'use_ph': cb('pH electrode', newLine=True),
+    'use_redox': cb('Redox electrode'),
+    'use_chlor_el': cb('Chlorine electrode', 'Optional, not a standard electrode'),
+    'use_pump': cb('Filter pump', newLine=True),
     'use_pump_rpm': cb('Pump with speed levels', 'Only for speed-controlled pumps with levels 0–3', '!data.use_pump'),
-    'use_backwash': cb('Automatic backwash'),
+    'use_backwash': cb('Automatic backwash', newLine=True),
     'use_refill': cb('Refill / water level'),
     'h2': hdr('Dosing – which channels are in operation?'),
-    'use_dos_cl': cb('Chlorine (liquid)', newLine=True),
-    'use_dos_elo': cb('Electrolysis (salt)'),
+    'use_dos_cl': {**cb('Chlorine (liquid)', 'Either chlorine or electrolysis', newLine=True), 'disabled': 'data.use_dos_elo'},
+    'use_dos_elo': {**cb('Electrolysis (salt)', 'Either chlorine or electrolysis'), 'disabled': 'data.use_dos_cl'},
     'use_dos_phm': cb('pH minus'),
     'use_dos_php': cb('pH plus'),
     'use_dos_floc': cb('Flocculant'),
@@ -223,6 +265,7 @@ func = {
     'h4': hdr('Extensions and inputs'),
     'use_ext1': cb('Relay extension 1', 'Relay names in the tab "Relays"', newLine=True),
     'use_ext2': cb('Relay extension 2'),
+    'use_vrel': cb('Virtual relays (other devices)'),
     'use_temp': cb('Temperature sensors', 'Sensors that are not connected are omitted automatically; names in the tab "Temperatures"'),
     'use_inputs': cb('Digital inputs'),
     'use_analog': cb('Analog / pulse inputs', 'e.g. filter pressure, humidity, probe flow – names and units in the tab "Analog"'),
@@ -242,6 +285,8 @@ for i in range(1, 13):
         f['placeholder'] = FIXED[i-1]
     temps[f'temp{i}_name'] = f
     temps[f'temp{i}_value'] = {'type': 'textSendTo', 'command': 'getTemp', 'data': {'sensor': i}, 'container': 'div', 'style': {'paddingTop': 18, 'opacity': 0.85}, **W(12, 6, 3, 3, 3)}
+
+temps['temp1_pump_only'] = {**cb('Water temperature (sensor 1) is only realistic while the pump runs', 'Sensor in the pump piping: with the pump off the value is frozen (data point temperatur.sensor1_pool), marked with * in the pool display', newLine=True), **FULL}
 
 units = ['bar', 'mbar', '%rF', '°C', 'cm/s', 'm³/h', 'l/min', 'V', 'mA', '%']
 analog = {'ha': static('The Violet has fixed inputs (see labels). Only inputs with a name are created as data points; empty unit = suggestion in grey. The live value helps with the assignment.')}
@@ -275,7 +320,23 @@ for e in (1, 2):
     relays[f'hr{e}'] = hdr(f'Relay extension {e}', f'!data.use_ext{e}')
     for r in range(1, 9):
         relays[f'ext{e}_{r}_name'] = {'type': 'text', 'label': f'EXT{e}.{r}', 'newLine': r % 4 == 1, 'hidden': f'!data.use_ext{e}', **W(12, 6, 3, 3, 3)}
-relays['hrnone'] = static('No relay extension selected (tab "Functions").', 'data.use_ext1 || data.use_ext2')
+relays['hrv'] = hdr('Virtual relays (other devices)', '!data.use_vrel')
+relays['hrvinfo'] = static('For devices not connected to the Violet (e.g. garden light via another adapter): name + ioBroker data point (true/false). Only ON/OFF, no automatic. Switchable in the pool display if "Allow switching" is enabled.', '!data.use_vrel', True)
+for n in range(1, 9):
+    relays[f'vrel{n}_name'] = {'type': 'text', 'label': f'Virtual relay {n} – name', 'newLine': True, 'hidden': '!data.use_vrel', **W(12, 6, 4, 4, 4)}
+    relays[f'vrel{n}_oid'] = {'type': 'objectId', 'label': 'Data point (true/false)', 'hidden': '!data.use_vrel', **W(12, 6, 6, 6, 6)}
+relays['hrnone'] = static('No relay extension selected (tab "Functions").', 'data.use_ext1 || data.use_ext2 || data.use_vrel')
+
+disp = {'hrange': hdr('Optimal ranges – values outside are shown in red (empty = no check)')}
+for k, lbl, nl in [('range_ph_min', 'pH from', True), ('range_ph_max', 'pH to', False), ('range_redox_min', 'Redox from (mV)', True), ('range_redox_max', 'Redox to (mV)', False), ('range_cl_min', 'Chlorine from (mg/l)', True), ('range_cl_max', 'Chlorine to (mg/l)', False)]:
+    disp[k] = {'type': 'number', 'label': lbl, 'min': 0, 'max': 2000, 'step': 0.01, 'newLine': nl, **W(6, 4, 3, 3, 3)}
+disp['hrows'] = hdr('Temperature rows of the pool display', '!data.use_temp')
+disp['hrowsinfo'] = static('Per row a main sensor and a small second line. The lists show name and current value (instance must be running). All rows empty = automatic.', '!data.use_temp', True)
+for n in range(1, 5):
+    disp[f'disp_row{n}'] = {'type': 'selectSendTo', 'command': 'getSensorList', 'label': f'Row {n} – main sensor', 'newLine': True, 'hidden': '!data.use_temp', **W(12, 6, 4, 4, 4)}
+    disp[f'disp_row{n}_sub'] = {'type': 'selectSendTo', 'command': 'getSensorList', 'label': f'Row {n} – second line', 'hidden': '!data.use_temp', **W(12, 6, 4, 4, 4)}
+disp['disp_hero_left'] = {'type': 'selectSendTo', 'command': 'getSensorList', 'label': 'Large display left', 'newLine': True, 'hidden': '!data.use_temp', **W(12, 6, 4, 4, 4)}
+disp['disp_hero_right'] = {'type': 'selectSendTo', 'command': 'getSensorList', 'label': 'Large display right', 'hidden': '!data.use_temp', **W(12, 6, 4, 4, 4)}
 
 config = {'i18n': True, 'type': 'tabs', 'items': {
     'tabConn': {'type': 'panel', 'label': 'Connection', 'items': conn},
@@ -283,6 +344,7 @@ config = {'i18n': True, 'type': 'tabs', 'items': {
     'tabTemp': {'type': 'panel', 'label': 'Temperatures', 'hidden': '!data.use_temp', 'items': temps},
     'tabAnalog': {'type': 'panel', 'label': 'Analog', 'hidden': '!data.use_analog', 'items': analog},
     'tabPump': {'type': 'panel', 'label': 'Pump', 'hidden': '!data.use_pump', 'items': pump},
+    'tabDisplay': {'type': 'panel', 'label': 'Display', 'hidden': '!data.web_enabled', 'items': disp},
     'tabRelay': {'type': 'panel', 'label': 'Relays', 'items': relays},
 }}
 

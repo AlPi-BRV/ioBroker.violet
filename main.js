@@ -18,6 +18,14 @@ const { names, pick } = require('./lib/i18n');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
 
+const num = (v) => (v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
+
+/** Läuft die Filterpumpe? Bei Drehzahlpumpen über die Stufen, sonst über den Status */
+function pumpRunning(d) {
+    if (d.PUMP_RPM_0 !== undefined) return [1, 2, 3].some((s) => parseInt(d[`PUMP_RPM_${s}`], 10) === 1);
+    return [1, 2, 3, 4].includes(parseInt(d.PUMP, 10));
+}
+
 class Violet extends utils.Adapter {
     constructor(options = {}) {
         super({ ...options, name: 'violet' });
@@ -74,11 +82,19 @@ class Violet extends utils.Adapter {
         }
 
         // fehlende Einstellungen (z. B. nach einem Update) mit Standardwerten auffüllen
+        // ab 0.6.0: Wasserwerte je Elektrode statt eines Häkchens „Wasserwerte“
+        if (this.config.use_ph === undefined && this.config.use_water !== undefined) {
+            const w = !!this.config.use_water;
+            this.config.use_ph = w;
+            this.config.use_redox = w;
+            this.config.use_chlor_el = w;
+        }
         const defaults = require('./io-package.json').native;
         for (const [k, v] of Object.entries(defaults)) {
             if (this.config[k] === undefined) this.config[k] = v;
         }
 
+        this.config.use_water = !!(this.config.use_ph || this.config.use_redox || this.config.use_chlor_el);
         this.defs = buildDefinitions(this.config);
         const flows = flowConfig(this.config);
         if (flows) {
@@ -131,6 +147,31 @@ class Violet extends utils.Adapter {
             const acked = await this.getStateAsync('meldungen.quittiert');
             this.msg.acked = (acked && acked.val) || '';
             this.subscribeStates('meldungen.quittieren');
+        }
+
+        // Wassertemperatur bei Fühler in der Verrohrung: letzter plausibler Wert
+        if (this.config.temp1_pump_only && this.config.use_temp) {
+            const st = await this.getStateAsync('temperatur.sensor1_pool');
+            this.t1 = { value: st && typeof st.val === 'number' ? st.val : null };
+        }
+
+        // virtuelle Relais: fremde Datenpunkte (true/false), nur EIN/AUS
+        this.vrel = [];
+        if (this.config.use_vrel) {
+            for (let n = 1; n <= 8; n++) {
+                const oid = String(this.config[`vrel${n}_oid`] || '').trim();
+                if (!oid) continue;
+                const name = String(this.config[`vrel${n}_name`] || '').trim() || `${this.t('Virtuelles Relais', 'Virtual relay')} ${n}`;
+                this.vrel.push({ id: `vrelais.${n}`, n, name, oid });
+                try {
+                    const st = await this.getForeignStateAsync(oid);
+                    this.cache[`vrelais.${n}`] = !!(st && st.val);
+                } catch {
+                    this.cache[`vrelais.${n}`] = false;
+                }
+                this.subscribeForeignStates(oid);
+            }
+            if (this.vrel.length) this.log.info(`${this.vrel.length} virtual relays configured`);
         }
 
         if (this.config.web_enabled) this.startWebServer();
@@ -210,6 +251,21 @@ class Violet extends utils.Adapter {
     }
 
     async processData(data) {
+        if (this.t1) {
+            // läuft die Pumpe seit mindestens 3 Minuten, ist der Messwert realistisch
+            const raw = parseFloat(data.onewire1_value);
+            const running = pumpRunning(data);
+            const lastOn = parseFloat(data.PUMP_LAST_ON);
+            const since = lastOn > 0 ? (lastOn > 1e12 ? lastOn : lastOn * 1000) : this.t1.since || Date.now();
+            if (running && !this.t1.since) this.t1.since = since;
+            if (!running) this.t1.since = 0;
+            const settled = running && Date.now() - this.t1.since >= 3 * 60 * 1000;
+            if (Number.isFinite(raw) && (settled || this.t1.value === null)) this.t1.value = Math.round(raw * 100) / 100;
+            if (this.t1.value !== null) {
+                data.__T1_POOL = this.t1.value;
+                data.__T1_FROZEN = !settled;
+            }
+        }
         if (this.volume) {
             const v = this.volume.update(data);
             if (v !== undefined) {
@@ -367,6 +423,15 @@ class Violet extends utils.Adapter {
             switching: this.controls.length > 0,
             pumpRpm: !!(c.use_pump && c.use_pump_rpm),
             volume: !!this.volume,
+            t1Pool: !!this.t1,
+            ranges: {
+                ph: [num(c.range_ph_min), num(c.range_ph_max)],
+                redox: [num(c.range_redox_min), num(c.range_redox_max)],
+                chlor: [num(c.range_cl_min), num(c.range_cl_max)],
+            },
+            rows: [1, 2, 3, 4].map((n) => ({ sensor: Number(c[`disp_row${n}`]) || 0, sub: Number(c[`disp_row${n}_sub`]) || 0 })).filter((r) => r.sensor || r.sub),
+            hero: [Number(c.disp_hero_left) || 0, Number(c.disp_hero_right) || 0],
+            vrelays: (this.vrel || []).map((v) => ({ id: v.id, name: v.name })),
             pv: !!c.use_pv,
             dmx: !!c.use_dmx,
             temps: [],
@@ -442,10 +507,26 @@ class Violet extends utils.Adapter {
         if (obj.command === 'getTemp') {
             const i = parseInt(obj.message && obj.message.sensor, 10);
             reply = this.describeSensor(i);
+        } else if (obj.command === 'getSensorList') {
+            reply = this.sensorList();
         } else if (obj.command === 'getAnalog') {
             reply = this.describeAnalog(obj.message && obj.message.key);
         }
         this.sendTo(obj.from, obj.command, reply, obj.callback);
+    }
+
+    /** Auswahlliste der Temperaturfühler für den Reiter „Display“ (Name + aktueller Wert) */
+    sensorList() {
+        const d = this.lastData || {};
+        const list = [{ label: this.t('– leer / automatisch –', '– empty / automatic –'), value: 0 }];
+        for (let i = 1; i <= 12; i++) {
+            const st = d[`onewire${i}_state`];
+            if (this.lastData && (st === undefined || st === 'NO_SENSOR_CONFIGURED')) continue;
+            const v = parseFloat(d[`onewire${i}_value`]);
+            const val = Number.isFinite(v) ? `  (${v.toLocaleString(this.lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C)` : '';
+            list.push({ label: `${i}: ${pick(tempName(this.config, i), this.lang)}${val}`, value: i });
+        }
+        return list;
     }
 
     describeSensor(i) {
@@ -476,7 +557,13 @@ class Violet extends utils.Adapter {
 
     /** Schaltwunsch aus ioBroker (ack=false) */
     async onStateChange(fullId, state) {
-        if (!state || state.ack) return;
+        if (!state) return;
+        if (!fullId.startsWith(`${this.namespace}.`)) {
+            // Rückmeldung eines virtuellen Relais (fremder Datenpunkt)
+            for (const v of this.vrel || []) if (v.oid === fullId) this.cache[v.id] = !!state.val;
+            return;
+        }
+        if (state.ack) return;
         const id = fullId.substring(this.namespace.length + 1);
 
         if (id === 'meldungen.quittieren') {
@@ -579,6 +666,15 @@ class Violet extends utils.Adapter {
                 if (url.pathname === '/api/set') {
                     const id = url.searchParams.get('id') || '';
                     const value = url.searchParams.get('value');
+                    const v = (this.vrel || []).find((x) => x.id === id);
+                    if (v) {
+                        if (!this.config.allow_switching) return send(403, { ok: false, error: 'switching disabled' });
+                        const on = String(value).toUpperCase() === 'ON';
+                        this.log.info(`Pool display (${req.socket.remoteAddress}): virtual relay ${v.name} (${v.oid}) = ${on}`);
+                        await this.setForeignStateAsync(v.oid, on, false);
+                        this.cache[v.id] = on;
+                        return send(200, { ok: true });
+                    }
                     const c = this.controls.find((x) => x.id === id);
                     if (!c) return send(403, { ok: false, error: 'This data point is not switchable (switching enabled?)' });
                     this.log.info(`Pool display (${req.socket.remoteAddress}): ${id} = ${value}`);

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.5.3",
+    "version": "0.6.0",
     "news": {
+      "0.6.0": {
+        "en": "New tab \"Display\" (optimal ranges, temperature rows, large display), virtual relays, water temperature frozen while the pump is off, electrodes selectable, flocculant in the display, chlorine or electrolysis",
+        "de": "Neuer Reiter „Display“ (Optimalbereiche, Temperaturzeilen, große Anzeige), virtuelle Relais, Wassertemperatur bei stehender Pumpe eingefroren, Elektroden wählbar, Flockung im Display, Chlor oder Elektrolyse",
+        "ru": "Новая вкладка «Дисплей» (оптимальные диапазоны, строки температур, крупная индикация), виртуальные реле, температура воды замораживается при выключенном насосе, выбор электродов, флокулянт на дисплее, хлор или электролиз",
+        "pt": "Novo separador «Display» (intervalos ideais, linhas de temperatura, indicação grande), relés virtuais, temperatura da água congelada com a bomba parada, elétrodos selecionáveis, floculante no display, cloro ou eletrólise",
+        "nl": "Nieuw tabblad „Display” (optimale bereiken, temperatuurregels, grote weergave), virtuele relais, watertemperatuur bevroren bij stilstaande pomp, elektroden selecteerbaar, vlokmiddel in het display, chloor of elektrolyse",
+        "fr": "Nouvel onglet « Affichage » (plages optimales, lignes de température, grand affichage), relais virtuels, température de l’eau figée pompe arrêtée, électrodes au choix, floculant affiché, chlore ou électrolyse",
+        "it": "Nuova scheda «Display» (intervalli ottimali, righe temperatura, indicazione grande), relè virtuali, temperatura dell’acqua congelata a pompa ferma, elettrodi selezionabili, flocculante nel display, cloro o elettrolisi",
+        "es": "Nueva pestaña «Pantalla» (rangos óptimos, filas de temperatura, indicación grande), relés virtuales, temperatura del agua congelada con la bomba parada, electrodos seleccionables, floculante en la pantalla, cloro o electrólisis",
+        "pl": "Nowa zakładka „Wyświetlacz” (zakresy optymalne, wiersze temperatur, duży wskaźnik), wirtualne przekaźniki, temperatura wody zamrożona przy zatrzymanej pompie, wybór elektrod, flokulant na wyświetlaczu, chlor lub elektroliza",
+        "uk": "Нова вкладка «Дисплей» (оптимальні діапазони, рядки температур, велика індикація), віртуальні реле, температура води заморожується при зупиненому насосі, вибір електродів, флокулянт на дисплеї, хлор або електроліз",
+        "zh-cn": "新增“显示屏”选项卡（最佳范围、温度行、大显示），虚拟继电器，水泵停止时冻结水温，可选电极，显示屏显示絮凝剂，氯或电解二选一"
+      },
       "0.5.3": {
         "en": "Pool display: runtimes without \"today\" so the line no longer wraps",
         "de": "Pool-Display: Laufzeiten ohne „heute“, damit die Zeile nicht mehr umbricht",
@@ -135,7 +148,7 @@
       "zh-cn": "PoolDigital Violet 泳池控制器适配器"
     },
     "authors": [
-      "Line Systems <office@line-systems.de>"
+      "Alexander Pietz <alex@1-5worlds.de>"
     ],
     "keywords": [
       "violet",
@@ -207,7 +220,9 @@
     "password": "",
     "interval": 10,
     "timeout": 5,
-    "use_water": true,
+    "use_ph": true,
+    "use_redox": true,
+    "use_chlor_el": false,
     "use_pump": true,
     "use_pump_rpm": false,
     "use_backwash": false,
@@ -226,6 +241,7 @@
     "use_eco": false,
     "use_ext1": false,
     "use_ext2": false,
+    "use_vrel": false,
     "use_temp": true,
     "use_inputs": false,
     "use_analog": false,
@@ -294,7 +310,40 @@
     "flow_2_heater": 0,
     "flow_3": 0,
     "flow_3_solar": 0,
-    "flow_3_heater": 0
+    "flow_3_heater": 0,
+    "temp1_pump_only": false,
+    "range_ph_min": null,
+    "range_ph_max": null,
+    "range_redox_min": null,
+    "range_redox_max": null,
+    "range_cl_min": null,
+    "range_cl_max": null,
+    "disp_row1": 0,
+    "disp_row1_sub": 0,
+    "disp_row2": 0,
+    "disp_row2_sub": 0,
+    "disp_row3": 0,
+    "disp_row3_sub": 0,
+    "disp_row4": 0,
+    "disp_row4_sub": 0,
+    "disp_hero_left": 1,
+    "disp_hero_right": 2,
+    "vrel1_name": "",
+    "vrel1_oid": "",
+    "vrel2_name": "",
+    "vrel2_oid": "",
+    "vrel3_name": "",
+    "vrel3_oid": "",
+    "vrel4_name": "",
+    "vrel4_oid": "",
+    "vrel5_name": "",
+    "vrel5_oid": "",
+    "vrel6_name": "",
+    "vrel6_oid": "",
+    "vrel7_name": "",
+    "vrel7_oid": "",
+    "vrel8_name": "",
+    "vrel8_oid": ""
   },
   "objects": [],
   "instanceObjects": [

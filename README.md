@@ -13,6 +13,9 @@ Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module a
 - **Questionnaire in the configuration**: only the areas you actually use are created as data points
 - Own names for temperature sensors, relays and analog inputs – with live values shown in the configuration
 - **Switching ON / OFF / AUTO** (main switch "Allow switching", disabled by default)
+- **Pool display settings** (tab "Display"): optimal ranges for pH, redox and chlorine (values outside in red), assignment of the temperature rows and the large display
+- **Virtual relays**: up to 8 ioBroker data points (true/false) of other devices, switchable in the relay view of the pool display
+- **Water temperature in the pump piping**: optional frozen value while the pump is off (`temperatur.sensor1_pool`, marked with * in the display)
 - **Circulated water volume of the day** in m³, calculated from the runtimes of the Violet and the delivery rate of the pump
 - **Violet messages** (warnings, alarms, reminders) as data point `meldungen.aktiv` and as notice in the pool display
 - **Pool display** in the style of the classic ProCon.IP display, served directly by the adapter
@@ -120,6 +123,14 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.0 (2026-10-11)
+- New tab "Display": optimal ranges (values outside in red), temperature rows and large display freely assignable
+- Virtual relays (other devices, ON/OFF only) in the relay view of the pool display
+- Water temperature (sensor 1) frozen while the pump is off – for sensors in the pump piping
+- Electrodes selectable individually (pH, redox, chlorine); chlorine or electrolysis
+- Flocculant (dosed today) shown in the pool display
+- Author contact updated
+
 ### 0.5.3 (2026-10-10)
 - Pool display: runtimes without "today" so the line no longer wraps
 
@@ -166,7 +177,7 @@ Used with kind permission of PoolDigital. This adapter is an independent communi
 
 MIT License
 
-Copyright (c) 2026 Line Systems <office@line-systems.de>
+Copyright (c) 2026 Alexander Pietz <alex@1-5worlds.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

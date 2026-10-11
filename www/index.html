@@ -21,6 +21,7 @@
     --muted: #c9ccd1;
     --min: #6ea8ff;
     --max: #ff6b6b;
+    --bad: #ff3b3b;
     --on: #3ddc5c;
     --off: #e0383e;
     --wait: #f0b429;
@@ -86,6 +87,8 @@
   .tw { gap: 1.4em; }
   .tw .lbl { flex: 0 0 auto; }
   .lbl .sub { white-space: nowrap; }
+  .bad { color: var(--bad) !important; }
+  .star { font-size: .5em; vertical-align: super; margin-left: .05em; opacity: .85; }
   .vsub { display: block; margin-top: .3em; font-size: .74em; font-weight: 400; color: var(--muted); white-space: nowrap; }  /* Breite setzt alignLabels() je Spalte */
   .tw .val { flex: 1 1 auto; min-width: 0; }
   .tw .badge { flex: 0 0 auto; margin-left: auto; }
@@ -246,7 +249,7 @@ const TXT = {
     pump: 'Filterpumpe', solar: 'Absorber', heater: 'Heizung', light: 'Licht', eco: 'ECO-Modus',
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
-    chlorine: 'Chlor', fw: 'Violet Firmware', uptime: 'Uptime',
+    chlorine: 'Chlor', floc: 'Flockung', fw: 'Violet Firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
     msg: 'Meldung der Violet', msgs: 'Meldungen der Violet', msgHint: 'Klicken öffnet die Violet in einem neuen Fenster',
     confirmPumpOff: 'Filterpumpe wirklich manuell AUSschalten?',
@@ -264,7 +267,7 @@ const TXT = {
     pump: 'Filter pump', solar: 'Absorber', heater: 'Heating', light: 'Light', eco: 'ECO mode',
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
-    chlorine: 'Chlorine', fw: 'Violet firmware', uptime: 'Uptime',
+    chlorine: 'Chlorine', floc: 'Flocculant', fw: 'Violet firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
     msg: 'Violet message', msgs: 'Violet messages', msgHint: 'Click to open the Violet in a new window',
     confirmPumpOff: 'Really switch the filter pump OFF manually?',
@@ -300,6 +303,8 @@ const DEMO = {
   'info.features': JSON.stringify({
     lang: LANG, font: params.get('font') || 'verdana', violetUrl: 'http://violet.local', switching: true, pumpRpm: true, pv: true, dmx: true,
     temps: Object.entries(DEMO_TEMPS).map(([n, name]) => ({ n: Number(n), name })),
+    ranges: { ph: [7.0, 7.4], redox: [650, 800], chlor: [0.3, 0.6] }, t1Pool: true,
+    vrelays: [{ id: 'vrelais.1', name: 'Teichpumpe' }, { id: 'vrelais.2', name: 'Gartenbrunnen' }],
     relays: [1, 2, 3, 4, 5, 6, 7, 8].map((r) => ({ id: `relais.ext1_${r}`, name: { 6: 'Gartenlicht', 8: 'Teichpumpe' }[r] || `EXT1.${r}`, named: r === 6 || r === 8 })),
     analog: [
       { id: 'analog.adc1', name: 'Filterdruck', unit: 'bar' },
@@ -318,7 +323,7 @@ const DEMO = {
   'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
-  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
+  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
   'solar.status': 6, 'solar.aktiv': false, 'solar.schalten': 'OFF', 'solar.laufzeit_heute': '00h 00m 00s',
   'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 00m 00s',
@@ -340,7 +345,7 @@ if (params.get('ohne')) {
 }
 
 let V = {};
-let F = { temps: [], relays: [], analog: [], messages: { enabled: false } };
+let F = { temps: [], relays: [], analog: [], messages: { enabled: false }, ranges: {}, rows: [], hero: [], vrelays: [] };
 let layoutSig = '';
 let relayView = false;
 let relayViewTimer = null;
@@ -360,8 +365,9 @@ const tempName = (n) => (F.temps.find((x) => x.n === n) || {}).name || `${LANG =
 const tempOk = (n) => n && has(`temperatur.sensor${n}`) && (!F.temps.length || F.temps.some((x) => x.n === n));
 
 function tempRows() {
-  if (CONFIG.temps && CONFIG.temps.length) {
-    return CONFIG.temps
+  const conf = F.rows && F.rows.length ? F.rows : CONFIG.temps;
+  if (conf && conf.length) {
+    return conf
       .filter((x) => tempOk(x.sensor) || tempOk(x.sub))
       .map((x) => (tempOk(x.sensor) ? x : { sensor: x.sub }))
       .map((x) => ({ sensor: x.sensor, sub: x.sub !== x.sensor && tempOk(x.sub) ? x.sub : null }));
@@ -377,6 +383,7 @@ function waterRows() {
   if (has('wasser.ph')) rows.push('ph');
   if (has('wasser.redox')) rows.push('redox');
   if (has('wasser.chlor')) rows.push('chlor');
+  else if (has('dosierung.flockung.tagesmenge')) rows.push('floc');
   const an = F.analog.filter((a) => !FLOW_UNITS.test(a.unit) && has(a.id));
   for (let i = 0; i < an.length; i += 2) rows.push({ main: an[i], note: an[i + 1] });
   return rows;
@@ -396,7 +403,7 @@ function relayRows() {
   return rows;
 }
 
-const relayList = () => F.relays.filter((r) => has(`${r.id}.status`));
+const relayList = () => [...F.relays.filter((r) => has(`${r.id}.status`)), ...F.vrelays.filter((v) => has(v.id)).map((v) => ({ ...v, named: true, virtual: true }))];
 
 /* ---------- Aufbau ---------- */
 function build() {
@@ -429,8 +436,9 @@ function build() {
   g.dataset.rows = JSON.stringify({ T, R });
 
   // große Anzeige und Fußzeile
-  const hw = tempOk(CONFIG.heroWater) ? CONFIG.heroWater : (T[0] || {}).sensor;
-  const ha = tempOk(CONFIG.heroAir) ? CONFIG.heroAir : (T[1] || {}).sensor;
+  const hL = F.hero[0] || CONFIG.heroWater, hR = F.hero[1] || CONFIG.heroAir;
+  const hw = tempOk(hL) ? hL : (T[0] || {}).sensor;
+  const ha = tempOk(hR) ? hR : (T[1] || {}).sensor;
   $('hero').style.display = hw || ha ? '' : 'none';
   $('heroWaterBox').style.display = hw ? '' : 'none';
   $('heroAirBox').style.display = ha ? '' : 'none';
@@ -462,10 +470,34 @@ function waterCell(w, cls) {
   if (w === 'redox') return `<div class="${cls}"><div class="lbl"><span class="main">RedOx:</span></div>
     <div class="val"><span class="big" id="rdx">–</span><span class="unit">mV</span><span class="mm" id="rdxmm"></span><span class="note" id="cldos"></span></div>
     <span class="badge" id="clmode">–</span></div>`;
-  if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span></div>
-    <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span><span class="mm" id="clmm"></span></div></div>`;
+  const floc = has('dosierung.flockung.tagesmenge');
+  if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span>${floc ? `<span class="sub">${t('floc')}:</span>` : ''}</div>
+    <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span>${floc ? '<span class="vsub" id="floc"></span>' : '<span class="mm" id="clmm"></span>'}</div></div>`;
+  if (w === 'floc') return `<div class="${cls}"><div class="lbl"><span class="main">${t('floc')}:</span></div>
+    <div class="val"><span class="big" id="flocBig">–</span><span class="unit">ml</span><span class="vsub">${t('today')}</span></div></div>`;
   return `<div class="${cls}"><div class="lbl"><span class="main">${esc(w.main.name)}:</span>${w.note ? `<span class="sub">${esc(w.note.name)}:</span>` : ''}</div>
     <div class="val"><span class="big" data-an="${w.main.id}" data-d="${w.main.unit === 'bar' ? 2 : 1}">–</span><span class="unit">${esc(w.main.unit)}</span>${w.note ? `<span class="vsub" data-note="${w.note.id}" data-unit="${esc(w.note.unit)}"></span>` : ''}</div></div>`;
+}
+
+const onOffSeg = (k) => `<div class="seg small" data-key="${k}" data-virtual="1">
+  <button data-v="ON" class="on">${t('on')}</button><button data-v="OFF" class="off">${t('off')}</button></div>`;
+
+/* Wert eines Temperaturfühlers; Sensor 1 bei Fühler in der Verrohrung: eingefrorener Poolwert mit * */
+function tempText(n, d, unit = '°') {
+  if (Number(n) === 1 && F.t1Pool && has('temperatur.sensor1_pool')) {
+    return `${fmt(V['temperatur.sensor1_pool'], d)}${unit}${V['temperatur.sensor1_eingefroren'] ? '<span class="star">*</span>' : ''}`;
+  }
+  return `${fmt(V[`temperatur.sensor${n}`], d)}${unit}`;
+}
+
+/* Optimalbereich aus der Konfiguration: außerhalb → rot */
+function rangeMark(elId, valId, key) {
+  const e = $(elId), r = F.ranges[key];
+  if (!e) return;
+  const v = Number(V[valId]);
+  const lo = r && r[0] !== null && r[0] !== undefined ? r[0] : null;
+  const hi = r && r[1] !== null && r[1] !== undefined ? r[1] : null;
+  e.classList.toggle('bad', Number.isFinite(v) && has(valId) && ((lo !== null && v < lo) || (hi !== null && v > hi)));
 }
 
 const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
@@ -499,7 +531,7 @@ function relayPairCell(list, cls) {
   const rows = list.map((r) => `<div class="rrow">
       <span class="rname ${r.named ? '' : 'dim'}">${esc(r.name)}</span>
       <span class="lamp" id="${kid(r.id)}lamp"></span>
-      ${modeSeg(r.id, 'small')}</div>`).join('');
+      ${r.virtual ? onOffSeg(r.id) : modeSeg(r.id, 'small')}</div>`).join('');
   return `<div class="${cls}"><div class="rlist">${rows}</div></div>`;
 }
 
@@ -512,13 +544,19 @@ function render() {
   if (!relayView) {
     T.forEach((x, r) => {
       const id = `temperatur.sensor${x.sensor}`;
-      setText(`t${r}`, has(id) ? `${fmt(V[id], 2)}°` : '–');
+      setHtml(`t${r}`, has(id) ? tempText(x.sensor, 2) : '–');
       setHtml(`tmm${r}`, has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], 2)}°</span><span class="hi">${fmt(V[`${id}_max`], 2)}°</span>` : '');
       const sub = x.sub ? `temperatur.sensor${x.sub}` : null;
-      setText(`tsub${r}`, sub && has(sub) ? `${tempName(x.sub)}: ${fmt(V[sub], 1)} °C` : '');
+      setHtml(`tsub${r}`, sub && has(sub) ? `${esc(tempName(x.sub))}: ${tempText(x.sub, 1, ' °C')}` : '');
     });
   } else {
     for (const r of relayList()) {
+      if (r.virtual) {
+        const lampV = $(`${kid(r.id)}lamp`);
+        if (lampV) lampV.className = 'lamp' + (V[r.id] === true ? ' on' : '');
+        markSeg(document.querySelector(`.seg[data-key="${r.id}"]`), V[r.id] ? 'ON' : 'OFF', true);
+        continue;
+      }
       const code = Number(V[`${r.id}.status`]);
       const lamp = $(`${kid(r.id)}lamp`);
       if (lamp) lamp.className = 'lamp' + (code === 5 ? ' wait' : V[`${r.id}.aktiv`] === true ? ' on' : '');
@@ -527,6 +565,12 @@ function render() {
   }
 
   setText('ph', fmt(V['wasser.ph'], 2)); setHtml('phmm', mm('wasser.ph', 2));
+  rangeMark('ph', 'wasser.ph', 'ph'); rangeMark('rdx', 'wasser.redox', 'redox'); rangeMark('cl', 'wasser.chlor', 'chlor');
+  rangeMark('botPh', 'wasser.ph', 'ph'); rangeMark('botRdx', 'wasser.redox', 'redox');
+  if (has('dosierung.flockung.tagesmenge')) {
+    setText('floc', `${fmt(V['dosierung.flockung.tagesmenge'], 0)} ml`);
+    setText('flocBig', fmt(V['dosierung.flockung.tagesmenge'], 0));
+  }
   setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('phmode', 'dosierung.ph_minus.status');
   setText('rdx', fmt(V['wasser.redox'], 1)); setHtml('rdxmm', mm('wasser.redox', 1));
@@ -575,8 +619,8 @@ function render() {
   }
 
   const hw = $('hero').dataset.w, ha = $('hero').dataset.a;
-  if (hw) $('heroWater').textContent = `${fmt(V[`temperatur.sensor${hw}`], 2)}°`;
-  if (ha) $('heroAir').textContent = `${fmt(V[`temperatur.sensor${ha}`], 2)}°`;
+  if (hw) $('heroWater').innerHTML = tempText(hw, 2);
+  if (ha) $('heroAir').innerHTML = tempText(ha, 2);
   $('botPh').textContent = `pH: ${fmt(V['wasser.ph'], 2)}`;
   $('botRdx').textContent = `RedOx: ${fmt(V['wasser.redox'], 1)}`;
   const fl = $('botFlow');
@@ -654,7 +698,7 @@ async function onSegClick(ev) {
   const seg = btn.parentElement;
   const isSpeed = !!seg.dataset.speed;
   const key = isSpeed ? 'speed' : seg.dataset.key;
-  const id = isSpeed ? 'pumpe.drehzahl_soll' : `${key}.schalten`;
+  const id = isSpeed ? 'pumpe.drehzahl_soll' : seg.dataset.virtual ? key : `${key}.schalten`;
   const value = btn.dataset.v;
 
   if (key === 'pumpe' && value === 'OFF' && !confirm(t('confirmPumpOff'))) return;
@@ -708,6 +752,7 @@ function applyFeatures() {
       temps: f.temps || [], relays: f.relays || [], analog: f.analog || [],
       switching: !!f.switching, pumpRpm: !!f.pumpRpm, pv: !!f.pv, dmx: !!f.dmx,
       violetUrl: f.violetUrl || '', messages: f.messages || { enabled: false }, font: f.font || 'verdana', lang: f.lang,
+      ranges: f.ranges || {}, rows: f.rows || [], hero: f.hero || [], vrelays: f.vrelays || [], t1Pool: !!f.t1Pool,
     };
     if (!params.get('lang') && f.lang) LANG = String(f.lang).slice(0, 2) === 'de' ? 'de' : 'en';
     document.documentElement.lang = LANG;
