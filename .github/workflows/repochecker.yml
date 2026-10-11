@@ -1,0 +1,19 @@
+# Runs the current ioBroker repository checker against the pushed branch.
+# The result is in the job log ("Run repochecker").
+name: Repository checker
+
+on:
+  push:
+    branches: [dev, main]
+  workflow_dispatch:
+
+jobs:
+  repochecker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run repochecker
+        # Does not fail the job: E250 ("not on npm") is expected until the first npm release.
+        run: npx -y @iobroker/repochecker https://github.com/${{ github.repository }} ${{ github.ref_name }} || true
