@@ -5,6 +5,7 @@ Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
 ## Arbeitsweise
+- Veröffentlichung (seit 0.6.8, funktioniert): Claude bringt die Version nach main → Alex legt auf GitHub ein Release an (releases/new, Tag vX.Y.Z auf main, Titel „Release vX.Y.Z“) → Workflow test-and-release veröffentlicht per Trusted Publishing auf npm (Claude kann keine Tags pushen; npm-Seite zeigt neue Version mit kurzer Verzögerung)
 - Lieferung als `.tgz` (npm pack), Installation im ioBroker-Admin „Aus Datei“
 - Entwicklung auf `dev`; nach `main` erst nach Alex' Test-OK
 - Konfiguration wird erzeugt: `python3 tools/i18n_admin.py` (jsonConfig + 11 Sprachen)
