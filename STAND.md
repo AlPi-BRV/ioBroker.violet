@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.9 auf Zweig `dev` (zum Testen), `main` = 0.6.8 (öffentlich, npm über GitHub-Tag)
+Stand: 2026-10-11, Version 0.6.9 auf Zweig `dev`, `main` = 0.6.9 (öffentlich, npm über GitHub-Release)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
