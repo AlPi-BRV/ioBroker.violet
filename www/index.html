@@ -134,7 +134,10 @@
 
   /* Relais-Ansicht (ersetzt die Temperaturspalte) */
   .rlist { display: flex; flex-direction: column; gap: .35em; width: 100%; }
-  .rrow { display: flex; align-items: center; gap: .6em; }
+  .rlist.three { gap: .12em; }
+  .rlist.three .seg.small button { padding: .3em .6em; }
+  .rrow { display: grid; grid-template-columns: minmax(0, 1fr) auto 8.6em; align-items: center; gap: .6em; }
+  .rrow .seg { justify-self: start; }
   .rrow .rname { flex: 1 1 auto; text-align: right; font-size: .92em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .rrow .rname.dim { color: var(--muted); font-weight: 400; }
 
@@ -412,7 +415,10 @@ const relayList = () => [...F.relays.filter((r) => has(`${r.id}.status`)), ...F.
 function build() {
   const T = tempRows(), W = waterRows(), R = relayRows(), RL = relayList();
   if (!RL.length) relayView = false;
-  const firstCol = relayView ? Math.ceil(RL.length / 2) : T.length;
+  // Relais-Ansicht: so viele Relais je Zelle (2 oder 3), dass die Zeilenzahl der Temperatur-Ansicht bleibt
+  const rowsNormal = Math.max(T.length, W.length, R.length, 1);
+  const per = RL.length > rowsNormal * 2 ? 3 : 2;
+  const firstCol = relayView ? Math.ceil(RL.length / per) : T.length;
   const n = Math.max(firstCol, W.length, R.length, 1);
   const showFirst = relayView || T.length;
   const cols = [showFirst && (relayView ? t('relayView') : t('temps')), W.length && t('water'), R.length && t('relays')];
@@ -426,7 +432,7 @@ function build() {
   for (let r = 0; r < n; r++) {
     const cls = `cell ${r % 2 ? 'od' : 'ev'}`;
     if (showFirst) {
-      if (relayView) g.insertAdjacentHTML('beforeend', relayPairCell(RL.slice(r * 2, r * 2 + 2), cls));
+      if (relayView) g.insertAdjacentHTML('beforeend', relayPairCell(RL.slice(r * per, r * per + per), cls));
       else g.insertAdjacentHTML('beforeend', T[r] ? tempCell(T[r], r, cls) : `<div class="${cls}"></div>`);
     }
     if (W.length) g.insertAdjacentHTML('beforeend', W[r] ? waterCell(W[r], cls) : `<div class="${cls}"></div>`);
@@ -537,7 +543,7 @@ function relayPairCell(list, cls) {
       <span class="rname ${r.named ? '' : 'dim'}">${esc(r.name)}</span>
       <span class="lamp" id="${kid(r.id)}lamp"></span>
       ${r.virtual ? onOffSeg(r.id) : modeSeg(r.id, 'small')}</div>`).join('');
-  return `<div class="${cls}"><div class="rlist">${rows}</div></div>`;
+  return `<div class="${cls}"><div class="rlist${list.length > 2 ? ' three' : ''}">${rows}</div></div>`;
 }
 
 /* ---------- Anzeige aktualisieren ---------- */

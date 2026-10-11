@@ -127,6 +127,10 @@ iobroker url https://github.com/AlPi-BRV/ioBroker.violet
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.4 (2026-10-11)
+- Pool display: relay view keeps the size of the display (up to 3 relays per cell), lamps aligned
+- Configuration: "Virtual relays (other ioBroker devices)"
+
 ### 0.6.3 (2026-10-11)
 - Pool display: smaller "blocked" text so the switches no longer shift; smaller * in the large display
 

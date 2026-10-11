@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.3",
+    "version": "0.6.4",
     "news": {
+      "0.6.4": {
+        "en": "Pool display: relay view keeps the size (up to 3 relays per cell), lamps aligned; \"Virtual relays (other ioBroker devices)\"",
+        "de": "Pool-Display: Relais-Ansicht behält die Größe (bis zu 3 Relais je Zelle), Lämpchen ausgerichtet; „Virtuelle Relais (andere ioBroker-Geräte)“",
+        "ru": "Дисплей: вид реле сохраняет размер (до 3 реле в ячейке), индикаторы выровнены; «Виртуальные реле (другие устройства ioBroker)»",
+        "pt": "Display: a vista de relés mantém o tamanho (até 3 relés por célula), lâmpadas alinhadas; «Relés virtuais (outros dispositivos ioBroker)»",
+        "nl": "Display: relaisweergave behoudt de grootte (tot 3 relais per cel), lampjes uitgelijnd; „Virtuele relais (andere ioBroker-apparaten)”",
+        "fr": "Affichage : la vue relais garde sa taille (jusqu’à 3 relais par cellule), voyants alignés ; « Relais virtuels (autres appareils ioBroker) »",
+        "it": "Display: la vista relè mantiene la dimensione (fino a 3 relè per cella), spie allineate; «Relè virtuali (altri dispositivi ioBroker)»",
+        "es": "Pantalla: la vista de relés mantiene el tamaño (hasta 3 relés por celda), lámparas alineadas; «Relés virtuales (otros dispositivos ioBroker)»",
+        "pl": "Wyświetlacz: widok przekaźników zachowuje rozmiar (do 3 na komórkę), lampki wyrównane; „Wirtualne przekaźniki (inne urządzenia ioBroker)”",
+        "uk": "Дисплей: вигляд реле зберігає розмір (до 3 реле в комірці), індикатори вирівняні; «Віртуальні реле (інші пристрої ioBroker)»",
+        "zh-cn": "显示屏：继电器视图保持大小（每格最多 3 个继电器），指示灯对齐；“虚拟继电器（其他 ioBroker 设备）”"
+      },
       "0.6.3": {
         "en": "Pool display: smaller \"blocked\" text, switches no longer shift; smaller * in the large display",
         "de": "Pool-Display: „GESPERRT“ kleiner, Schalter verschieben sich nicht mehr; kleinerer * in der großen Anzeige",

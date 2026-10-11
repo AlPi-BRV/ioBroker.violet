@@ -457,7 +457,7 @@
         },
         "use_vrel": {
           "type": "checkbox",
-          "label": "Virtual relays (other devices)",
+          "label": "Virtual relays (other ioBroker devices)",
           "xs": 12,
           "sm": 6,
           "md": 4,
@@ -1961,7 +1961,7 @@
         },
         "hrv": {
           "type": "header",
-          "text": "Virtual relays (other devices)",
+          "text": "Virtual relays (other ioBroker devices)",
           "size": 5,
           "newLine": true,
           "xs": 12,
