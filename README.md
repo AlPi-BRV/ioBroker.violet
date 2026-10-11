@@ -119,6 +119,10 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.7 (2026-10-11)
+- Code formatted to the ioBroker standard (ESLint/Prettier), no functional changes
+- Automatic tests on GitHub (test-and-release workflow), release script prepared
+
 ### 0.6.6 (2026-10-11)
 - Repository checker: Node.js 22 required, dependencies updated (adapter-core 3.4.3, admin 7.6.17), installation notes adjusted, admin layout on small screens
 
