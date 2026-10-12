@@ -61,4 +61,6 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Später: manuelle Dosierung, Abdeckung, VIS-Pool-Ansicht, Multihost-Slave, offizielles ioBroker-Repository
 - Idee (Alex): Display-Schrift mit kleinerem Komma suchen
 - Idee (Alex): Versionsnummer des Adapters in der Fußzeile des Pool-Displays
+- Plan (2026-10-12): Anleitung als docs/-Ordner im Repo (kein GitHub-Wiki, damit versioniert mit dem Code; über io-package „docs“ im Admin verlinkbar), je de/en: 1) Installation/Erststart 2) Konfiguration Reiter für Reiter mit Screenshots 3) Datenpunkte als Tabelle 4) Pool-Display 5) Berechnungen (Wassermenge, Wärmeleistung, Zelle, eingefrorene Werte) 6) Schalten/Grundsätze 7) FAQ/Fehlersuche; README danach kurz + Links. Alex liefert Screenshots. Zeitpunkt: vor dem PR ins ioBroker-Repository
+- 0.6.10 von Alex getestet (2026-10-12): Wärmeleistung funktioniert (Heizung 5 min ≈ 9 kW → 0,7 kWh), Display passt
 - Idee: komplette Display-Konfigurationsseite (Felder frei zuordnen) – Grundstein seit 0.6.0 im Reiter „Display“
