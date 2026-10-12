@@ -39,7 +39,7 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Auskunft PoolDigital: bei DOS_2_ELO bedeuten die Kanister-Felder: DAILY_DOSING_AMOUNT_ML = g Chlor heute, TOTAL_CAN_AMOUNT_ML = Reststunden der Zelle, LAST_CAN_RESET = Zellenwechsel (in der Violet quittiert)
 - Eigener Zähler aus 0.6.10 entfernt (lib/cell.js nur noch cellConfig + cellWear), ebenso elo_output, elo_start_hours, Taster zelle_gewechselt, info.cellState
 - Datenpunkte: erzeugt_heute (g), zelle_reststunden (h), zellenwechsel; optional mit elo_lifetime (Std. 0, gleicher Wert wie in der Violet): zelle_verschleiss (%), zelle_warnung (elo_warn %)
-- Nicht an Alex' Anlage prüfbar (Flüssigchlor) – Rückmeldung von Elektrolyse-Testern abwarten
+- Von Alex getestet (2026-10-12, Violet kurz auf SEL umgestellt): Felder werden richtig gelesen, Display „ELO: 0 g heute · Zelle 40 %“ – bereit für main/Release
 
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck
