@@ -72,6 +72,26 @@ If the absorber or the heating reduces the flow, enter the lower value there (em
 - The reduction by absorber / heating is counted by the adapter at each poll; resets at midnight
 - Only a calculation – nothing is written to the Violet
 
+## Heat output (absorber / heating)
+
+In the tab "Pump" (section "Heat output") the adapter can calculate how much heat the absorber and the heating bring into the pool:
+
+- Power (kW) = (return − water temperature sensor 1) × flow of the running pump level × 1.163 – the flow comes from the delivery rates above (with absorber / heating: the lower value)
+- Sensors: absorber return (in the Violet usually sensor 4) and optionally a heating return sensor
+- Position of the heating return sensor: "only behind the heating" or "behind absorber and heating (in series)". In series and both running: heating = total − absorber
+- Data points `solar.leistung` / `heizung.leistung` (kW) and `solar.energie_heute` / `heizung.energie_heute` (kWh, resets at midnight); in the pool display behind the runtime: `03h 12m (4.2 kW · 11.6 kWh)`
+- Negative values (absorber cooling) are shown as 0. For long-term statistics use e.g. the adapter sourceanalytics
+- "Type of heating" (oil/gas heat exchanger, heat pump, electric) sets the name in the pool display
+
+## Electrolysis cell
+
+The Violet reports the same values for electrolysis as for liquid chlorine (canister, ml) – but no operating hours of the cell. So the adapter counts them itself:
+
+- Configuration (tab "Functions", visible with electrolysis): cell output in g chlorine per hour, lifetime in hours (usually 3000–6000 h), warning threshold in %, optional start value for a cell that has already been running
+- Data points under `dosierung.elektrolyse`: `zelle_stunden`, `zelle_reststunden`, `zelle_verschleiss` (%), `zelle_warnung`, `erzeugt_heute` (g)
+- `zelle_gewechselt` (button) resets the counter after a cell change – only in ioBroker, nothing is written to the Violet
+- The canister values (remaining amount, range, canister change, ml) are no longer created for electrolysis
+
 ## Violet messages
 
 The adapter reads the messages of the Violet once per minute via `GET /getNotifications?ALL`
@@ -122,6 +142,12 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.10 (2026-10-12)
+- New: heat output of absorber and heating (kW) and heat energy of today (kWh), calculated from return temperatures and the configured pump flow; return sensor behind heating only or behind absorber and heating in series
+- New: electrolysis cell – operating hours counter, remaining hours, wear in %, warning threshold, chlorine produced today (g), button "cell replaced"; canister values are no longer created for electrolysis
+- New: type of heating (heat exchanger, heat pump, electric) as name in the pool display
+- Fix: status 2 (auto, off by rule) no longer counts as running for the water volume reduction
+
 ### 0.6.9 (2026-10-11)
 - Maintenance according to the ioBroker repository checker: admin >= 7.6.20, tests with Node.js 22/24/26, translation files in short format (admin/i18n/<lang>.json), dependabot settings
 

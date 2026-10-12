@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.9",
+    "version": "0.6.10",
     "news": {
+      "0.6.10": {
+        "en": "Heat output of absorber and heating (kW, kWh today); electrolysis cell operating hours, wear and chlorine produced",
+        "de": "Wärmeleistung von Absorber und Heizung (kW, kWh heute); Elektrolysezelle mit Betriebsstunden, Verschleiß und erzeugtem Chlor",
+        "ru": "Тепловая мощность абсорбера и нагрева (кВт, кВт·ч за сегодня); ячейка электролиза: наработка, износ и выработанный хлор",
+        "pt": "Potência térmica do absorvedor e do aquecimento (kW, kWh hoje); célula de eletrólise com horas de funcionamento, desgaste e cloro produzido",
+        "nl": "Warmtevermogen van absorber en verwarming (kW, kWh vandaag); elektrolysecel met bedrijfsuren, slijtage en geproduceerd chloor",
+        "fr": "Puissance thermique de l'absorbeur et du chauffage (kW, kWh du jour) ; cellule d'électrolyse avec heures de fonctionnement, usure et chlore produit",
+        "it": "Potenza termica di assorbitore e riscaldamento (kW, kWh oggi); cella elettrolitica con ore di funzionamento, usura e cloro prodotto",
+        "es": "Potencia térmica del absorbedor y la calefacción (kW, kWh hoy); célula de electrólisis con horas de funcionamiento, desgaste y cloro producido",
+        "pl": "Moc cieplna absorbera i ogrzewania (kW, kWh dzisiaj); ogniwo elektrolizy z godzinami pracy, zużyciem i wytworzonym chlorem",
+        "uk": "Теплова потужність абсорбера й нагріву (кВт, кВт·год за сьогодні); комірка електролізу: напрацювання, знос і вироблений хлор",
+        "zh-cn": "吸热器和加热的热功率（kW、今日 kWh）；电解槽运行小时数、损耗和产氯量"
+      },
       "0.6.9": {
         "en": "Maintenance: ioBroker repository checker recommendations (admin 7.6.20, tests with Node.js 26, translation files in short format)",
         "de": "Wartung: Empfehlungen des ioBroker-Repository-Checkers (admin 7.6.20, Tests mit Node.js 26, Übersetzungsdateien im Kurzformat)",
@@ -265,7 +278,16 @@
     "vrel7_name": "",
     "vrel7_oid": "",
     "vrel8_name": "",
-    "vrel8_oid": ""
+    "vrel8_oid": "",
+    "heat_enabled": false,
+    "heat_sensor_absorber": 4,
+    "heat_sensor_return": 0,
+    "heat_return_position": "heater",
+    "heater_type": "exchanger",
+    "elo_output": 0,
+    "elo_lifetime": 5000,
+    "elo_warn": 90,
+    "elo_start_hours": 0
   },
   "objects": [],
   "instanceObjects": [
@@ -349,6 +371,36 @@
         "name": {
           "en": "Internal: state of the water volume calculation",
           "de": "Intern: Zwischenstand der Wassermengen-Berechnung"
+        },
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.heatState",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": {
+          "en": "Internal: state of the heat output calculation",
+          "de": "Intern: Zwischenstand der Wärmemengen-Berechnung"
+        },
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.cellState",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": {
+          "en": "Internal: operating hours counter of the electrolysis cell",
+          "de": "Intern: Betriebsstundenzähler der Elektrolysezelle"
         },
         "type": "string",
         "read": true,

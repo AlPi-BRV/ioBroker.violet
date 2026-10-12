@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-11, Version 0.6.9 auf Zweig `dev`, `main` = 0.6.9 (öffentlich, npm über GitHub-Release)
+Stand: 2026-10-12, Version 0.6.10 auf Zweig `dev` (wartet auf Alex' Test), `main` = 0.6.9 (öffentlich, npm über GitHub-Release)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -23,6 +23,17 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - main.js – Abfrage, Schalten, Meldungen, Webserver (Port 8099: /, /api/data, /api/set, /api/ack), virtuelle Relais, eingefrorene Wassertemperatur
 - lib/datapoints.js – Datenpunkte nach Gruppen (use_*), lib/i18n.js – Namen de/en, lib/volume.js – umgewälzte Wassermenge
 - www/index.html – Pool-Display (baut sich aus info.features auf; Demo: ?demo=1&lang=de)
+
+## 0.6.10 (dev, 2026-10-12) – Wärmeleistung + Elektrolysezelle
+- lib/heat.js: kW = (Rücklauf − Wasser Sensor 1) × Durchfluss × 1,163; Durchfluss = currentFlow() aus lib/volume.js (Stufe, bei Solar/Heizung kleinerer Wert); kWh heute per Trapez, Lücken > 10 min nicht hochgerechnet; Zustand info.heatState
+- Config Reiter „Pumpe“: heat_enabled, heat_sensor_absorber (Std. 4), heat_sensor_return, heat_return_position heater|combined (Alex: combined, in Reihe → Heizung = Gesamt − Solar), heater_type exchanger|heatpump|electric (Name im Display)
+- Datenpunkte solar./heizung.leistung (kW), .energie_heute (kWh); negative Leistung vorerst 0
+- lib/cell.js: Violet liefert für DOS_2_ELO nur dieselben Felder wie Chlor (keine Zellenstunden/-leistung) → Adapter zählt DOS_2_ELO_RUNTIME auf; info.cellState {sec, rt, start}; Startwert ersetzt Zähler, sobald in der Config geändert
+- Config Reiter „Funktionen“ (bei Elektrolyse): elo_output g/h, elo_lifetime h (Std. 5000, typ. 3000–6000), elo_warn %, elo_start_hours
+- Datenpunkte dosierung.elektrolyse.zelle_stunden/_reststunden/_verschleiss/_warnung/erzeugt_heute, Taster zelle_gewechselt; Kanister-Datenpunkte für ELO entfallen
+- Fix: Status 2 (durch Regel AUS) zählt bei der Wassermenge nicht mehr als laufend
+- Pool-Display: „(4,2 kW · 11,6 kWh)“ hinter Laufzeit von Absorber/Heizung; ELO-Zeile „ELO: 52 g heute · Zelle 93 % ⚠“; Demo ?demo=1&elo=1&wp=1
+- Offen: zweiter Wärmeerzeuger (Alex plant 2027 Wärmepumpe → Absorber + WP + Ölheizung; Erkennung klärt Alex mit PoolDigital), negative Solarleistung später, Frage an PoolDigital nach interner Zellenzählung (Firmware-Wunsch)
 
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck

@@ -22,6 +22,8 @@ const {
     CHANNELS,
 } = require('./lib/datapoints');
 const { VolumeCounter, flowConfig } = require('./lib/volume');
+const { HeatCounter, heatConfig } = require('./lib/heat');
+const { CellCounter, cellConfig } = require('./lib/cell');
 const { names, pick } = require('./lib/i18n');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
@@ -82,6 +84,7 @@ class Violet extends utils.Adapter {
         this.pollTimer = null;
         this.defs = [];
         this.msgDefs = [];
+        this.extraDefs = []; // weitere beschreibbare Datenpunkte (z. B. „Zelle gewechselt“)
         this.controls = [];
         this.prepared = new Set(); // in diesem Lauf bereits angelegte/aktualisierte Objekte
         this.failCount = 0;
@@ -153,14 +156,24 @@ class Violet extends utils.Adapter {
         this.defs = buildDefinitions(this.config);
         const flows = flowConfig(this.config);
         if (flows) {
-            let saved = null;
-            try {
-                const st = await this.getStateAsync('info.volumeState');
-                saved = st && st.val ? JSON.parse(st.val) : null;
-            } catch {
-                saved = null;
-            }
-            this.volume = new VolumeCounter(flows, saved);
+            this.volume = new VolumeCounter(flows, await this.loadJsonState('info.volumeState'));
+        }
+        const hc = heatConfig(this.config, flows);
+        if (hc) {
+            this.heat = new HeatCounter(hc, await this.loadJsonState('info.heatState'));
+            this.log.info('Heat output calculation for absorber/heating is active');
+        }
+        const cc = cellConfig(this.config);
+        if (cc) {
+            this.cell = new CellCounter(cc, await this.loadJsonState('info.cellState'));
+            this.extraDefs.push({
+                id: 'dosierung.elektrolyse.zelle_gewechselt',
+                name: 'Elektrolyse – Zelle gewechselt (Zähler zurücksetzen)',
+                type: 'boolean',
+                role: 'button',
+                write: true,
+                read: false,
+            });
         }
         this.msgDefs = messageDefinitions(this.config);
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
@@ -190,8 +203,11 @@ class Violet extends utils.Adapter {
         for (const c of this.controls) {
             await this.prepareObject(c);
         }
-        for (const m of this.msgDefs) {
+        for (const m of [...this.msgDefs, ...this.extraDefs]) {
             await this.prepareObject(m);
+        }
+        if (this.cell) {
+            this.subscribeStates('dosierung.elektrolyse.zelle_gewechselt');
         }
         if (this.controls.some(c => c.speed)) {
             const cur = await this.getStateAsync('pumpe.drehzahl_soll');
@@ -264,7 +280,7 @@ class Violet extends utils.Adapter {
 
     /** Entfernt alles, was laut Konfiguration nicht mehr gebraucht wird */
     async cleanup() {
-        const wanted = new Set([...this.defs, ...this.controls, ...this.msgDefs].map(d => d.id));
+        const wanted = new Set([...this.defs, ...this.controls, ...this.msgDefs, ...this.extraDefs].map(d => d.id));
         const wantedChannels = new Set();
         for (const id of wanted) {
             const parts = id.split('.');
@@ -290,6 +306,16 @@ class Violet extends utils.Adapter {
         }
         if (removed) {
             this.log.info(`${removed} data points no longer needed were removed`);
+        }
+    }
+
+    /** Gespeicherten Zwischenstand (JSON in einem info-Datenpunkt) lesen */
+    async loadJsonState(id) {
+        try {
+            const st = await this.getStateAsync(id);
+            return st && st.val ? JSON.parse(st.val) : null;
+        } catch {
+            return null;
         }
     }
 
@@ -386,6 +412,25 @@ class Violet extends utils.Adapter {
             if (v !== undefined) {
                 data.__VOLUME_TODAY = v;
                 await this.setStateChangedAsync('info.volumeState', JSON.stringify(this.volume.state()), true);
+            }
+        }
+        if (this.heat) {
+            const h = this.heat.update(data);
+            data.__HEAT_SOLAR_KW = h.solarKw;
+            data.__HEAT_SOLAR_KWH = h.solarKwh;
+            data.__HEAT_HEATER_KW = h.heaterKw;
+            data.__HEAT_HEATER_KWH = h.heaterKwh;
+            await this.setStateChangedAsync('info.heatState', JSON.stringify(this.heat.state()), true);
+        }
+        if (this.cell) {
+            const c = this.cell.update(data);
+            if (c) {
+                data.__ELO_HOURS = c.hours;
+                data.__ELO_REST = c.rest;
+                data.__ELO_WEAR = c.wear;
+                data.__ELO_WARN = c.warn;
+                data.__ELO_G_TODAY = c.gramsToday;
+                await this.setStateChangedAsync('info.cellState', JSON.stringify(this.cell.state()), true);
             }
         }
         for (const def of this.defs) {
@@ -572,6 +617,9 @@ class Violet extends utils.Adapter {
             switching: this.controls.length > 0,
             pumpRpm: !!(c.use_pump && c.use_pump_rpm),
             volume: !!this.volume,
+            heat: !!this.heat,
+            heaterType: c.heater_type || 'exchanger',
+            elo: !!c.use_dos_elo,
             t1Pool: !!this.t1,
             waterFreeze: !!this.wfreeze,
             version: this.version,
@@ -679,7 +727,7 @@ class Violet extends utils.Adapter {
             const i = parseInt(obj.message && obj.message.sensor, 10);
             reply = this.describeSensor(i);
         } else if (obj.command === 'getSensorList') {
-            reply = this.sensorList();
+            reply = this.sensorList(!!(obj.message && obj.message.none));
         } else if (obj.command === 'getAnalog') {
             reply = this.describeAnalog(obj.message && obj.message.key);
         }
@@ -687,9 +735,12 @@ class Violet extends utils.Adapter {
     }
 
     /** Auswahlliste der Temperaturfühler für den Reiter „Display“ (Name + aktueller Wert) */
-    sensorList() {
+    sensorList(none = false) {
         const d = this.lastData || {};
-        const list = [{ label: this.t('– leer / automatisch –', '– empty / automatic –'), value: 0 }];
+        const first = none
+            ? this.t('– kein Fühler –', '– no sensor –')
+            : this.t('– leer / automatisch –', '– empty / automatic –');
+        const list = [{ label: first, value: 0 }];
         for (let i = 1; i <= 12; i++) {
             const st = d[`onewire${i}_state`];
             if (this.lastData && (st === undefined || st === 'NO_SENSOR_CONFIGURED')) {
@@ -767,6 +818,19 @@ class Violet extends utils.Adapter {
             return;
         }
         const id = fullId.substring(this.namespace.length + 1);
+
+        if (id === 'dosierung.elektrolyse.zelle_gewechselt') {
+            if (state.val && this.cell) {
+                this.cell.reset();
+                await this.setStateAsync('info.cellState', JSON.stringify(this.cell.state()), true);
+                this.log.info('Electrolysis cell replaced – operating hours counter reset to 0 (only in ioBroker)');
+                if (this.lastData) {
+                    await this.processData(this.lastData);
+                }
+            }
+            await this.setStateAsync(id, false, true);
+            return;
+        }
 
         if (id === 'meldungen.quittieren') {
             if (state.val) {

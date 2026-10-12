@@ -68,6 +68,26 @@ Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert ein
 - Den Abzug für Absorber / Heizung zählt der Adapter bei jeder Abfrage mit; um Mitternacht beginnt alles bei 0
 - Reine Berechnung – an die Violet wird nichts geschrieben
 
+## Wärmeleistung (Absorber / Heizung)
+
+Im Reiter „Pumpe“ (Abschnitt „Wärmeleistung“) kann der Adapter berechnen, wie viel Wärme Absorber und Heizung in den Pool bringen:
+
+- Leistung (kW) = (Rücklauf − Wassertemperatur Sensor 1) × Durchfluss der laufenden Pumpenstufe × 1,163 – der Durchfluss kommt aus den Fördermengen oben (bei Absorber / Heizung der kleinere Wert)
+- Fühler: Absorber-Rücklauf (in der Violet meist Sensor 4) und optional ein Fühler im Heizungs-Rücklauf
+- Lage des Heizungs-Rücklauffühlers: „nur hinter der Heizung“ oder „hinter Absorber und Heizung (in Reihe)“. In Reihe und beide an: Heizung = Gesamt − Absorber
+- Datenpunkte `solar.leistung` / `heizung.leistung` (kW) und `solar.energie_heute` / `heizung.energie_heute` (kWh, um Mitternacht auf 0); im Pool-Display hinter der Laufzeit: `03h 12m (4,2 kW · 11,6 kWh)`
+- Negative Werte (Absorber kühlt) werden als 0 angezeigt. Für Langzeitauswertungen z. B. den Adapter sourceanalytics nutzen
+- „Art der Heizung“ (Öl/Gas über Wärmetauscher, Wärmepumpe, elektrisch) legt den Namen im Pool-Display fest
+
+## Elektrolysezelle
+
+Die Violet liefert für die Elektrolyse dieselben Werte wie für Flüssigchlor (Kanister, ml) – aber keine Betriebsstunden der Zelle. Deshalb zählt der Adapter selbst:
+
+- Konfiguration (Reiter „Funktionen“, sichtbar bei Elektrolyse): Zellenleistung in g Chlor pro Stunde, Lebensdauer in Stunden (meist 3000–6000 h), Warnschwelle in %, optional ein Startwert für eine Zelle, die schon eine Weile läuft
+- Datenpunkte unter `dosierung.elektrolyse`: `zelle_stunden`, `zelle_reststunden`, `zelle_verschleiss` (%), `zelle_warnung`, `erzeugt_heute` (g)
+- `zelle_gewechselt` (Taster) setzt den Zähler nach einem Zellenwechsel zurück – nur in ioBroker, an die Violet wird nichts geschrieben
+- Die Kanister-Werte (Restmenge, Reichweite, Kanisterwechsel, ml) werden bei Elektrolyse nicht mehr angelegt
+
 ## Meldungen der Violet
 
 Der Adapter liest die Meldungen einmal pro Minute über `GET /getNotifications?ALL`

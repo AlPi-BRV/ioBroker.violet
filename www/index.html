@@ -253,6 +253,7 @@ const TXT = {
     off: 'AUS', on: 'EIN', wait: 'WARTET', blocked: 'GESPERRT', emergOff: 'NOT-AUS', auto: 'AUTO',
     pump: 'Filterpumpe', solar: 'Absorber', heater: 'Heizung', light: 'Licht', eco: 'ECO-Modus',
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
+    heatpump: 'Wärmepumpe', eheater: 'E-Heizung', cell: 'Zelle', gToday: 'g heute',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
     chlorine: 'Chlor', floc: 'Flockung', fw: 'Violet Firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
@@ -271,6 +272,7 @@ const TXT = {
     off: 'OFF', on: 'ON', wait: 'WAIT', blocked: 'BLOCKED', emergOff: 'EMERG. OFF', auto: 'AUTO',
     pump: 'Filter pump', solar: 'Absorber', heater: 'Heating', light: 'Light', eco: 'ECO mode',
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
+    heatpump: 'Heat pump', eheater: 'E-heater', cell: 'Cell', gToday: 'g today',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
     chlorine: 'Chlorine', floc: 'Flocculant', fw: 'Violet firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
@@ -330,14 +332,26 @@ const DEMO = {
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
   'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
-  'solar.status': 6, 'solar.aktiv': false, 'solar.schalten': 'OFF', 'solar.laufzeit_heute': '00h 00m 00s',
-  'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 00m 00s',
+  'solar.status': 1, 'solar.aktiv': true, 'solar.schalten': 'AUTO', 'solar.laufzeit_heute': '03h 12m 40s', 'solar.leistung': 4.21, 'solar.energie_heute': 11.6,
+  'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 41m 05s', 'heizung.leistung': 0, 'heizung.energie_heute': 5.3,
   'licht.status': 0, 'licht.aktiv': false, 'licht.schalten': 'AUTO',
   'system.firmware': '1.2.5', 'system.laufzeit': '09d 16h 25m', 'system.cpu_temperatur': 53.2,
 };
 for (let s = 1; s <= 12; s++) { DEMO[`dmx.szene${s}.status`] = s === 3 ? 4 : 0; DEMO[`dmx.szene${s}.aktiv`] = s === 3; DEMO[`dmx.szene${s}.schalten`] = s === 3 ? 'ON' : 'AUTO'; }
 for (let r = 1; r <= 8; r++) { DEMO[`relais.ext1_${r}.status`] = r === 6 ? 4 : 6; DEMO[`relais.ext1_${r}.aktiv`] = r === 6; DEMO[`relais.ext1_${r}.schalten`] = r === 6 ? 'ON' : 'OFF'; }
-// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &msg=1
+// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &msg=1   &elo=1 (Elektrolyse statt Flüssigchlor)   &wp=1 (Wärmepumpe)
+if (params.get('elo') === '1') {
+  for (const id of Object.keys(DEMO)) if (id.startsWith('dosierung.chlor.')) delete DEMO[id];
+  Object.assign(DEMO, {
+    'dosierung.elektrolyse.status': 1, 'dosierung.elektrolyse.erzeugt_heute': 52,
+    'dosierung.elektrolyse.zelle_stunden': 4630, 'dosierung.elektrolyse.zelle_verschleiss': 92.6, 'dosierung.elektrolyse.zelle_warnung': true,
+  });
+}
+if (params.get('wp') === '1') {
+  const f = JSON.parse(DEMO['info.features']);
+  f.heaterType = 'heatpump';
+  DEMO['info.features'] = JSON.stringify(f);
+}
 if (params.get('ohne')) {
   const f = JSON.parse(DEMO['info.features']);
   for (const k of params.get('ohne').split(',')) {
@@ -514,6 +528,17 @@ function rangeMark(elId, valId, key) {
 const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
   <button data-v="AUTO" class="auto">${t('auto')}</button><button data-v="ON" class="on">${t('on')}</button><button data-v="OFF" class="off">${t('off')}</button></div>`;
 
+/* Name der Heizung je nach Art (Konfiguration „Art der Heizung“) */
+const heaterLabel = () => (F.heaterType === 'heatpump' ? 'heatpump' : F.heaterType === 'electric' ? 'eheater' : 'heater');
+
+/* Wärmeleistung / Wärmemenge heute hinter der Laufzeit von Absorber und Heizung */
+function heatText(k) {
+  if (!has(`${k}.energie_heute`)) return '';
+  const p = V[`${k}.leistung`];
+  const now = V[`${k}.aktiv`] === true && typeof p === 'number' && p > 0 ? `${fmt(p, 1)} kW · ` : '';
+  return ` (${now}${fmt(V[`${k}.energie_heute`], 1)} kWh)`;
+}
+
 function relayCell(x, cls) {
   const k = x.key, id = kid(k);
   const state = `<div class="state"><span class="lamp" id="${id}lamp"></span><span id="${id}txt">–</span></div>`;
@@ -534,7 +559,7 @@ function relayCell(x, cls) {
       <div class="ctrl">${x.light ? `<div class="line">${modeSeg(k)}</div>` : ''}${dmx}</div></div>`;
   }
   return `<div class="${cls} relay">
-    <div class="lbl"><span class="main">${t(x.label)}:</span><span class="sub" id="${id}rt"></span></div>${state}
+    <div class="lbl"><span class="main">${t(k === 'heizung' ? heaterLabel() : x.label)}:</span><span class="sub" id="${id}rt"></span></div>${state}
     <div class="ctrl">${modeSeg(k)}</div></div>`;
 }
 
@@ -586,8 +611,18 @@ function render() {
   setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ${t('mlToday')}` : '');
   dosBadge('phmode', 'dosierung.ph_minus.status');
   setHtml('rdx', fmt(V['wasser.redox'], 1) + star); setHtml('rdxmm', mm('wasser.redox', 1));
-  setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ${t('mlToday')}` : '');
-  dosBadge('clmode', 'dosierung.chlor.status');
+  if (has('dosierung.elektrolyse.status') && !has('dosierung.chlor.status')) {
+    // Elektrolyse: erzeugtes Chlor heute und Verschleiß der Zelle statt Kanister-ml
+    const parts = [];
+    if (has('dosierung.elektrolyse.erzeugt_heute')) parts.push(`ELO: ${fmt(V['dosierung.elektrolyse.erzeugt_heute'], 0)} ${t('gToday')}`);
+    if (has('dosierung.elektrolyse.zelle_verschleiss')) parts.push(`${t('cell')} ${fmt(V['dosierung.elektrolyse.zelle_verschleiss'], 0)} %${V['dosierung.elektrolyse.zelle_warnung'] === true ? ' ⚠' : ''}`);
+    else if (has('dosierung.elektrolyse.zelle_stunden')) parts.push(`${t('cell')} ${fmt(V['dosierung.elektrolyse.zelle_stunden'], 0)} h`);
+    setText('cldos', parts.join(' · '));
+    dosBadge('clmode', 'dosierung.elektrolyse.status');
+  } else {
+    setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ${t('mlToday')}` : '');
+    dosBadge('clmode', 'dosierung.chlor.status');
+  }
   setHtml('cl', fmt(V['wasser.chlor'], 2) + star); setHtml('clmm', mm('wasser.chlor', 2));
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
   document.querySelectorAll('[data-note]').forEach((e) => {
@@ -604,7 +639,7 @@ function render() {
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const tx = $(`${id}txt`); if (tx) tx.classList.toggle('long', code === 2 || code === 5);
       const rt = V[`${k}.laufzeit_heute`];
-      const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : '';
+      const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : heatText(k);
       setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
       markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
@@ -768,7 +803,7 @@ function applyFeatures() {
       temps: f.temps || [], relays: f.relays || [], analog: f.analog || [],
       switching: !!f.switching, pumpRpm: !!f.pumpRpm, pv: !!f.pv, dmx: !!f.dmx,
       violetUrl: f.violetUrl || '', messages: f.messages || { enabled: false }, font: f.font || 'verdana', lang: f.lang,
-      waterFreeze: !!f.waterFreeze, version: f.version || '',
+      waterFreeze: !!f.waterFreeze, version: f.version || '', heaterType: f.heaterType || 'exchanger',
       ranges: f.ranges || {}, rows: f.rows || [], hero: f.hero || [], vrelays: f.vrelays || [], t1Pool: !!f.t1Pool,
     };
     if (!params.get('lang') && f.lang) LANG = String(f.lang).slice(0, 2) === 'de' ? 'de' : 'en';
