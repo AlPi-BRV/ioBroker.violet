@@ -81,12 +81,12 @@ Im Reiter „Pumpe“ (Abschnitt „Wärmeleistung“) kann der Adapter berechne
 
 ## Elektrolysezelle
 
-Die Violet liefert für die Elektrolyse dieselben Werte wie für Flüssigchlor (Kanister, ml) – aber keine Betriebsstunden der Zelle. Deshalb zählt der Adapter selbst:
+Für die Elektrolyse nutzt die Violet dieselben Felder wie für Flüssigchlor, aber mit anderer Bedeutung (Auskunft PoolDigital): Die Tagesmenge ist erzeugtes Chlor in **g**, der „Kanister“-Inhalt sind die **Reststunden der Zelle**, der Kanisterwechsel ist der **Zellenwechsel**.
 
-- Konfiguration (Reiter „Funktionen“, sichtbar bei Elektrolyse): Zellenleistung in g Chlor pro Stunde, Lebensdauer in Stunden (meist 3000–6000 h), Warnschwelle in %, optional ein Startwert für eine Zelle, die schon eine Weile läuft
-- Datenpunkte unter `dosierung.elektrolyse`: `zelle_stunden`, `zelle_reststunden`, `zelle_verschleiss` (%), `zelle_warnung`, `erzeugt_heute` (g)
-- `zelle_gewechselt` (Taster) setzt den Zähler nach einem Zellenwechsel zurück – nur in ioBroker, an die Violet wird nichts geschrieben
-- Die Kanister-Werte (Restmenge, Reichweite, Kanisterwechsel, ml) werden bei Elektrolyse nicht mehr angelegt
+- Datenpunkte unter `dosierung.elektrolyse`: `erzeugt_heute` (g), `zelle_reststunden` (h), `zellenwechsel` (Datum)
+- Optional (Reiter „Funktionen“, sichtbar bei Elektrolyse): Lebensdauer der Zelle in Stunden eintragen – derselbe Wert wie in der Violet. Dann kommen `zelle_verschleiss` (%) und `zelle_warnung` (ab der Warnschwelle) hinzu
+- Der Zellenwechsel wird in der Violet wie ein Kanisterwechsel quittiert – an die Violet wird nichts geschrieben
+- Bitte melden, wenn die Werte anders aussehen – an der Anlage des Autors läuft Flüssigchlor
 
 ## Meldungen der Violet
 

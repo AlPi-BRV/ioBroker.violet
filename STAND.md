@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-12, Version 0.6.10 auf `dev` und `main` (Release v0.6.10 legt Alex an → npm über GitHub-Release)
+Stand: 2026-10-12, Version 0.6.11 auf `dev` (wartet auf Alex' Test), `main` = 0.6.10 (auf npm, Release v0.6.10)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -34,6 +34,12 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Fix: Status 2 (durch Regel AUS) zählt bei der Wassermenge nicht mehr als laufend
 - Pool-Display: „(4,2 kW · 11,6 kWh)“ hinter Laufzeit von Absorber/Heizung; ELO-Zeile „ELO: 52 g heute · Zelle 93 % ⚠“; Demo ?demo=1&elo=1&wp=1
 - Offen: zweiter Wärmeerzeuger (Alex plant 2027 Wärmepumpe → Absorber + WP + Ölheizung; Erkennung klärt Alex mit PoolDigital), negative Solarleistung später, Frage an PoolDigital nach interner Zellenzählung (Firmware-Wunsch)
+
+## 0.6.11 (dev, 2026-10-12) – Elektrolyse aus Violet-Werten
+- Auskunft PoolDigital: bei DOS_2_ELO bedeuten die Kanister-Felder: DAILY_DOSING_AMOUNT_ML = g Chlor heute, TOTAL_CAN_AMOUNT_ML = Reststunden der Zelle, LAST_CAN_RESET = Zellenwechsel (in der Violet quittiert)
+- Eigener Zähler aus 0.6.10 entfernt (lib/cell.js nur noch cellConfig + cellWear), ebenso elo_output, elo_start_hours, Taster zelle_gewechselt, info.cellState
+- Datenpunkte: erzeugt_heute (g), zelle_reststunden (h), zellenwechsel; optional mit elo_lifetime (Std. 0, gleicher Wert wie in der Violet): zelle_verschleiss (%), zelle_warnung (elo_warn %)
+- Nicht an Alex' Anlage prüfbar (Flüssigchlor) – Rückmeldung von Elektrolyse-Testern abwarten
 
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck

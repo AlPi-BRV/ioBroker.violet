@@ -23,7 +23,6 @@ const {
 } = require('./lib/datapoints');
 const { VolumeCounter, flowConfig } = require('./lib/volume');
 const { HeatCounter, heatConfig } = require('./lib/heat');
-const { CellCounter, cellConfig } = require('./lib/cell');
 const { names, pick } = require('./lib/i18n');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
@@ -84,7 +83,7 @@ class Violet extends utils.Adapter {
         this.pollTimer = null;
         this.defs = [];
         this.msgDefs = [];
-        this.extraDefs = []; // weitere beschreibbare Datenpunkte (z. B. „Zelle gewechselt“)
+        this.extraDefs = []; // weitere beschreibbare Datenpunkte außerhalb von defs/controls/msgDefs
         this.controls = [];
         this.prepared = new Set(); // in diesem Lauf bereits angelegte/aktualisierte Objekte
         this.failCount = 0;
@@ -163,18 +162,6 @@ class Violet extends utils.Adapter {
             this.heat = new HeatCounter(hc, await this.loadJsonState('info.heatState'));
             this.log.info('Heat output calculation for absorber/heating is active');
         }
-        const cc = cellConfig(this.config);
-        if (cc) {
-            this.cell = new CellCounter(cc, await this.loadJsonState('info.cellState'));
-            this.extraDefs.push({
-                id: 'dosierung.elektrolyse.zelle_gewechselt',
-                name: 'Elektrolyse – Zelle gewechselt (Zähler zurücksetzen)',
-                type: 'boolean',
-                role: 'button',
-                write: true,
-                read: false,
-            });
-        }
         this.msgDefs = messageDefinitions(this.config);
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
         if (this.config.use_pump && this.config.use_pump_rpm && this.config.allow_switching) {
@@ -205,9 +192,6 @@ class Violet extends utils.Adapter {
         }
         for (const m of [...this.msgDefs, ...this.extraDefs]) {
             await this.prepareObject(m);
-        }
-        if (this.cell) {
-            this.subscribeStates('dosierung.elektrolyse.zelle_gewechselt');
         }
         if (this.controls.some(c => c.speed)) {
             const cur = await this.getStateAsync('pumpe.drehzahl_soll');
@@ -421,17 +405,6 @@ class Violet extends utils.Adapter {
             data.__HEAT_HEATER_KW = h.heaterKw;
             data.__HEAT_HEATER_KWH = h.heaterKwh;
             await this.setStateChangedAsync('info.heatState', JSON.stringify(this.heat.state()), true);
-        }
-        if (this.cell) {
-            const c = this.cell.update(data);
-            if (c) {
-                data.__ELO_HOURS = c.hours;
-                data.__ELO_REST = c.rest;
-                data.__ELO_WEAR = c.wear;
-                data.__ELO_WARN = c.warn;
-                data.__ELO_G_TODAY = c.gramsToday;
-                await this.setStateChangedAsync('info.cellState', JSON.stringify(this.cell.state()), true);
-            }
         }
         for (const def of this.defs) {
             if (def.when && !def.when(data)) {
@@ -818,19 +791,6 @@ class Violet extends utils.Adapter {
             return;
         }
         const id = fullId.substring(this.namespace.length + 1);
-
-        if (id === 'dosierung.elektrolyse.zelle_gewechselt') {
-            if (state.val && this.cell) {
-                this.cell.reset();
-                await this.setStateAsync('info.cellState', JSON.stringify(this.cell.state()), true);
-                this.log.info('Electrolysis cell replaced – operating hours counter reset to 0 (only in ioBroker)');
-                if (this.lastData) {
-                    await this.processData(this.lastData);
-                }
-            }
-            await this.setStateAsync(id, false, true);
-            return;
-        }
 
         if (id === 'meldungen.quittieren') {
             if (state.val) {

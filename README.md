@@ -85,12 +85,12 @@ In the tab "Pump" (section "Heat output") the adapter can calculate how much hea
 
 ## Electrolysis cell
 
-The Violet reports the same values for electrolysis as for liquid chlorine (canister, ml) – but no operating hours of the cell. So the adapter counts them itself:
+For electrolysis the Violet uses the same fields as for liquid chlorine, but with a different meaning (information from PoolDigital): the daily amount is chlorine produced in **g**, the "canister" content is the **remaining hours of the cell**, the canister change is the **cell change**.
 
-- Configuration (tab "Functions", visible with electrolysis): cell output in g chlorine per hour, lifetime in hours (usually 3000–6000 h), warning threshold in %, optional start value for a cell that has already been running
-- Data points under `dosierung.elektrolyse`: `zelle_stunden`, `zelle_reststunden`, `zelle_verschleiss` (%), `zelle_warnung`, `erzeugt_heute` (g)
-- `zelle_gewechselt` (button) resets the counter after a cell change – only in ioBroker, nothing is written to the Violet
-- The canister values (remaining amount, range, canister change, ml) are no longer created for electrolysis
+- Data points under `dosierung.elektrolyse`: `erzeugt_heute` (g), `zelle_reststunden` (h), `zellenwechsel` (date)
+- Optional (tab "Functions", visible with electrolysis): enter the cell lifetime in hours – the same value as in the Violet. Then `zelle_verschleiss` (%) and `zelle_warnung` (from the warning threshold) are added
+- The cell change is confirmed in the Violet like a canister change – nothing is written to the Violet
+- Please report if your values look different – the author's pool uses liquid chlorine
 
 ## Violet messages
 
@@ -142,6 +142,10 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.11 (2026-10-12)
+- Electrolysis: chlorine produced today (g), remaining cell hours and last cell change are now taken directly from the Violet (the canister fields have this meaning for electrolysis – information from PoolDigital); the own operating hours counter, cell output, start value and button "cell replaced" are removed
+- Wear in % and warning remain optional (cell lifetime in the configuration)
+
 ### 0.6.10 (2026-10-12)
 - New: heat output of absorber and heating (kW) and heat energy of today (kWh), calculated from return temperatures and the configured pump flow; return sensor behind heating only or behind absorber and heating in series
 - New: electrolysis cell – operating hours counter, remaining hours, wear in %, warning threshold, chlorine produced today (g), button "cell replaced"; canister values are no longer created for electrolysis

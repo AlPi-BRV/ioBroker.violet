@@ -253,7 +253,7 @@ const TXT = {
     off: 'AUS', on: 'EIN', wait: 'WARTET', blocked: 'GESPERRT', emergOff: 'NOT-AUS', auto: 'AUTO',
     pump: 'Filterpumpe', solar: 'Absorber', heater: 'Heizung', light: 'Licht', eco: 'ECO-Modus',
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
-    heatpump: 'Wärmepumpe', eheater: 'E-Heizung', cell: 'Zelle', gToday: 'g heute',
+    heatpump: 'Wärmepumpe', eheater: 'E-Heizung', cell: 'Zelle', cellLeft: 'Zelle noch {h} h', gToday: 'g heute',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
     chlorine: 'Chlor', floc: 'Flockung', fw: 'Violet Firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
@@ -272,7 +272,7 @@ const TXT = {
     off: 'OFF', on: 'ON', wait: 'WAIT', blocked: 'BLOCKED', emergOff: 'EMERG. OFF', auto: 'AUTO',
     pump: 'Filter pump', solar: 'Absorber', heater: 'Heating', light: 'Light', eco: 'ECO mode',
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
-    heatpump: 'Heat pump', eheater: 'E-heater', cell: 'Cell', gToday: 'g today',
+    heatpump: 'Heat pump', eheater: 'E-heater', cell: 'Cell', cellLeft: 'Cell {h} h left', gToday: 'g today',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
     chlorine: 'Chlorine', floc: 'Flocculant', fw: 'Violet firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
@@ -344,7 +344,7 @@ if (params.get('elo') === '1') {
   for (const id of Object.keys(DEMO)) if (id.startsWith('dosierung.chlor.')) delete DEMO[id];
   Object.assign(DEMO, {
     'dosierung.elektrolyse.status': 1, 'dosierung.elektrolyse.erzeugt_heute': 52,
-    'dosierung.elektrolyse.zelle_stunden': 4630, 'dosierung.elektrolyse.zelle_verschleiss': 92.6, 'dosierung.elektrolyse.zelle_warnung': true,
+    'dosierung.elektrolyse.zelle_reststunden': 370, 'dosierung.elektrolyse.zelle_verschleiss': 92.6, 'dosierung.elektrolyse.zelle_warnung': true,
   });
 }
 if (params.get('wp') === '1') {
@@ -616,7 +616,7 @@ function render() {
     const parts = [];
     if (has('dosierung.elektrolyse.erzeugt_heute')) parts.push(`ELO: ${fmt(V['dosierung.elektrolyse.erzeugt_heute'], 0)} ${t('gToday')}`);
     if (has('dosierung.elektrolyse.zelle_verschleiss')) parts.push(`${t('cell')} ${fmt(V['dosierung.elektrolyse.zelle_verschleiss'], 0)} %${V['dosierung.elektrolyse.zelle_warnung'] === true ? ' ⚠' : ''}`);
-    else if (has('dosierung.elektrolyse.zelle_stunden')) parts.push(`${t('cell')} ${fmt(V['dosierung.elektrolyse.zelle_stunden'], 0)} h`);
+    else if (has('dosierung.elektrolyse.zelle_reststunden')) parts.push(t('cellLeft').replace('{h}', fmt(V['dosierung.elektrolyse.zelle_reststunden'], 0)));
     setText('cldos', parts.join(' · '));
     dosBadge('clmode', 'dosierung.elektrolyse.status');
   } else {

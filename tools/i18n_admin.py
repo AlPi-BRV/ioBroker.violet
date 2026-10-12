@@ -219,6 +219,33 @@ T.update({
     'For a cell that has already been running. Replaces the counter when changed.': ['Für eine Zelle, die schon eine Weile läuft. Ersetzt den Zähler, sobald der Wert geändert wird.', 'Для уже работавшей ячейки. Заменяет счётчик при изменении значения.', 'Para uma célula que já funcionou. Substitui o contador quando o valor é alterado.', 'Voor een cel die al een tijd draait. Vervangt de teller zodra de waarde wordt gewijzigd.', 'Pour une cellule déjà en service. Remplace le compteur dès que la valeur est modifiée.', 'Per una cella già in funzione. Sostituisce il contatore quando il valore viene modificato.', 'Para una célula que ya ha funcionado. Sustituye el contador cuando se cambia el valor.', 'Dla ogniwa, które już pracowało. Zastępuje licznik po zmianie wartości.', 'Для комірки, що вже працювала. Замінює лічильник після зміни значення.', '用于已运行一段时间的电解槽。修改该值后将替换计数器。'],
 })
 
+
+# 0.6.11 – Elektrolyse aus den Violet-Werten
+T.update({
+    'For electrolysis the Violet reports chlorine produced today in g and the remaining hours of the cell (in the canister fields). The cell change is confirmed in the Violet as for a canister.': [
+        'Bei Elektrolyse meldet die Violet das heute erzeugte Chlor in g und die Reststunden der Zelle (in den Kanister-Feldern). Der Zellenwechsel wird in der Violet wie ein Kanisterwechsel quittiert.',
+        'При электролизе Violet передаёт выработанный сегодня хлор в г и остаток часов ячейки (в полях канистры). Замена ячейки подтверждается в Violet как замена канистры.',
+        'Na eletrólise, a Violet informa o cloro produzido hoje em g e as horas restantes da célula (nos campos do bidão). A troca da célula é confirmada na Violet como a de um bidão.',
+        'Bij elektrolyse meldt de Violet het vandaag geproduceerde chloor in g en de resterende uren van de cel (in de jerrycanvelden). De celwissel wordt in de Violet bevestigd zoals een jerrycanwissel.',
+        "Pour l'électrolyse, la Violet indique le chlore produit aujourd'hui en g et les heures restantes de la cellule (dans les champs du bidon). Le changement de cellule se valide dans la Violet comme pour un bidon.",
+        "Con l'elettrolisi la Violet riporta il cloro prodotto oggi in g e le ore residue della cella (nei campi della tanica). Il cambio cella si conferma nella Violet come per una tanica.",
+        'Con electrólisis la Violet informa del cloro producido hoy en g y de las horas restantes de la célula (en los campos del bidón). El cambio de célula se confirma en la Violet como el de un bidón.',
+        'Przy elektrolizie Violet podaje chlor wytworzony dziś w g oraz pozostałe godziny ogniwa (w polach kanistra). Wymianę ogniwa potwierdza się w Violet jak wymianę kanistra.',
+        'При електролізі Violet передає вироблений сьогодні хлор у г і залишок годин комірки (у полях каністри). Заміна комірки підтверджується у Violet як заміна каністри.',
+        '电解时，Violet 在药桶字段中报告今日产氯量（克）和电解槽剩余小时数。更换电解槽时，像更换药桶一样在 Violet 中确认。'],
+    'Same value as in the Violet (usually 3000–6000 h). For wear in % and the warning; empty = remaining hours only': [
+        'Gleicher Wert wie in der Violet (meist 3000–6000 h). Für Verschleiß in % und die Warnung; leer = nur Reststunden',
+        'То же значение, что и в Violet (обычно 3000–6000 ч). Для износа в % и предупреждения; пусто = только остаток часов',
+        'O mesmo valor que na Violet (normalmente 3000–6000 h). Para o desgaste em % e o aviso; vazio = só horas restantes',
+        'Dezelfde waarde als in de Violet (meestal 3000–6000 u). Voor slijtage in % en de waarschuwing; leeg = alleen resterende uren',
+        "Même valeur que dans la Violet (généralement 3000–6000 h). Pour l'usure en % et l'avertissement ; vide = heures restantes seulement",
+        "Stesso valore della Violet (di solito 3000–6000 h). Per l'usura in % e l'avviso; vuoto = solo ore residue",
+        'El mismo valor que en la Violet (normalmente 3000–6000 h). Para el desgaste en % y el aviso; vacío = solo horas restantes',
+        'Ta sama wartość co w Violet (zwykle 3000–6000 h). Dla zużycia w % i ostrzeżenia; puste = tylko pozostałe godziny',
+        'Те саме значення, що й у Violet (зазвичай 3000–6000 год). Для зносу в % і попередження; порожньо = лише залишок годин',
+        '与 Violet 中的值相同（通常 3000–6000 小时）。用于损耗百分比和警告；留空 = 仅显示剩余小时'],
+})
+
 SENSOR = {'en': 'Sensor', 'de': 'Sensor', 'ru': 'Датчик', 'pt': 'Sensor', 'nl': 'Sensor', 'fr': 'Capteur', 'it': 'Sensore', 'es': 'Sensor', 'pl': 'Czujnik', 'uk': 'Датчик', 'zh-cn': '传感器'}
 FREE = {'en': '(free)', 'de': '(frei)', 'ru': '(свободный)', 'pt': '(livre)', 'nl': '(vrij)', 'fr': '(libre)', 'it': '(libero)', 'es': '(libre)', 'pl': '(dowolny)', 'uk': '(вільний)', 'zh-cn': '（自定义）'}
 FIXED = ['Water temperature', 'Outside temperature', 'Absorber temperature', 'Absorber return', 'Heat exchanger', 'Storage temperature']
@@ -306,11 +333,9 @@ func = {
     'use_dos_php': cb('pH plus'),
     'use_dos_floc': cb('Flocculant'),
     'helo': hdr('Electrolysis cell', '!data.use_dos_elo'),
-    'eloinfo': static('The Violet does not report operating hours of the cell. The adapter adds up the runtime itself; the data point "zelle_gewechselt" resets the counter (only in ioBroker).', '!data.use_dos_elo', True),
-    'elo_output': {'type': 'number', 'label': 'Cell output – g chlorine per hour', 'tooltip': 'See type plate or data sheet; empty = no grams per day', 'min': 0, 'max': 1000, 'step': 0.1, 'newLine': True, 'hidden': '!data.use_dos_elo', **W()},
-    'elo_lifetime': {'type': 'number', 'label': 'Cell lifetime – hours', 'tooltip': 'Usually 3000–6000 h according to the manufacturer', 'min': 0, 'max': 50000, 'hidden': '!data.use_dos_elo', **W()},
-    'elo_warn': {'type': 'number', 'label': 'Warning at – % of lifetime', 'min': 1, 'max': 100, 'hidden': '!data.use_dos_elo', **W()},
-    'elo_start_hours': {'type': 'number', 'label': 'Hours already run (start value)', 'tooltip': 'For a cell that has already been running. Replaces the counter when changed.', 'min': 0, 'max': 50000, 'hidden': '!data.use_dos_elo', **W()},
+    'eloinfo': static('For electrolysis the Violet reports chlorine produced today in g and the remaining hours of the cell (in the canister fields). The cell change is confirmed in the Violet as for a canister.', '!data.use_dos_elo', True),
+    'elo_lifetime': {'type': 'number', 'label': 'Cell lifetime – hours', 'tooltip': 'Same value as in the Violet (usually 3000–6000 h). For wear in % and the warning; empty = remaining hours only', 'min': 0, 'max': 50000, 'newLine': True, 'hidden': '!data.use_dos_elo', **W()},
+    'elo_warn': {'type': 'number', 'label': 'Warning at – % of lifetime', 'min': 1, 'max': 100, 'hidden': '!data.use_dos_elo || !data.elo_lifetime', **W()},
     'h3': hdr('Heating, light and accessories'),
     'use_heater': cb('Heating / heat pump', newLine=True),
     'use_solar': cb('Solar heating'),

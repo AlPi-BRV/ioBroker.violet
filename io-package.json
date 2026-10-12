@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.10",
+    "version": "0.6.11",
     "news": {
+      "0.6.11": {
+        "en": "Electrolysis: chlorine produced (g), remaining cell hours and last cell change taken directly from the Violet",
+        "de": "Elektrolyse: erzeugtes Chlor (g), Reststunden der Zelle und letzter Zellenwechsel direkt aus der Violet",
+        "ru": "Электролиз: выработанный хлор (г), остаток часов ячейки и последняя замена ячейки берутся напрямую из Violet",
+        "pt": "Eletrólise: cloro produzido (g), horas restantes da célula e última troca da célula lidos diretamente da Violet",
+        "nl": "Elektrolyse: geproduceerd chloor (g), resterende celuren en laatste celwissel direct uit de Violet",
+        "fr": "Électrolyse : chlore produit (g), heures restantes de la cellule et dernier changement de cellule lus directement dans la Violet",
+        "it": "Elettrolisi: cloro prodotto (g), ore residue della cella e ultimo cambio cella letti direttamente dalla Violet",
+        "es": "Electrólisis: cloro producido (g), horas restantes de la célula y último cambio de célula leídos directamente de la Violet",
+        "pl": "Elektroliza: wytworzony chlor (g), pozostałe godziny ogniwa i ostatnia wymiana ogniwa odczytywane bezpośrednio z Violet",
+        "uk": "Електроліз: вироблений хлор (г), залишок годин комірки та остання заміна комірки беруться безпосередньо з Violet",
+        "zh-cn": "电解：产氯量（克）、电解槽剩余小时数和上次更换时间直接从 Violet 读取"
+      },
       "0.6.10": {
         "en": "Heat output of absorber and heating (kW, kWh today); electrolysis cell operating hours, wear and chlorine produced",
         "de": "Wärmeleistung von Absorber und Heizung (kW, kWh heute); Elektrolysezelle mit Betriebsstunden, Verschleiß und erzeugtem Chlor",
@@ -284,10 +297,8 @@
     "heat_sensor_return": 0,
     "heat_return_position": "heater",
     "heater_type": "exchanger",
-    "elo_output": 0,
-    "elo_lifetime": 5000,
-    "elo_warn": 90,
-    "elo_start_hours": 0
+    "elo_lifetime": 0,
+    "elo_warn": 90
   },
   "objects": [],
   "instanceObjects": [
@@ -386,21 +397,6 @@
         "name": {
           "en": "Internal: state of the heat output calculation",
           "de": "Intern: Zwischenstand der Wärmemengen-Berechnung"
-        },
-        "type": "string",
-        "read": true,
-        "write": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.cellState",
-      "type": "state",
-      "common": {
-        "role": "json",
-        "name": {
-          "en": "Internal: operating hours counter of the electrolysis cell",
-          "de": "Intern: Betriebsstundenzähler der Elektrolysezelle"
         },
         "type": "string",
         "read": true,
