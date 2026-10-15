@@ -47,6 +47,8 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - README: Deutsch zuerst, darunter „# English“ mit Changelog (Englisch ist Pflicht fürs ioBroker-Repository); docs/de/README.md entfernt
 
 - Forum-Testthread (2026-10-15): https://forum.iobroker.net/topic/85574/test-adapter-iobroker.violet-violet-poolsteuerung – Forum: Titel max. 60 Zeichen; Demo-Violet zum Ausprobieren: demo.myviolet.de
+- Forum-Richtlinien „Tester“: Titel „Test Adapter <name ohne iobroker.> v0.7.x GitHub|Latest“ (x bleibt stehen); Thread-Titel jetzt „Test Adapter violet v0.7.x GitHub - Violet Poolsteuerung“; bei neuer Minor-Version Titel anpassen, Test wird geschlossen, wenn stable
+- Violet holt Firmware-Updates selbst (mit Internetzugang) → ältere Firmware nur bei Anlagen ohne Internet; Rückfall last_error_id trotzdem behalten
 
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck
