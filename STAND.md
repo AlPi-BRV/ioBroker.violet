@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-12, Version 0.6.11 auf `dev` (wartet auf Alex' Test), `main` = 0.6.10 (auf npm, Release v0.6.10)
+Stand: 2026-10-15, Version 0.7.0 auf `main` und `dev` (von Alex getestet, Release v0.7.0 legt Alex an)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -40,6 +40,11 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Eigener Zähler aus 0.6.10 entfernt (lib/cell.js nur noch cellConfig + cellWear), ebenso elo_output, elo_start_hours, Taster zelle_gewechselt, info.cellState
 - Datenpunkte: erzeugt_heute (g), zelle_reststunden (h), zellenwechsel; optional mit elo_lifetime (Std. 0, gleicher Wert wie in der Violet): zelle_verschleiss (%), zelle_warnung (elo_warn %)
 - Von Alex getestet (2026-10-12, Violet kurz auf SEL umgestellt): Felder werden richtig gelesen, Display „ELO: 0 g heute · Zelle 40 %“ – bereit für main/Release
+
+## 0.7.0 (2026-10-15 nach main)
+- Übernahme aus der Violet (lib/violetconfig.js), COP Wärmepumpe, DMX-Szenennamen, Durchflusssensor in der Pumpenzeile, Fix Pumpe manuell (Code 4)
+- Alex: PoolDigital einverstanden, dass die Konfig-Abfrage im öffentlichen Code steht
+- README: Deutsch zuerst, darunter „# English“ mit Changelog (Englisch ist Pflicht fürs ioBroker-Repository); docs/de/README.md entfernt
 
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck
