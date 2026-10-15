@@ -46,6 +46,8 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Alex: PoolDigital einverstanden, dass die Konfig-Abfrage im öffentlichen Code steht
 - README: Deutsch zuerst, darunter „# English“ mit Changelog (Englisch ist Pflicht fürs ioBroker-Repository); docs/de/README.md entfernt
 
+- Forum-Testthread (2026-10-15): https://forum.iobroker.net/topic/85574/test-adapter-iobroker.violet-violet-poolsteuerung – Forum: Titel max. 60 Zeichen; Demo-Violet zum Ausprobieren: demo.myviolet.de
+
 ## Offen
 - Repository-PR (latest): Alex möchte damit WARTEN, bis sich Tester gemeldet haben und erste Bugs gefunden sind (2026-10-12). mcm1957 (ioBroker-Team) hat in Issue #4 positiv kommentiert und wartet auf den PR – kein Zeitdruck
 - README: Badges (npm-Version, Downloads, Tests, Lizenz); Badges „installiert“/„stable“ (iobroker.live/badges/violet-installed.svg, -stable.svg) erst nach Aufnahme ins Repository ergänzen
