@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.6.11",
+    "version": "0.7.0",
     "news": {
+      "0.7.0": {
+        "en": "Take over names, delivery rates and installed functions from the Violet (button in the configuration, automatically on first start); names for DMX scenes; Heat pump: COP (now and today) and electricity of today from a power data point of your choice (e.g. Shelly); fix: pump switched on manually was treated as stopped (no flow, frozen values)",
+        "de": "Namen, Fördermengen und verbaute Funktionen aus der Violet übernehmen (Knopf in der Konfiguration, beim Erststart automatisch); Namen für DMX-Szenen; Wärmepumpe: COP (jetzt und heute) und Strom heute aus einem frei wählbaren Leistungs-Datenpunkt (z. B. Shelly); Fehler behoben: von Hand eingeschaltete Pumpe galt als stehend (kein Durchfluss, eingefrorene Werte)",
+        "ru": "Перенос названий, производительности и установленных функций из Violet (кнопка в настройках, автоматически при первом запуске); названия сцен DMX; Тепловой насос: COP (сейчас и за сегодня) и электроэнергия за сегодня из выбранной точки данных мощности (например, Shelly); исправлено: насос, включённый вручную, считался остановленным (нет расхода, замороженные значения)",
+        "pt": "Importar nomes, caudais e funções instaladas da Violet (botão na configuração, automaticamente no primeiro arranque); nomes para cenas DMX; Bomba de calor: COP (agora e hoje) e eletricidade de hoje a partir de um ponto de dados de potência à escolha (ex. Shelly); correção: bomba ligada manualmente era considerada parada (sem caudal, valores congelados)",
+        "nl": "Namen, debieten en geïnstalleerde functies uit de Violet overnemen (knop in de configuratie, automatisch bij de eerste start); namen voor DMX-scènes; Warmtepomp: COP (nu en vandaag) en stroom van vandaag uit een vrij te kiezen vermogensdatapunt (bijv. Shelly); fout opgelost: handmatig ingeschakelde pomp gold als stilstaand (geen debiet, bevroren waarden)",
+        "fr": "Reprise des noms, débits et fonctions installées depuis la Violet (bouton dans la configuration, automatiquement au premier démarrage) ; noms des scènes DMX ; Pompe à chaleur : COP (actuel et du jour) et électricité du jour depuis un point de données de puissance au choix (p. ex. Shelly); correction : la pompe allumée manuellement était considérée à l'arrêt (pas de débit, valeurs figées)",
+        "it": "Importazione di nomi, portate e funzioni installate dalla Violet (pulsante nella configurazione, automaticamente al primo avvio); nomi per le scene DMX; Pompa di calore: COP (ora e oggi) ed elettricità di oggi da un punto dati di potenza a scelta (es. Shelly); correzione: la pompa accesa manualmente era considerata ferma (nessuna portata, valori congelati)",
+        "es": "Importar nombres, caudales y funciones instaladas de la Violet (botón en la configuración, automáticamente en el primer arranque); nombres para escenas DMX; Bomba de calor: COP (ahora y hoy) y electricidad de hoy desde un punto de datos de potencia a elegir (p. ej. Shelly); corrección: la bomba encendida manualmente se consideraba parada (sin caudal, valores congelados)",
+        "pl": "Przejmowanie nazw, wydajności i zainstalowanych funkcji z Violet (przycisk w konfiguracji, automatycznie przy pierwszym uruchomieniu); nazwy scen DMX; Pompa ciepła: COP (teraz i dzisiaj) oraz dzisiejsze zużycie prądu z dowolnego punktu danych mocy (np. Shelly); poprawka: ręcznie włączona pompa była traktowana jako zatrzymana (brak przepływu, zamrożone wartości)",
+        "uk": "Перенесення назв, продуктивності та встановлених функцій з Violet (кнопка в налаштуваннях, автоматично під час першого запуску); назви сцен DMX; Тепловий насос: COP (зараз і за сьогодні) та електроенергія за сьогодні з довільної точки даних потужності (наприклад, Shelly); виправлено: насос, увімкнений вручну, вважався зупиненим (немає витрати, заморожені значення)",
+        "zh-cn": "从 Violet 导入名称、流量和已安装功能（配置中的按钮，首次启动时自动）；DMX 场景名称；热泵：根据可自选的功率数据点（例如 Shelly）计算 COP（当前和今日）及今日用电量；修复：手动开启的水泵被视为停止（无流量、数值冻结）"
+      },
       "0.6.11": {
         "en": "Electrolysis: chlorine produced (g), remaining cell hours and last cell change taken directly from the Violet",
         "de": "Elektrolyse: erzeugtes Chlor (g), Reststunden der Zelle und letzter Zellenwechsel direkt aus der Violet",
@@ -292,11 +305,25 @@
     "vrel7_oid": "",
     "vrel8_name": "",
     "vrel8_oid": "",
+    "dmx1_name": "",
+    "dmx2_name": "",
+    "dmx3_name": "",
+    "dmx4_name": "",
+    "dmx5_name": "",
+    "dmx6_name": "",
+    "dmx7_name": "",
+    "dmx8_name": "",
+    "dmx9_name": "",
+    "dmx10_name": "",
+    "dmx11_name": "",
+    "dmx12_name": "",
     "heat_enabled": false,
     "heat_sensor_absorber": 4,
     "heat_sensor_return": 0,
     "heat_return_position": "heater",
     "heater_type": "exchanger",
+    "hp_power_oid": "",
+    "hp_power_unit": "W",
     "elo_lifetime": 0,
     "elo_warn": 90
   },

@@ -95,7 +95,8 @@
   .tw .badge { flex: 0 0 auto; margin-left: auto; }
 
   /* Relais-Spalte */
-  .relay .lbl { flex: 0 0 33%; }
+  .relay .lbl { flex: 0 0 35%; }
+  .relay .lbl .sub { white-space: pre; }  /* Zeilenumbruch nur per \n (Wärmewerte unter der Laufzeit) */
   .state { flex: 0 0 5em; display: flex; align-items: center; gap: .5em; width: 5em; white-space: nowrap; }
   .state .long { font-size: .62em; letter-spacing: .02em; }
   .ctrl { display: flex; flex-direction: column; align-items: flex-start; gap: .4em; }
@@ -303,12 +304,15 @@ const FUNCS = [
   { key: 'nachspeisung', label: 'refill' },
 ];
 const FLOW_UNITS = /cm\/s/i;
+/* Förderleistung (Durchflusssensor in m³/h): gehört zur Pumpe, steht in deren Zeile statt bei den Wasserwerten */
+const PUMP_FLOW_UNITS = /m(³|3)\s*\/\s*h/i;
+const pumpFlow = () => F.analog.find((a) => PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
 
 /* ---------- Demo-Daten (Werte deiner Anlage vom 09.10.2026) ---------- */
 const DEMO_TEMPS = { 1: 'Wassertemperatur', 2: 'Außentemperatur', 3: 'Absorbertemperatur', 4: 'Absorber-Rücklauf', 7: 'Pool Rücklauf', 8: 'Heizung Vorlauf', 9: 'Heizung Rücklauf', 11: 'Schwimmbad' };
 const DEMO = {
   'info.features': JSON.stringify({
-    lang: LANG, font: params.get('font') || 'verdana', violetUrl: 'http://violet.local', switching: true, pumpRpm: true, pv: true, dmx: true,
+    lang: LANG, font: params.get('font') || 'verdana', violetUrl: 'http://violet.local', switching: true, pumpRpm: true, pv: true, dmx: true, dmxNames: ['Pool weiß', 'Pool rot', 'Pool grün', 'Pool blau', 'Terrasse', '', 'Garten'],
     temps: Object.entries(DEMO_TEMPS).map(([n, name]) => ({ n: Number(n), name })),
     ranges: { ph: [7.0, 7.4], redox: [650, 800], chlor: [0.3, 0.6] }, t1Pool: true,
     vrelays: [{ id: 'vrelais.1', name: 'Teichpumpe' }, { id: 'vrelais.2', name: 'Gartenbrunnen' }],
@@ -317,6 +321,7 @@ const DEMO = {
       { id: 'analog.adc1', name: 'Filterdruck', unit: 'bar' },
       { id: 'analog.adc5', name: 'Luftfeuchte', unit: '%rF' },
       { id: 'analog.impuls1', name: 'Anströmung', unit: 'cm/s' },
+      { id: 'analog.impuls2', name: 'Förderleistung', unit: 'm³/h' },
     ],
     messages: { enabled: true, active: params.get('msg') === '1', count: 1, text: 'Elektroden-Kalibrierung überfällig', time: '10.10.2026 09:12:00', type: 'REMINDER' },
   }),
@@ -329,7 +334,7 @@ const DEMO = {
   'temperatur.sensor3': 12.3, 'temperatur.sensor3_min': 8.4, 'temperatur.sensor3_max': 16.2,
   'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
-  'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0,
+  'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0, 'analog.impuls2': 7.4,
   'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
   'solar.status': 1, 'solar.aktiv': true, 'solar.schalten': 'AUTO', 'solar.laufzeit_heute': '03h 12m 40s', 'solar.leistung': 4.21, 'solar.energie_heute': 11.6,
@@ -350,7 +355,12 @@ if (params.get('elo') === '1') {
 if (params.get('wp') === '1') {
   const f = JSON.parse(DEMO['info.features']);
   f.heaterType = 'heatpump';
+  f.cop = true;
   DEMO['info.features'] = JSON.stringify(f);
+  Object.assign(DEMO, {
+    'heizung.status': 1, 'heizung.aktiv': true, 'heizung.schalten': 'AUTO', 'heizung.leistung': 6.4,
+    'heizung.strom_leistung': 1.52, 'heizung.strom_heute': 1.4, 'heizung.cop': 4.2, 'heizung.cop_heute': 3.8,
+  });
 }
 if (params.get('ohne')) {
   const f = JSON.parse(DEMO['info.features']);
@@ -404,12 +414,14 @@ function waterRows() {
   if (has('wasser.redox')) rows.push('redox');
   if (has('wasser.chlor')) rows.push('chlor');
   else if (has('dosierung.flockung.tagesmenge')) rows.push('floc');
-  const an = F.analog.filter((a) => !FLOW_UNITS.test(a.unit) && has(a.id));
+  const an = F.analog.filter((a) => !FLOW_UNITS.test(a.unit) && !PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
   for (let i = 0; i < an.length; i += 2) rows.push({ main: an[i], note: an[i + 1] });
   return rows;
 }
 
 const dmxOn = () => F.dmx && has('dmx.szene1.status');
+/* Name einer DMX-Szene: eigener Name aus der Konfiguration oder „Szene n“ */
+const sceneName = (n) => (F.dmxNames && F.dmxNames[n - 1]) || `${t('scene')} ${n}`;
 
 function relayRows() {
   const rows = [];
@@ -531,12 +543,19 @@ const modeSeg = (k, small = '') => `<div class="seg ${small}" data-key="${k}">
 /* Name der Heizung je nach Art (Konfiguration „Art der Heizung“) */
 const heaterLabel = () => (F.heaterType === 'heatpump' ? 'heatpump' : F.heaterType === 'electric' ? 'eheater' : 'heater');
 
-/* Wärmeleistung / Wärmemenge heute hinter der Laufzeit von Absorber und Heizung */
+/* Wärmeleistung / Wärmemenge heute (und COP) in einer zweiten Zeile unter der Laufzeit von Absorber und Heizung */
 function heatText(k) {
   if (!has(`${k}.energie_heute`)) return '';
   const p = V[`${k}.leistung`];
   const now = V[`${k}.aktiv`] === true && typeof p === 'number' && p > 0 ? `${fmt(p, 1)} kW · ` : '';
-  return ` (${now}${fmt(V[`${k}.energie_heute`], 1)} kWh)`;
+  // Wärmepumpe mit Strommessung: COP jetzt (läuft) bzw. COP heute (steht)
+  let cop = '';
+  if (k === 'heizung' && F.cop) {
+    const c = now ? V['heizung.cop'] : V['heizung.cop_heute'];
+    if (typeof c === 'number' && c > 0) cop = ` · COP ${fmt(c, 1)}`;
+  }
+  // eigene Zeile unter der Laufzeit, sonst wird die Beschriftung zu breit und verschiebt die Zeile
+  return `\n${now}${fmt(V[`${k}.energie_heute`], 1)} kWh${cop}`;
 }
 
 function relayCell(x, cls) {
@@ -551,7 +570,7 @@ function relayCell(x, cls) {
   }
   if (k === 'licht') {
     const opts = [`<option value="">${t('sceneChoose')}</option>`, `<option value="off">${t('sceneOff')}</option>`]
-      .concat([...Array(12).keys()].map((i) => `<option value="${i + 1}">${t('scene')} ${i + 1}</option>`)).join('');
+      .concat([...Array(12).keys()].map((i) => `<option value="${i + 1}">${esc(sceneName(i + 1))}</option>`)).join('');
     const dmx = x.dmx ? `<div class="line"><select class="dmx" id="dmxSel">${opts}</select></div>` : '';
     return `<div class="${cls} relay">
       <div class="lbl"><span class="main">${x.light ? t('light') : t('dmx')}:</span><span class="sub" id="${id}rt"></span></div>
@@ -639,7 +658,9 @@ function render() {
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const tx = $(`${id}txt`); if (tx) tx.classList.toggle('long', code === 2 || code === 5);
       const rt = V[`${k}.laufzeit_heute`];
-      const vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : heatText(k);
+      let vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : heatText(k);
+      const pf = k === 'pumpe' ? pumpFlow() : null;
+      if (pf && typeof V[pf.id] === 'number') vol += `\n${pf.name}: ${fmt(V[pf.id], 1)} ${pf.unit}`; // zweite Zeile unter der Laufzeit
       setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
       markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
     }
@@ -770,7 +791,7 @@ async function onDmxChange(ev) {
     if (v === 'off') { if (active) await send(`dmx.szene${active}.schalten`, 'OFF', `${t('sceneOff')}`); }
     else if (v) {
       if (active && String(active) !== v) await send(`dmx.szene${active}.schalten`, 'OFF', '');
-      await send(`dmx.szene${v}.schalten`, 'ON', `${t('scene')} ${v}`);
+      await send(`dmx.szene${v}.schalten`, 'ON', sceneName(v));
       for (let s = 1; s <= 12; s++) if (demo) V[`dmx.szene${s}.aktiv`] = String(s) === v;
     }
   } catch (e) {
@@ -803,7 +824,7 @@ function applyFeatures() {
       temps: f.temps || [], relays: f.relays || [], analog: f.analog || [],
       switching: !!f.switching, pumpRpm: !!f.pumpRpm, pv: !!f.pv, dmx: !!f.dmx,
       violetUrl: f.violetUrl || '', messages: f.messages || { enabled: false }, font: f.font || 'verdana', lang: f.lang,
-      waterFreeze: !!f.waterFreeze, version: f.version || '', heaterType: f.heaterType || 'exchanger',
+      waterFreeze: !!f.waterFreeze, version: f.version || '', heaterType: f.heaterType || 'exchanger', cop: !!f.cop, dmxNames: f.dmxNames || [],
       ranges: f.ranges || {}, rows: f.rows || [], hero: f.hero || [], vrelays: f.vrelays || [], t1Pool: !!f.t1Pool,
     };
     if (!params.get('lang') && f.lang) LANG = String(f.lang).slice(0, 2) === 'de' ? 'de' : 'en';

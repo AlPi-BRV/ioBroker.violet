@@ -60,6 +60,80 @@
           "lg": 3,
           "xl": 3
         },
+        "hdrImport": {
+          "type": "header",
+          "text": "Take over from the Violet",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "importInfo": {
+          "type": "staticText",
+          "text": "Names (sensors, relays, inputs, DMX scenes), delivery rates of the pump and installed functions can be read from the Violet. Requires user name and password (saved). Nothing is written to the Violet; the values only appear in the form – check them and save.",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "style": {
+            "opacity": 0.75
+          }
+        },
+        "importEmpty": {
+          "type": "sendTo",
+          "command": "importViolet",
+          "jsonData": "{\"overwrite\": false}",
+          "label": "Fill empty fields",
+          "result": {
+            "ok": {
+              "en": "%s values from the Violet filled in – please check and save.",
+              "de": "%s Werte aus der Violet eingetragen – bitte prüfen und speichern."
+            },
+            "none": {
+              "en": "Nothing to take over – everything is already filled in.",
+              "de": "Nichts zu übernehmen – alles ist schon eingetragen."
+            }
+          },
+          "useNative": true,
+          "showProcess": true,
+          "variant": "outlined",
+          "newLine": true,
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
+        "importAll": {
+          "type": "sendTo",
+          "command": "importViolet",
+          "jsonData": "{\"overwrite\": true}",
+          "label": "Replace all",
+          "tooltip": "Also replaces names and delivery rates already entered",
+          "result": {
+            "ok": {
+              "en": "%s values from the Violet filled in – please check and save.",
+              "de": "%s Werte aus der Violet eingetragen – bitte prüfen und speichern."
+            },
+            "none": {
+              "en": "Nothing to take over – everything is already filled in.",
+              "de": "Nichts zu übernehmen – alles ist schon eingetragen."
+            }
+          },
+          "useNative": true,
+          "showProcess": true,
+          "variant": "outlined",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
+        },
         "hdrSwitch": {
           "type": "header",
           "text": "Switching from ioBroker",
@@ -1669,6 +1743,63 @@
           "md": 4,
           "lg": 4,
           "xl": 4
+        },
+        "hcop": {
+          "type": "header",
+          "text": "Heat pump COP",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.heat_enabled || !data.use_heater || data.heater_type !== 'heatpump'"
+        },
+        "hcopinfo": {
+          "type": "staticText",
+          "text": "Optional: select the ioBroker data point with the power consumption of the heat pump (e.g. Shelly). The adapter then calculates the electricity of today and the COP (heat output ÷ power consumption, now and for today). Empty = no COP.",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.heat_enabled || !data.use_heater || data.heater_type !== 'heatpump'",
+          "style": {
+            "opacity": 0.75
+          }
+        },
+        "hp_power_oid": {
+          "type": "objectId",
+          "label": "Power consumption data point",
+          "newLine": true,
+          "hidden": "!data.heat_enabled || !data.use_heater || data.heater_type !== 'heatpump'",
+          "xs": 12,
+          "sm": 8,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "hp_power_unit": {
+          "type": "select",
+          "label": "Unit of the data point",
+          "hidden": "!data.heat_enabled || !data.use_heater || data.heater_type !== 'heatpump'",
+          "options": [
+            {
+              "label": "W",
+              "value": "W"
+            },
+            {
+              "label": "kW",
+              "value": "kW"
+            }
+          ],
+          "xs": 12,
+          "sm": 4,
+          "md": 2,
+          "lg": 2,
+          "xl": 2
         }
       }
     },
@@ -2317,6 +2448,150 @@
           "md": 6,
           "lg": 6,
           "xl": 6
+        },
+        "hdmx": {
+          "type": "header",
+          "text": "DMX light scenes",
+          "size": 5,
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "hidden": "!data.use_dmx"
+        },
+        "dmx1_name": {
+          "type": "text",
+          "label": "DMX 1",
+          "newLine": true,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx2_name": {
+          "type": "text",
+          "label": "DMX 2",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx3_name": {
+          "type": "text",
+          "label": "DMX 3",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx4_name": {
+          "type": "text",
+          "label": "DMX 4",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx5_name": {
+          "type": "text",
+          "label": "DMX 5",
+          "newLine": true,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx6_name": {
+          "type": "text",
+          "label": "DMX 6",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx7_name": {
+          "type": "text",
+          "label": "DMX 7",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx8_name": {
+          "type": "text",
+          "label": "DMX 8",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx9_name": {
+          "type": "text",
+          "label": "DMX 9",
+          "newLine": true,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx10_name": {
+          "type": "text",
+          "label": "DMX 10",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx11_name": {
+          "type": "text",
+          "label": "DMX 11",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
+        },
+        "dmx12_name": {
+          "type": "text",
+          "label": "DMX 12",
+          "newLine": false,
+          "hidden": "!data.use_dmx",
+          "xs": 12,
+          "sm": 6,
+          "md": 3,
+          "lg": 3,
+          "xl": 3
         },
         "hrnone": {
           "type": "staticText",

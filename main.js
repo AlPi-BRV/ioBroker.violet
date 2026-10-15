@@ -18,9 +18,11 @@ const {
     messageDefinitions,
     modeFromStatus,
     tempName,
+    dmxLabel,
     setLang,
     CHANNELS,
 } = require('./lib/datapoints');
+const { mapVioletConfig, configChanges, fetchVioletConfig } = require('./lib/violetconfig');
 const { VolumeCounter, flowConfig } = require('./lib/volume');
 const { HeatCounter, heatConfig } = require('./lib/heat');
 const { names, pick } = require('./lib/i18n');
@@ -32,7 +34,7 @@ const num = v => (v === null || v === undefined || v === '' || !Number.isFinite(
 /** Läuft die Filterpumpe? Bei Drehzahlpumpen über die Stufen, sonst über den Status */
 function pumpRunning(d) {
     if (d.PUMP_RPM_0 !== undefined) {
-        return [1, 2, 3].some(s => parseInt(d[`PUMP_RPM_${s}`], 10) === 1);
+        return [1, 2, 3].some(s => [1, 3, 4].includes(parseInt(d[`PUMP_RPM_${s}`], 10)));
     }
     return [1, 3, 4].includes(parseInt(d.PUMP, 10));
 }
@@ -161,6 +163,18 @@ class Violet extends utils.Adapter {
         if (hc) {
             this.heat = new HeatCounter(hc, await this.loadJsonState('info.heatState'));
             this.log.info('Heat output calculation for absorber/heating is active');
+            if (hc.elec) {
+                // Stromaufnahme der Wärmepumpe aus fremdem Datenpunkt (z. B. Shelly) für den COP
+                this.hpPower = { oid: hc.elecOid, factor: hc.elecFactor, val: null };
+                try {
+                    const st = await this.getForeignStateAsync(hc.elecOid);
+                    this.hpPower.val = st ? parseFloat(st.val) : null;
+                } catch {
+                    this.hpPower.val = null;
+                }
+                this.subscribeForeignStates(hc.elecOid);
+                this.log.info(`Heat pump COP: power consumption from ${hc.elecOid}`);
+            }
         }
         this.msgDefs = messageDefinitions(this.config);
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
@@ -256,6 +270,10 @@ class Violet extends utils.Adapter {
 
         if (this.config.web_enabled) {
             this.startWebServer();
+        }
+
+        if (await this.firstStartImport()) {
+            return; // Konfiguration ergänzt – die Instanz startet neu
         }
 
         this.log.info(`Polling ${this.baseUrl} every ${this.interval / 1000} s`);
@@ -399,7 +417,13 @@ class Violet extends utils.Adapter {
             }
         }
         if (this.heat) {
-            const h = this.heat.update(data);
+            const hp = this.hpPower;
+            const elecKw = hp && Number.isFinite(hp.val) ? hp.val * hp.factor : null;
+            const h = this.heat.update(data, new Date(), elecKw);
+            data.__HP_ELEC_KW = h.elecKw;
+            data.__HP_ELEC_KWH = h.elecKwh;
+            data.__HP_COP = h.copNow;
+            data.__HP_COP_TODAY = h.copToday;
             data.__HEAT_SOLAR_KW = h.solarKw;
             data.__HEAT_SOLAR_KWH = h.solarKwh;
             data.__HEAT_HEATER_KW = h.heaterKw;
@@ -592,6 +616,7 @@ class Violet extends utils.Adapter {
             volume: !!this.volume,
             heat: !!this.heat,
             heaterType: c.heater_type || 'exchanger',
+            cop: !!this.hpPower,
             elo: !!c.use_dos_elo,
             t1Pool: !!this.t1,
             waterFreeze: !!this.wfreeze,
@@ -608,6 +633,7 @@ class Violet extends utils.Adapter {
             vrelays: (this.vrel || []).map(v => ({ id: v.id, name: v.name })),
             pv: !!c.use_pv,
             dmx: !!c.use_dmx,
+            dmxNames: [...Array(12).keys()].map(i => String(c[`dmx${i + 1}_name`] || '').trim()),
             temps: [],
             relays: [],
             analog: this.defs
@@ -685,14 +711,98 @@ class Violet extends utils.Adapter {
         }
         const d = ch.match(/^dmx\.szene(\d+)$/);
         if (d) {
-            return `DMX-Szene ${d[1]}`;
+            return dmxLabel(this.config, Number(d[1]));
         }
         return ch.split('.').pop();
+    }
+
+    /**
+     * Erster Start einer neuen Instanz (noch nie Daten abgefragt): leere Namen/Fördermengen aus der
+     * Violet vorbelegen und verbaute Funktionen einschalten. Nur mit Login, nur lesen.
+     *
+     * @returns {Promise<boolean>} true = Konfiguration geändert, Instanz startet neu
+     */
+    async firstStartImport() {
+        try {
+            const seen = await this.getStateAsync('info.rawJson');
+            if (seen && seen.val) {
+                return false; // Instanz lief schon – nichts automatisch ändern
+            }
+        } catch {
+            return false;
+        }
+        if (!this.config.username) {
+            this.log.info(
+                'Tip: with user name and password of the Violet, names and delivery rates can be taken over from the Violet (button in the configuration)',
+            );
+            return false;
+        }
+        let changes;
+        try {
+            const found = mapVioletConfig(await fetchVioletConfig(this.baseUrl, this.headers, this.timeout));
+            changes = configChanges(this.config, found, { flags: true });
+        } catch (e) {
+            this.log.info(`Settings of the Violet could not be read (${e.message}) – continuing without`);
+            return false;
+        }
+        const n = Object.keys(changes).length;
+        if (!n) {
+            return false;
+        }
+        this.log.info(
+            `First start: ${n} settings taken over from the Violet (names, delivery rates, functions) – restarting`,
+        );
+        await this.extendForeignObjectAsync(`system.adapter.${this.namespace}`, { native: changes });
+        return true;
+    }
+
+    /**
+     * Knopf in der Konfiguration: Vorgaben aus der Violet in das Formular übernehmen
+     * (gespeichert wird erst mit „Speichern“).
+     *
+     * @param {{overwrite?: boolean}} msg overwrite = auch ausgefüllte Felder ersetzen
+     */
+    async importForAdmin(msg) {
+        if (!this.baseUrl) {
+            return {
+                error: this.t(
+                    'Zuerst die IP der Violet eintragen und speichern.',
+                    'Enter and save the IP of the Violet first.',
+                ),
+            };
+        }
+        if (!this.config.username) {
+            return {
+                error: this.t(
+                    'Dafür braucht der Adapter Benutzer und Passwort der Violet (Reiter „Verbindung“) – eintragen und speichern.',
+                    'This needs user name and password of the Violet (tab "Connection") – enter and save them.',
+                ),
+            };
+        }
+        let changes;
+        try {
+            const found = mapVioletConfig(await fetchVioletConfig(this.baseUrl, this.headers, this.timeout));
+            changes = configChanges(this.config, found, { overwrite: !!(msg && msg.overwrite), flags: true });
+        } catch (e) {
+            this.log.warn(`Settings of the Violet could not be read: ${e.message}`);
+            return { error: `${this.t('Violet nicht lesbar', 'Violet not readable')}: ${e.message}` };
+        }
+        const n = Object.keys(changes).length;
+        this.log.info(`Configuration: ${n} values from the Violet offered`);
+        // Texte stehen in der Konfiguration (result: ok/none); native immer mitschicken, sonst meldet Admin doppelt
+        return n ? { native: changes, result: 'ok', args: [String(n)] } : { native: {}, result: 'none' };
     }
 
     /** Anfragen aus der Konfigurationsseite (z. B. aktuelle Temperatur neben dem Namensfeld) */
     onMessage(obj) {
         if (!obj || !obj.callback) {
+            return;
+        }
+        if (obj.command === 'importViolet') {
+            this.importForAdmin(obj.message).then(
+                r => this.sendTo(obj.from, obj.command, r, obj.callback),
+                e => this.sendTo(obj.from, obj.command, { error: e.message }, obj.callback),
+            );
             return;
         }
         let reply = '';
@@ -779,6 +889,9 @@ class Violet extends utils.Adapter {
             return;
         }
         if (!fullId.startsWith(`${this.namespace}.`)) {
+            if (this.hpPower && this.hpPower.oid === fullId) {
+                this.hpPower.val = parseFloat(state.val);
+            }
             // Rückmeldung eines virtuellen Relais (fremder Datenpunkt)
             for (const v of this.vrel || []) {
                 if (v.oid === fullId) {
