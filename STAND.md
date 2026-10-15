@@ -44,7 +44,7 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 ## 0.7.0 (2026-10-15 nach main)
 - Übernahme aus der Violet (lib/violetconfig.js), COP Wärmepumpe, DMX-Szenennamen, Durchflusssensor in der Pumpenzeile, Fix Pumpe manuell (Code 4)
 - Alex: PoolDigital einverstanden, dass die Konfig-Abfrage im öffentlichen Code steht
-- README: Deutsch zuerst, darunter „# English“ mit Changelog (Englisch ist Pflicht fürs ioBroker-Repository); docs/de/README.md entfernt
+- README: zweisprachiger Versuch (Deutsch oben) scheiterte am Checker (E6015 README.md nur Englisch, E6025 genau eine H1) → README.md rein Englisch mit Link „🇩🇪 Deutsche Anleitung“ oben, deutsche Anleitung in docs/de/README.md (Alex: Variante A, kein .github/README.md-Trick)
 
 - Forum-Testthread (2026-10-15): https://forum.iobroker.net/topic/85574/test-adapter-iobroker.violet-violet-poolsteuerung – Forum: Titel max. 60 Zeichen; Demo-Violet zum Ausprobieren: demo.myviolet.de
 - Forum-Richtlinien „Tester“: Titel „Test Adapter <name ohne iobroker.> v0.7.x GitHub|Latest“ (x bleibt stehen); Thread-Titel jetzt „Test Adapter violet v0.7.x GitHub - Violet Poolsteuerung“; bei neuer Minor-Version Titel anpassen, Test wird geschlossen, wenn stable
