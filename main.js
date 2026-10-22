@@ -293,6 +293,14 @@ class Violet extends utils.Adapter {
 
         const objs = await this.getAdapterObjectsAsync();
         let removed = 0;
+
+        // Datenpunkte älterer Versionen, die es nicht mehr gibt
+        for (const id of ['info.cellState']) {
+            if (objs[`${this.namespace}.${id}`]) {
+                await this.delObjectAsync(id);
+                removed++;
+            }
+        }
         for (const fullId of Object.keys(objs)) {
             const id = fullId.substring(this.namespace.length + 1);
             if (!id || id === 'info' || id.startsWith('info.')) {

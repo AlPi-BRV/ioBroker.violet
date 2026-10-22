@@ -163,6 +163,11 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.7.1 (2026-10-22)
+- Data point names in all 11 ioBroker languages (requested by the repository check); own names from the configuration stay unchanged
+- Data points `schalten`: role changed from `level.mode` (not in the ioBroker role catalogue) to `text` – values `ON` / `OFF` / `AUTO` are unchanged
+- Obsolete data point `info.cellState` (from 0.6.10) is removed
+
 ### 0.7.0 (2026-10-14)
 - Take over from the Violet: names of temperature sensors, relays, analog/pulse inputs and DMX scenes, delivery rates of the pump and installed functions (tab "Connection", buttons "Fill empty fields" / "Replace all"; needs user name and password of the Violet). On the very first start of a new instance this happens automatically. Read only – nothing is written to the Violet, and only the needed values are evaluated
 - Own names for DMX scenes (tab "Relays"), used for data points and in the pool display

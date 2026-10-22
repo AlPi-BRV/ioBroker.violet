@@ -1,6 +1,6 @@
 # ioBroker.violet – Arbeitsstand (Übergabe für neue Gespräche)
 
-Stand: 2026-10-15, Version 0.7.0 auf `main` und `dev` (von Alex getestet, Release v0.7.0 legt Alex an)
+Stand: 2026-10-22, Version 0.7.0 auf `main` (auf npm), 0.7.1 auf `dev` (Test durch Alex offen)
 Repository: https://github.com/AlPi-BRV/ioBroker.violet
 Autor: Alexander Pietz <alex@1-5worlds.de>
 
@@ -10,6 +10,13 @@ Autor: Alexander Pietz <alex@1-5worlds.de>
 - Entwicklung auf `dev`; nach `main` erst nach Alex' Test-OK
 - Konfiguration wird erzeugt: `python3 tools/i18n_admin.py` (jsonConfig + 11 Sprachen)
 - Versionswechsel: io-package.json (version + news in 11 Sprachen), package.json, README-Changelog
+
+## Aufnahme ins ioBroker-Repository (latest)
+- PR ioBroker/ioBroker.repositories#6976 „Add violet to latest“ (2026-10-21, über iobroker.dev); Kommentar mit Demo-Violet (demo.myviolet.de) und Forum-Testthread
+- Issue #8 im eigenen Repo (ioBroker-Bot): keine Fehler; W4001 (noch nicht in latest, erledigt sich mit dem PR), S8913 Automerge-Workflow für Dependabot (optional, offen)
+- Objekt-Export violet.0.json am PR (Werte nicht exportiert). Automatische Prüfung: E1008 (Rolle `level.mode` unbekannt, 37×) und Übersetzungen fehlen (11 Sprachen, 344×) → in 0.7.1 behoben; Prüfung lokal mit lib/objectStructure.js aus ioBroker.repochecker nachgestellt: 0 Meldungen
+- Nach Test von 0.7.1: nach main, Release v0.7.1, NEUEN Objekt-Export an den PR hängen
+- Datenpunktnamen: Übersetzungstabellen in lib/names-i18n.json (Begriffe, Muster mit Nummern, Zusätze wie „Maximum“); neue Namen dort in allen Sprachen ergänzen
 
 ## Wissen
 - Violet: *_LAST_ON/*_LAST_OFF sind Ortszeit als Unix-Epoch (nicht echtes UTC) → Laufzeit immer gegen die Violet-Uhr (Felder date + time) rechnen (0.6.8)
