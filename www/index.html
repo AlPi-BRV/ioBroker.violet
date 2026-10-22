@@ -133,6 +133,12 @@
   }
   @keyframes pulse { 50% { opacity: .45; } }
 
+  /* zusätzliche Relais-Zeilen über die ganze Breite (je 3 Funktionen nebeneinander) */
+  .xrow { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 88px; font-size: 16.5px; }
+  .xitem { display: flex; align-items: center; justify-content: center; gap: .8em; padding: .4em .9em; }
+  .xitem + .xitem { border-left: 1px solid rgba(255,255,255,.08); }
+  .xitem.relay .lbl { flex: 0 1 auto; }
+
   /* Relais-Ansicht (ersetzt die Temperaturspalte) */
   .rlist { display: flex; flex-direction: column; gap: .35em; width: 100%; }
   .rlist.three { gap: .12em; }
@@ -344,7 +350,7 @@ const DEMO = {
 };
 for (let s = 1; s <= 12; s++) { DEMO[`dmx.szene${s}.status`] = s === 3 ? 4 : 0; DEMO[`dmx.szene${s}.aktiv`] = s === 3; DEMO[`dmx.szene${s}.schalten`] = s === 3 ? 'ON' : 'AUTO'; }
 for (let r = 1; r <= 8; r++) { DEMO[`relais.ext1_${r}.status`] = r === 6 ? 4 : 6; DEMO[`relais.ext1_${r}.aktiv`] = r === 6; DEMO[`relais.ext1_${r}.schalten`] = r === 6 ? 'ON' : 'OFF'; }
-// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &msg=1   &elo=1 (Elektrolyse statt Flüssigchlor)   &wp=1 (Wärmepumpe)
+// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &alle=1   &msg=1   &elo=1 (Elektrolyse statt Flüssigchlor)   &wp=1 (Wärmepumpe)
 if (params.get('elo') === '1') {
   for (const id of Object.keys(DEMO)) if (id.startsWith('dosierung.chlor.')) delete DEMO[id];
   Object.assign(DEMO, {
@@ -361,6 +367,12 @@ if (params.get('wp') === '1') {
     'heizung.status': 1, 'heizung.aktiv': true, 'heizung.schalten': 'AUTO', 'heizung.leistung': 6.4,
     'heizung.strom_leistung': 1.52, 'heizung.strom_heute': 1.4, 'heizung.cop': 4.2, 'heizung.cop_heute': 3.8,
   });
+}
+// &alle=1: zusätzlich ECO, Rückspülung und Nachspeisung (mehr Relais-Zeilen als Temperaturen/Wasserwerte)
+if (params.get('alle') === '1') {
+  for (const k of ['eco', 'rueckspuelung', 'nachspeisung']) {
+    Object.assign(DEMO, { [`${k}.status`]: 0, [`${k}.aktiv`]: false, [`${k}.schalten`]: 'AUTO', [`${k}.laufzeit_heute`]: '00h 00m 00s' });
+  }
 }
 if (params.get('ohne')) {
   const f = JSON.parse(DEMO['info.features']);
@@ -445,8 +457,13 @@ function build() {
   const rowsNormal = Math.max(T.length, W.length, R.length, 1);
   const per = RL.length > rowsNormal * 2 ? 3 : 2;
   const firstCol = relayView ? Math.ceil(RL.length / per) : T.length;
-  const n = Math.max(firstCol, W.length, R.length, 1);
   const showFirst = relayView || T.length;
+  // Relais, die über die Zeilen der anderen Spalten hinausgehen, kommen nebeneinander in eigene Zeilen über die
+  // ganze Breite (je 3) – sonst wird die Tabelle hoch, mit leeren Zellen links, und alles darunter verschiebt sich
+  const left = Math.max(showFirst ? firstCol : 0, W.length);
+  const mainR = left && R.length > left ? left : R.length;
+  const extra = R.slice(mainR);
+  const n = Math.max(firstCol, W.length, mainR, 1);
   const cols = [showFirst && (relayView ? t('relayView') : t('temps')), W.length && t('water'), R.length && t('relays')];
   const g = $('grid');
   g.style.gridTemplateColumns = cols.map((c, i) => (c ? (i === 2 ? '1.25fr' : '1fr') : null)).filter(Boolean).join(' ') || '1fr';
@@ -462,7 +479,13 @@ function build() {
       else g.insertAdjacentHTML('beforeend', T[r] ? tempCell(T[r], r, cls) : `<div class="${cls}"></div>`);
     }
     if (W.length) g.insertAdjacentHTML('beforeend', W[r] ? waterCell(W[r], cls) : `<div class="${cls}"></div>`);
-    if (R.length) g.insertAdjacentHTML('beforeend', R[r] ? relayCell(R[r], cls) : `<div class="${cls} relay"></div>`);
+    if (R.length) g.insertAdjacentHTML('beforeend', r < mainR && R[r] ? relayCell(R[r], cls) : `<div class="${cls} relay"></div>`);
+  }
+  for (let i = 0; i < extra.length; i += 3) {
+    const cls = `xrow ${(n + i / 3) % 2 ? 'od' : 'ev'}`;
+    const items = extra.slice(i, i + 3).map((x) => relayCell(x, 'xitem'));
+    while (items.length < 3) items.push('<div class="xitem"></div>');
+    g.insertAdjacentHTML('beforeend', `<div class="${cls}">${items.join('')}</div>`);
   }
   g.querySelectorAll('.seg').forEach((seg) => seg.addEventListener('click', onSegClick));
   g.querySelectorAll('select.dmx').forEach((s) => s.addEventListener('change', onDmxChange));
