@@ -26,6 +26,7 @@ const { mapVioletConfig, configChanges, fetchVioletConfig } = require('./lib/vio
 const { VolumeCounter, flowConfig } = require('./lib/volume');
 const { HeatCounter, heatConfig } = require('./lib/heat');
 const { names, pick } = require('./lib/i18n');
+const ioPackage = require('./io-package.json');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
 
@@ -316,6 +317,21 @@ class Violet extends utils.Adapter {
         }
         if (removed) {
             this.log.info(`${removed} data points no longer needed were removed`);
+        }
+
+        // Namen/Rollen vorhandener Datenpunkte auf den aktuellen Stand bringen – auch solche, die gerade keinen Wert
+        // bekommen (z. B. Fühler, der in der Violet momentan nicht eingerichtet ist)
+        for (const def of this.defs) {
+            if (objs[`${this.namespace}.${def.id}`] && !this.prepared.has(def.id)) {
+                await this.prepareObject(def);
+            }
+        }
+
+        // Namen der festen info-Datenpunkte aus io-package.json (alle Sprachen) übernehmen
+        for (const o of ioPackage.instanceObjects || []) {
+            if (o.common && typeof o.common.name === 'object' && objs[`${this.namespace}.${o._id}`]) {
+                await this.extendObjectAsync(o._id, { common: { name: o.common.name } });
+            }
         }
     }
 

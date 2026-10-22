@@ -166,7 +166,7 @@ Restart the instance after an update.
 ### 0.7.1 (2026-10-22)
 - Data point names in all 11 ioBroker languages (requested by the repository check); own names from the configuration stay unchanged
 - Data points `schalten`: role changed from `level.mode` (not in the ioBroker role catalogue) to `text` – values `ON` / `OFF` / `AUTO` are unchanged
-- Obsolete data point `info.cellState` (from 0.6.10) is removed
+- Obsolete data point `info.cellState` (from 0.6.10) is removed; names of existing data points are updated on start, also for sensors that currently deliver no value
 - Pool display: relay rows that go beyond the temperature and water value rows are shown side by side (3 per row) in a full-width row – no empty cells, the display no longer grows in height (preview: `?demo=1&alle=1`)
 
 ### 0.7.0 (2026-10-14)
