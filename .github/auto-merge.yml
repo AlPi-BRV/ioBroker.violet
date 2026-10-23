@@ -1,0 +1,12 @@
+# Configure here which dependency updates should be merged automatically
+# by .github/workflows/automerge-dependabot.yml (ioBroker recommendation).
+# update_type is an upper limit: "semver:minor" also allows patch updates.
+# Everything that matches none of the rules stays open for a manual review.
+- match:
+    # Only merge patches for production dependencies
+    dependency_type: production
+    update_type: 'semver:patch'
+- match:
+    # and development dependencies can have a minor update, too
+    dependency_type: development
+    update_type: 'semver:minor'

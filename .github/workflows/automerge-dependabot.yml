@@ -1,6 +1,6 @@
 # Merges Dependabot PRs automatically once "Test and Release" has passed for
-# exactly the PR's current commit. Only patch and minor updates are merged;
-# major updates stay open for a manual review.
+# exactly the PR's current commit. Which updates are merged is configured in
+# .github/auto-merge.yml; everything else stays open for a manual review.
 # Runs via workflow_run in the context of the base repository, so no foreign
 # code is checked out or executed here.
 name: Auto-merge Dependabot PRs
@@ -22,7 +22,7 @@ jobs:
       github.event.workflow_run.actor.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Merge PR if patch or minor update
+      - name: Merge PR if allowed by .github/auto-merge.yml
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -33,13 +33,39 @@ jobs:
             --jq '[.[] | select(.author.login == "app/dependabot")][0].number // empty')
           if [ -z "$pr" ]; then echo "No open Dependabot PR for $BRANCH"; exit 0; fi
 
-          body=$(gh pr view "$pr" --repo "$REPO" --json body --jq .body)
-          types=$(printf '%s\n' "$body" | grep -o 'update-type: version-update:semver-[a-z]*' | sort -u || true)
-          echo "PR #$pr update types:"; echo "$types"
+          # Rules from the default branch, converted to JSON (yq is preinstalled on ubuntu runners)
+          gh api "repos/$REPO/contents/.github/auto-merge.yml" -H 'Accept: application/vnd.github.raw' \
+            | yq -o=json '.' > rules.json
+          # Dependabot writes the update metadata into the commit message
+          gh api "repos/$REPO/commits/$SHA" --jq .commit.message > message.txt
 
-          if [ -z "$types" ] || printf '%s\n' "$types" | grep -q 'semver-major'; then
-            echo "Major or unknown update - leaving PR #$pr for manual review"
-            exit 0
+          if ! python3 - <<'EOF'
+          import json, re, sys
+          rules = json.load(open('rules.json')) or []
+          msg = open('message.txt').read()
+          deps = re.findall(r'dependency-name: "?([^"\n]+)"?\n(?:.*\n)*?\s*dependency-type: (\S+)\n\s*update-type: version-update:semver-(\w+)', msg)
+          if not deps:
+              print('No update metadata found - leaving PR for manual review'); sys.exit(1)
+          level = {'patch': 1, 'minor': 2, 'major': 3}
+          def allowed(dep_type, update):
+              kind = 'development' if dep_type.endswith('development') else 'production'
+              for r in rules:
+                  m = r.get('match', {})
+                  if m.get('dependency_type', 'all') not in ('all', kind):
+                      continue
+                  ut = str(m.get('update_type', ''))
+                  if ut.startswith('semver:') and level.get(update, 9) <= level.get(ut[7:], 0):
+                      return True
+              return False
+          ok = True
+          for name, dep_type, update in deps:
+              a = allowed(dep_type, update)
+              print(f'{name}: {dep_type}, {update} -> {"ok" if a else "manual review"}')
+              ok = ok and a
+          sys.exit(0 if ok else 1)
+          EOF
+          then
+            echo "PR #$pr stays open"; exit 0
           fi
 
           # Squash-merge only if the PR head is still the commit that was tested
