@@ -1,0 +1,47 @@
+# Merges Dependabot PRs automatically once "Test and Release" has passed for
+# exactly the PR's current commit. Only patch and minor updates are merged;
+# major updates stay open for a manual review.
+# Runs via workflow_run in the context of the base repository, so no foreign
+# code is checked out or executed here.
+name: Auto-merge Dependabot PRs
+
+on:
+  workflow_run:
+    workflows: ['Test and Release']
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    if: |
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge PR if patch or minor update
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number,author \
+            --jq '[.[] | select(.author.login == "app/dependabot")][0].number // empty')
+          if [ -z "$pr" ]; then echo "No open Dependabot PR for $BRANCH"; exit 0; fi
+
+          body=$(gh pr view "$pr" --repo "$REPO" --json body --jq .body)
+          types=$(printf '%s\n' "$body" | grep -o 'update-type: version-update:semver-[a-z]*' | sort -u || true)
+          echo "PR #$pr update types:"; echo "$types"
+
+          if [ -z "$types" ] || printf '%s\n' "$types" | grep -q 'semver-major'; then
+            echo "Major or unknown update - leaving PR #$pr for manual review"
+            exit 0
+          fi
+
+          # Squash-merge only if the PR head is still the commit that was tested
+          gh api -X PUT "repos/$REPO/pulls/$pr/merge" -f merge_method=squash -f sha="$SHA"
+          gh api -X DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
