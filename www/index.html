@@ -262,7 +262,7 @@ const TXT = {
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
     heatpump: 'Wärmepumpe', eheater: 'E-Heizung', cell: 'Zelle', cellLeft: 'Zelle noch {h} h', gToday: 'g heute',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
-    chlorine: 'Chlor', floc: 'Flockung', fw: 'Violet Firmware', uptime: 'Uptime',
+    chlorine: 'Chlor', floc: 'Flockung', flowRate: 'Förderleistung', fw: 'Violet Firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
     msg: 'Meldung der Violet', msgs: 'Meldungen der Violet', msgHint: 'Klicken öffnet die Violet in einem neuen Fenster',
     confirmPumpOff: 'Filterpumpe wirklich manuell AUSschalten?',
@@ -281,7 +281,7 @@ const TXT = {
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
     heatpump: 'Heat pump', eheater: 'E-heater', cell: 'Cell', cellLeft: 'Cell {h} h left', gToday: 'g today',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
-    chlorine: 'Chlorine', floc: 'Flocculant', fw: 'Violet firmware', uptime: 'Uptime',
+    chlorine: 'Chlorine', floc: 'Flocculant', flowRate: 'Flow rate', fw: 'Violet firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
     msg: 'Violet message', msgs: 'Violet messages', msgHint: 'Click to open the Violet in a new window',
     confirmPumpOff: 'Really switch the filter pump OFF manually?',
@@ -312,7 +312,14 @@ const FUNCS = [
 const FLOW_UNITS = /cm\/s/i;
 /* Förderleistung (Durchflusssensor in m³/h): gehört zur Pumpe, steht in deren Zeile statt bei den Wasserwerten */
 const PUMP_FLOW_UNITS = /m(³|3)\s*\/\s*h/i;
-const pumpFlow = () => F.analog.find((a) => PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
+/* Vorrang: echter Sensor, solange er etwas liefert; sonst die vom Adapter berechnete Förderleistung.
+   Ein Eingang, der nur 0 liefert (kein Sensor angeschlossen), verschwindet, sobald der berechnete Wert da ist. */
+const pumpFlow = () => {
+  const s = F.analog.find((a) => PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
+  if (s && Number(V[s.id]) > 0) return s;
+  if (has('pumpe.foerderleistung')) return { id: 'pumpe.foerderleistung', name: t('flowRate'), unit: 'm³/h' };
+  return s;
+};
 
 /* ---------- Demo-Daten (Werte deiner Anlage vom 09.10.2026) ---------- */
 const DEMO_TEMPS = { 1: 'Wassertemperatur', 2: 'Außentemperatur', 3: 'Absorbertemperatur', 4: 'Absorber-Rücklauf', 7: 'Pool Rücklauf', 8: 'Heizung Vorlauf', 9: 'Heizung Rücklauf', 11: 'Schwimmbad' };
@@ -327,7 +334,6 @@ const DEMO = {
       { id: 'analog.adc1', name: 'Filterdruck', unit: 'bar' },
       { id: 'analog.adc5', name: 'Luftfeuchte', unit: '%rF' },
       { id: 'analog.impuls1', name: 'Anströmung', unit: 'cm/s' },
-      { id: 'analog.impuls2', name: 'Förderleistung', unit: 'm³/h' },
     ],
     messages: { enabled: true, active: params.get('msg') === '1', count: 1, text: 'Elektroden-Kalibrierung überfällig', time: '10.10.2026 09:12:00', type: 'REMINDER' },
   }),
@@ -341,7 +347,7 @@ const DEMO = {
   'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
   'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
   'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0, 'analog.impuls2': 7.4,
-  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
+  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.foerderleistung': 6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
   'pv.ueberschuss': 1,
   'solar.status': 1, 'solar.aktiv': true, 'solar.schalten': 'AUTO', 'solar.laufzeit_heute': '03h 12m 40s', 'solar.leistung': 4.21, 'solar.energie_heute': 11.6,
   'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 41m 05s', 'heizung.leistung': 0, 'heizung.energie_heute': 5.3,

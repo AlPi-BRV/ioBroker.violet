@@ -23,7 +23,7 @@ const {
     CHANNELS,
 } = require('./lib/datapoints');
 const { mapVioletConfig, configChanges, fetchVioletConfig } = require('./lib/violetconfig');
-const { VolumeCounter, flowConfig } = require('./lib/volume');
+const { VolumeCounter, flowConfig, currentFlow } = require('./lib/volume');
 const { HeatCounter, heatConfig } = require('./lib/heat');
 const { names, pick } = require('./lib/i18n');
 const ioPackage = require('./io-package.json');
@@ -435,6 +435,8 @@ class Violet extends utils.Adapter {
         }
         if (this.volume) {
             const v = this.volume.update(data);
+            // aktuelle Förderleistung der laufenden Stufe (m³/h), 0 = Pumpe steht
+            data.__FLOW_NOW = Math.round(currentFlow(this.volume.flows, data) * 10) / 10;
             if (v !== undefined) {
                 data.__VOLUME_TODAY = v;
                 await this.setStateChangedAsync('info.volumeState', JSON.stringify(this.volume.state()), true);

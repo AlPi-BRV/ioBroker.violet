@@ -94,7 +94,8 @@ Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert ein
 - Datenpunkt `pumpe.umwaelzung_heute` (m³), im Pool-Display hinter der Laufzeit: `06h 07m (25,9 m³)`
 - Grundlage sind die Laufzeiten je Stufe, die die Violet selbst zählt – ein Neustart von ioBroker verfälscht nichts
 - Den Abzug für Absorber / Heizung zählt der Adapter bei jeder Abfrage mit; um Mitternacht beginnt alles bei 0
-- Ein Durchflusssensor in m³/h (z. B. Impulseingang 2) erscheint im Pool-Display in der Pumpenzeile unter der Laufzeit
+- Datenpunkt `pumpe.foerderleistung` (m³/h): aktuelle Förderleistung der laufenden Stufe aus den eingetragenen Werten (Absorber/Heizung berücksichtigt), 0 = Pumpe steht – im Pool-Display in der Pumpenzeile unter der Laufzeit
+- Ein echter Durchflusssensor in m³/h (z. B. Impulseingang 2) hat dort Vorrang, solange er einen Wert über 0 liefert
 - Reine Berechnung – an die Violet wird nichts geschrieben
 
 ## Wärmeleistung (Absorber / Heizung)

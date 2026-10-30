@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "news": {
+      "0.7.2": {
+        "en": "New data point pumpe.foerderleistung (m³/h): calculated flow rate of the running pump level; pool display shows it in the pump row, a flow sensor input that only delivers 0 is no longer shown",
+        "de": "Neuer Datenpunkt pumpe.foerderleistung (m³/h): berechnete Förderleistung der laufenden Pumpenstufe; das Pool-Display zeigt sie in der Pumpenzeile, ein Durchflusseingang, der nur 0 liefert, wird nicht mehr angezeigt",
+        "ru": "Новая точка данных pumpe.foerderleistung (м³/ч): расчётная производительность текущей ступени насоса; дисплей бассейна показывает её в строке насоса, вход расходомера, выдающий только 0, больше не отображается",
+        "pt": "Novo ponto de dados pumpe.foerderleistung (m³/h): caudal calculado do nível da bomba em funcionamento; o ecrã da piscina mostra-o na linha da bomba, uma entrada de caudal que só fornece 0 deixa de ser mostrada",
+        "nl": "Nieuw datapunt pumpe.foerderleistung (m³/h): berekend debiet van de lopende pompstand; het zwembaddisplay toont het in de pomprij, een debietingang die alleen 0 levert wordt niet meer getoond",
+        "fr": "Nouveau point de données pumpe.foerderleistung (m³/h) : débit calculé du niveau de pompe en cours ; l'affichage piscine l'indique dans la ligne de la pompe, une entrée de débit qui ne fournit que 0 n'est plus affichée",
+        "it": "Nuovo punto dati pumpe.foerderleistung (m³/h): portata calcolata del livello pompa in funzione; il display piscina la mostra nella riga della pompa, un ingresso di portata che fornisce solo 0 non viene più mostrato",
+        "es": "Nuevo punto de datos pumpe.foerderleistung (m³/h): caudal calculado del nivel de bomba en marcha; la pantalla de la piscina lo muestra en la fila de la bomba, una entrada de caudal que solo da 0 ya no se muestra",
+        "pl": "Nowy punkt danych pumpe.foerderleistung (m³/h): obliczona wydajność bieżącego stopnia pompy; wyświetlacz basenu pokazuje ją w wierszu pompy, wejście przepływu dające tylko 0 nie jest już pokazywane",
+        "uk": "Нова точка даних pumpe.foerderleistung (м³/год): розрахункова продуктивність поточної ступені насоса; дисплей басейну показує її в рядку насоса, вхід витратоміра, що дає лише 0, більше не відображається",
+        "zh-cn": "新数据点 pumpe.foerderleistung（m³/h）：当前水泵档位的计算流量；泳池显示屏在水泵行中显示，只输出 0 的流量输入不再显示"
+      },
       "0.7.1": {
         "en": "Data point names in all 11 ioBroker languages; data points \"schalten\" now use the valid role \"text\" (no change in values); obsolete data point info.cellState is removed; pool display: relay rows beyond the other columns are shown side by side in a full-width row (no more empty cells, display stays compact)",
         "de": "Datenpunktnamen in allen 11 ioBroker-Sprachen; Datenpunkte „schalten“ nutzen jetzt die gültige Rolle „text“ (Werte unverändert); veralteter Datenpunkt info.cellState wird entfernt; Pool-Display: Relais-Zeilen, die über die anderen Spalten hinausgehen, stehen nebeneinander in einer Zeile über die ganze Breite (keine leeren Zellen, Anzeige bleibt kompakt)",

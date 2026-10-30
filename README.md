@@ -70,6 +70,8 @@ If the absorber or the heating reduces the flow, enter the lower value there (em
 - Data point `pumpe.umwaelzung_heute` (m³), in the pool display behind the runtime: `06h 07m (25.9 m³)`
 - Basis: the runtimes per level counted by the Violet itself – an ioBroker restart does not distort the value
 - The reduction by absorber / heating is counted by the adapter at each poll; resets at midnight
+- Data point `pumpe.foerderleistung` (m³/h): current flow rate of the running level from the entered values (absorber/heating considered), 0 = pump off – shown in the pool display in the pump row below the runtime
+- A real flow sensor in m³/h (e.g. impulse input 2) takes precedence there as long as it delivers a value above 0
 - Only a calculation – nothing is written to the Violet
 
 ## Heat output (absorber / heating)
@@ -163,6 +165,10 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.7.2 (2026-10-30)
+- New data point `pumpe.foerderleistung` (m³/h): calculated flow rate of the running pump level from the configured delivery rates (absorber/heating considered)
+- Pool display: the line "Flow rate" in the pump row now shows the calculated value; a flow sensor input that only delivers 0 (no sensor connected) is no longer shown
+
 ### 0.7.1 (2026-10-22)
 - Data point names in all 11 ioBroker languages (requested by the repository check); own names from the configuration stay unchanged
 - Data points `schalten`: role changed from `level.mode` (not in the ioBroker role catalogue) to `text` – values `ON` / `OFF` / `AUTO` are unchanged

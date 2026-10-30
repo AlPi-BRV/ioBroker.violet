@@ -1,6 +1,6 @@
 {
   "name": "iobroker.violet",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "ioBroker adapter for the PoolDigital Violet pool controller",
   "author": {
     "name": "Alexander Pietz",
