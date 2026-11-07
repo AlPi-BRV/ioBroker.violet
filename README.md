@@ -20,9 +20,9 @@ Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module a
 - **Switching ON / OFF / AUTO** (main switch "Allow switching", disabled by default)
 - **Pool display settings** (tab "Display"): optimal ranges for pH, redox and chlorine (values outside in red), assignment of the temperature rows and the large display
 - **Virtual relays**: up to 8 ioBroker data points (true/false) of other devices, switchable in the relay view of the pool display
-- **Water temperature in the pump piping**: optional frozen value while the pump is off (`temperatur.sensor1_pool`, marked with * in the display)
+- **Water temperature in the pump piping**: optional frozen value while the pump is off (`temperatures.sensor1_pool`, marked with * in the display)
 - **Circulated water volume of the day** in m³, calculated from the runtimes of the Violet and the delivery rate of the pump
-- **Violet messages** (warnings, alarms, reminders) as data point `meldungen.aktiv` and as notice in the pool display
+- **Violet messages** (warnings, alarms, reminders) as data point `messages.active` and as notice in the pool display
 - **Pool display** in the style of the classic ProCon.IP display, served directly by the adapter
 - Data point names, configuration and pool display in German and English; configuration in 11 languages
 
@@ -34,7 +34,7 @@ Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module a
 
 ## Switching
 
-With "Allow switching" every selected function gets a data point `schalten`:
+With "Allow switching" every selected function gets a data point `switch`:
 
 | Value | Effect |
 |---|---|
@@ -43,9 +43,9 @@ With "Allow switching" every selected function gets a data point `schalten`:
 | `AUTO` | back to the automatic mode of the Violet |
 
 - Switchable: filter pump, heating, solar, light, ECO, refill, backwash, rinse, PV surplus (ON/OFF only), relays EXT1/EXT2, DMX scenes
-- `pumpe.drehzahl_soll` (1 = ECO, 2 = Normal, 3 = Boost) – used when switching on, applied immediately while the pump runs manually
+- `pump.speed_setpoint` (1 = ECO, 2 = Normal, 3 = Boost) – used when switching on, applied immediately while the pump runs manually
 - "Duration for manual ON/OFF" in minutes, 0 = permanently
-- The data point `schalten` always reflects the actual mode of the Violet
+- The data point `switch` always reflects the actual mode of the Violet
 - Command: `GET /setFunctionManually?FUNCTION,ACTION,DURATION,VALUE` – every command and error is logged
 
 ### Status codes
@@ -67,10 +67,10 @@ Source: interface description of PoolDigital (getReadings, revision 14.07.2024).
 In the tab "Pump" you enter the delivery rate of the pump in m³/h – per speed level for speed-controlled pumps.
 If the absorber or the heating reduces the flow, enter the lower value there (empty = same as alone; if both run, the lower value applies).
 
-- Data point `pumpe.umwaelzung_heute` (m³), in the pool display behind the runtime: `06h 07m (25.9 m³)`
+- Data point `pump.circulated_today` (m³), in the pool display behind the runtime: `06h 07m (25.9 m³)`
 - Basis: the runtimes per level counted by the Violet itself – an ioBroker restart does not distort the value
 - The reduction by absorber / heating is counted by the adapter at each poll; resets at midnight
-- Data point `pumpe.foerderleistung` (m³/h): current flow rate of the running level from the entered values (absorber/heating considered), 0 = pump off – shown in the pool display in the pump row below the runtime
+- Data point `pump.flow_rate` (m³/h): current flow rate of the running level from the entered values (absorber/heating considered), 0 = pump off – shown in the pool display in the pump row below the runtime
 - A real flow sensor in m³/h (e.g. impulse input 2) takes precedence there as long as it delivers a value above 0
 - Only a calculation – nothing is written to the Violet
 
@@ -81,7 +81,7 @@ In the tab "Pump" (section "Heat output") the adapter can calculate how much hea
 - Power (kW) = (return − water temperature sensor 1) × flow of the running pump level × 1.163 – the flow comes from the delivery rates above (with absorber / heating: the lower value)
 - Sensors: absorber return (in the Violet usually sensor 4) and optionally a heating return sensor
 - Position of the heating return sensor: "only behind the heating" or "behind absorber and heating (in series)". In series and both running: heating = total − absorber
-- Data points `solar.leistung` / `heizung.leistung` (kW) and `solar.energie_heute` / `heizung.energie_heute` (kWh, resets at midnight); in the pool display in a line below the runtime: `4.2 kW · 11.6 kWh`
+- Data points `solar.power` / `heater.power` (kW) and `solar.energy_today` / `heater.energy_today` (kWh, resets at midnight); in the pool display in a line below the runtime: `4.2 kW · 11.6 kWh`
 - Negative values (absorber cooling) are shown as 0. For long-term statistics use e.g. the adapter sourceanalytics
 - "Type of heating" (oil/gas heat exchanger, heat pump, electric) sets the name in the pool display
 
@@ -89,9 +89,9 @@ In the tab "Pump" (section "Heat output") the adapter can calculate how much hea
 
 With "Heat pump" as type of heating, any ioBroker data point with the power consumption can be selected (e.g. a Shelly, unit W or kW).
 
-- `heizung.strom_leistung` (kW) and `heizung.strom_heute` (kWh, standby included)
-- `heizung.cop` = heat output ÷ power consumption, only while the heating runs (from 0.1 kW), otherwise empty
-- `heizung.cop_heute` = heat energy today ÷ electricity today (from 0.05 kWh)
+- `heater.electrical_power` (kW) and `heater.electricity_today` (kWh, standby included)
+- `heater.cop` = heat output ÷ power consumption, only while the heating runs (from 0.1 kW), otherwise empty
+- `heater.cop_today` = heat energy today ÷ electricity today (from 0.05 kWh)
 - In the pool display after the heat energy: the current COP while running, otherwise the COP of today
 - The heat output is based on the delivery rate entered – the COP is a good estimate, not a calibrated measurement
 
@@ -110,7 +110,7 @@ In the tab "Connection" the adapter can read defaults from the Violet: names of 
 
 For electrolysis the Violet uses the same fields as for liquid chlorine, but with a different meaning (information from PoolDigital): the daily amount is chlorine produced in **g**, the "canister" content is the **remaining hours of the cell**, the canister change is the **cell change**.
 
-- Data points under `dosierung.elektrolyse`: `erzeugt_heute` (g), `zelle_reststunden` (h), `zellenwechsel` (date)
+- Data points under `dosing.electrolysis`: `produced_today` (g), `cell_remaining_hours` (h), `cell_change` (date)
 - Optional (tab "Functions", visible with electrolysis): enter the cell lifetime in hours – the same value as in the Violet. Then `zelle_verschleiss` (%) and `zelle_warnung` (from the warning threshold) are added
 - The cell change is confirmed in the Violet like a canister change – nothing is written to the Violet
 - Please report if your values look different – the author's pool uses liquid chlorine
@@ -122,11 +122,11 @@ The adapter reads the messages of the Violet once per minute via `GET /getNotifi
 
 | Data point | Meaning |
 |---|---|
-| `meldungen.aktiv` | `true` if there is a new, not yet acknowledged message – ideal for a signal icon in your visualization |
-| `meldungen.anzahl` | number of new messages |
-| `meldungen.text`, `.zeit`, `.typ` | latest message |
-| `meldungen.liste` | the last 20 messages as JSON |
-| `meldungen.quittieren` | button: acknowledge in ioBroker |
+| `messages.active` | `true` if there is a new, not yet acknowledged message – ideal for a signal icon in your visualization |
+| `messages.count` | number of new messages |
+| `messages.text`, `.time`, `.type` | latest message |
+| `messages.list` | the last 20 messages as JSON |
+| `messages.acknowledge` | button: acknowledge in ioBroker |
 
 Acknowledging only affects ioBroker – messages that must be confirmed on the Violet itself still have to be confirmed there.
 In the pool display a new message appears as a blinking yellow dot in the footer; a click opens the Violet in a new window and acknowledges the message in ioBroker.
@@ -140,7 +140,7 @@ Served by the adapter itself (built-in web server, no other adapters required):
 - Pump row with speed levels (active level in green) and PV indicator (only if PV surplus is used and active)
 - Light row with DMX scenes (if used)
 - Button "Relays" in the header: shows the switches of the relay extensions instead of the temperatures
-- Switches only if "Allow switching" is enabled; the interface only accepts the released `schalten` data points (never dosing)
+- Switches only if "Allow switching" is enabled; the interface only accepts the released `switch` data points (never dosing)
 - Interface: `GET /api/data` (values), `GET /api/set?id=…&value=…` (switching), `GET /api/ack` (acknowledge messages)
 - **Use only in your home network** – do not expose it to the internet (no login)
 - Preview without adapter: open `www/index.html` locally with `?demo=1` (options: `&lang=en`, `&font=arial`, `&msg=1`, `&ohne=heizung,solar,pv,dmx,relais`)
@@ -150,6 +150,28 @@ Served by the adapter itself (built-in web server, no other adapters required):
 Install the adapter in the ioBroker admin under **Adapters**.
 
 Restart the instance after an update.
+
+## Upgrade to 0.8.0 (English IDs)
+
+Up to version 0.7.x the data points had German IDs. Since 0.8.0 all IDs are English. The adapter moves existing data points automatically on the first start after the update (value and history settings are kept, older history data stays under the old ID). Scripts, VIS views and other adapters that use these data points must be changed once.
+
+| up to 0.7.x | since 0.8.0 |
+|---|---|
+| `wasser.*` | `water.*` (`chlor` → `chlorine`, `eingefroren` → `frozen`) |
+| `temperatur.sensorN` | `temperatures.sensorN` |
+| `pumpe.*` | `pump.*` (`stufe` → `level`, `drehzahl_soll` → `speed_setpoint`, `umwaelzung_heute` → `circulated_today`) |
+| `dosierung.chlor`, `.elektrolyse`, `.flockung` | `dosing.chlorine`, `.electrolysis`, `.flocculant` |
+| `heizung.*`, `nachspeisung.*`, `rueckspuelung.*` | `heater.*`, `refill.*`, `backwash.*` |
+| `licht.*`, `abdeckung.*`, `dmx.szeneN` | `light.*`, `cover.*`, `dmx.sceneN` |
+| `relais.extX_Y` | `relays.extX_Y` |
+| `meldungen.*` | `messages.*` (`aktiv` → `active`, `quittieren` → `acknowledge`) |
+| `eingaenge.eingangN`, `analog.impulsN` | `inputs.inputN`, `analog.pulseN` |
+| `diagnose.*` | `diagnostics.*` |
+| `….schalten` | `….switch` |
+| `….aktiv`, `….laufzeit_heute`, `….letzter_start`, `….letztes_ende` | `….active`, `….runtime_today`, `….last_on`, `….last_off` |
+| `….tagesmenge`, `….kanister_rest`, `….reichweite`, `….sperren` | `….dosed_today`, `….canister_remaining`, `….range`, `….locks` |
+
+The complete list is in [lib/idmap.js](lib/idmap.js).
 
 ## FAQ
 
@@ -165,9 +187,12 @@ Restart the instance after an update.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### 0.7.2 (2026-10-30)
-- New data point `pumpe.foerderleistung` (m³/h): calculated flow rate of the running pump level from the configured delivery rates (absorber/heating considered)
+### 0.8.0 (2026-11-07)
+- **Breaking change – English object IDs** (requested by the ioBroker review): all data points now have English IDs, e.g. `wasser.chlor` → `water.chlorine`, `pumpe.schalten` → `pump.switch`, `meldungen.quittieren` → `messages.acknowledge`. Existing data points are moved automatically on the first start: last value and history settings (`common.custom`) are taken over, the old objects are deleted. Older history data stays stored under the old IDs. **Please adapt your scripts and visualizations** – see [Upgrade to 0.8.0](#upgrade-to-080-english-ids)
+- States of other adapters (heat pump power, virtual relays) are only taken over when acknowledged (`ack = true`)
+- New data point `pump.flow_rate` (m³/h): calculated flow rate of the running pump level from the configured delivery rates (absorber/heating considered)
 - Pool display: the line "Flow rate" in the pump row now shows the calculated value; a flow sensor input that only delivers 0 (no sensor connected) is no longer shown
+- npm keyword `dosing` instead of `dosierung`
 
 ### 0.7.1 (2026-10-22)
 - Data point names in all 11 ioBroker languages (requested by the repository check); own names from the configuration stay unchanged

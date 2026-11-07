@@ -20,10 +20,10 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 - **Schalten EIN / AUS / AUTO** (Hauptschalter „Schalten erlauben“, standardmäßig aus)
 - **Einstellungen fürs Pool-Display** (Reiter „Display“): Optimalbereiche für pH, Redox und Chlor (Werte außerhalb rot), Zuordnung der Temperaturzeilen und der großen Anzeige
 - **Virtuelle Relais**: bis zu 8 ioBroker-Datenpunkte (true/false) anderer Geräte, schaltbar in der Relais-Ansicht des Pool-Displays
-- **Wassertemperatur in der Verrohrung**: optional eingefrorener Wert bei stehender Pumpe (`temperatur.sensor1_pool`, im Display mit * markiert)
+- **Wassertemperatur in der Verrohrung**: optional eingefrorener Wert bei stehender Pumpe (`temperatures.sensor1_pool`, im Display mit * markiert)
 - **Umgewälzte Wassermenge des Tages** in m³, berechnet aus den Laufzeiten der Violet und der Fördermenge der Pumpe
 - **Wärmeleistung** von Absorber und Heizung, bei Wärmepumpen zusätzlich der **COP**
-- **Meldungen der Violet** (Warnungen, Alarme, Erinnerungen) als Datenpunkt `meldungen.aktiv` und als Hinweis im Pool-Display
+- **Meldungen der Violet** (Warnungen, Alarme, Erinnerungen) als Datenpunkt `messages.active` und als Hinweis im Pool-Display
 - **Pool-Display** im Stil der alten ProCon.IP-Anzeige, direkt vom Adapter ausgeliefert
 - Datenpunktnamen, Konfiguration und Pool-Display auf Deutsch und Englisch; Konfiguration in 11 Sprachen
 
@@ -58,7 +58,7 @@ Im Reiter „Verbindung“ kann der Adapter Vorgaben aus der Violet lesen: Namen
 
 ## Schalten
 
-Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `schalten`:
+Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `switch`:
 
 | Wert | Wirkung |
 |---|---|
@@ -67,9 +67,9 @@ Mit „Schalten erlauben“ bekommt jede gewählte Funktion einen Datenpunkt `sc
 | `AUTO` | zurück in die Automatik der Violet |
 
 - Schaltbar: Filterpumpe, Heizung, Solar, Licht, ECO, Nachspeisung, Rückspülung, Nachspülen, PV-Überschuss (nur ON/OFF), Relais EXT1/EXT2, DMX-Szenen
-- `pumpe.drehzahl_soll` (1 = ECO, 2 = Normal, 3 = Boost) – wird beim Einschalten verwendet, bei laufender Pumpe sofort übernommen
+- `pump.speed_setpoint` (1 = ECO, 2 = Normal, 3 = Boost) – wird beim Einschalten verwendet, bei laufender Pumpe sofort übernommen
 - „Dauer bei manuell EIN/AUS“ in Minuten, 0 = dauerhaft
-- Der Datenpunkt `schalten` zeigt immer den tatsächlichen Modus der Violet
+- Der Datenpunkt `switch` zeigt immer den tatsächlichen Modus der Violet
 - Befehl: `GET /setFunctionManually?FUNKTION,AKTION,DAUER,WERT` – jeder Befehl und jeder Fehler wird protokolliert
 
 ### Status-Codes
@@ -91,10 +91,10 @@ Quelle: Schnittstellenbeschreibung von PoolDigital (getReadings, Stand 14.07.202
 Im Reiter „Pumpe“ trägst du die Fördermenge der Pumpe in m³/h ein – bei Drehzahlpumpen je Stufe.
 Bremst der Absorber oder die Heizung den Durchfluss, dort den kleineren Wert eintragen (leer = wie allein; laufen beide, gilt der kleinere Wert).
 
-- Datenpunkt `pumpe.umwaelzung_heute` (m³), im Pool-Display hinter der Laufzeit: `06h 07m (25,9 m³)`
+- Datenpunkt `pump.circulated_today` (m³), im Pool-Display hinter der Laufzeit: `06h 07m (25,9 m³)`
 - Grundlage sind die Laufzeiten je Stufe, die die Violet selbst zählt – ein Neustart von ioBroker verfälscht nichts
 - Den Abzug für Absorber / Heizung zählt der Adapter bei jeder Abfrage mit; um Mitternacht beginnt alles bei 0
-- Datenpunkt `pumpe.foerderleistung` (m³/h): aktuelle Förderleistung der laufenden Stufe aus den eingetragenen Werten (Absorber/Heizung berücksichtigt), 0 = Pumpe steht – im Pool-Display in der Pumpenzeile unter der Laufzeit
+- Datenpunkt `pump.flow_rate` (m³/h): aktuelle Förderleistung der laufenden Stufe aus den eingetragenen Werten (Absorber/Heizung berücksichtigt), 0 = Pumpe steht – im Pool-Display in der Pumpenzeile unter der Laufzeit
 - Ein echter Durchflusssensor in m³/h (z. B. Impulseingang 2) hat dort Vorrang, solange er einen Wert über 0 liefert
 - Reine Berechnung – an die Violet wird nichts geschrieben
 
@@ -105,7 +105,7 @@ Im Reiter „Pumpe“ (Abschnitt „Wärmeleistung“) kann der Adapter berechne
 - Leistung (kW) = (Rücklauf − Wassertemperatur Sensor 1) × Durchfluss der laufenden Pumpenstufe × 1,163 – der Durchfluss kommt aus den Fördermengen oben (bei Absorber / Heizung der kleinere Wert)
 - Fühler: Absorber-Rücklauf (in der Violet meist Sensor 4) und optional ein Fühler im Heizungs-Rücklauf
 - Lage des Heizungs-Rücklauffühlers: „nur hinter der Heizung“ oder „hinter Absorber und Heizung (in Reihe)“. In Reihe und beide an: Heizung = Gesamt − Absorber
-- Datenpunkte `solar.leistung` / `heizung.leistung` (kW) und `solar.energie_heute` / `heizung.energie_heute` (kWh, um Mitternacht auf 0); im Pool-Display in einer Zeile unter der Laufzeit: `4,2 kW · 11,6 kWh`
+- Datenpunkte `solar.power` / `heater.power` (kW) und `solar.energy_today` / `heater.energy_today` (kWh, um Mitternacht auf 0); im Pool-Display in einer Zeile unter der Laufzeit: `4,2 kW · 11,6 kWh`
 - Negative Werte (Absorber kühlt) werden als 0 angezeigt. Für Langzeitauswertungen z. B. den Adapter sourceanalytics nutzen
 - „Art der Heizung“ (Öl/Gas über Wärmetauscher, Wärmepumpe, elektrisch) legt den Namen im Pool-Display fest
 
@@ -113,9 +113,9 @@ Im Reiter „Pumpe“ (Abschnitt „Wärmeleistung“) kann der Adapter berechne
 
 Ist als Art der Heizung „Wärmepumpe“ gewählt, lässt sich ein beliebiger ioBroker-Datenpunkt mit dem Stromverbrauch auswählen (z. B. ein Shelly, Einheit W oder kW).
 
-- `heizung.strom_leistung` (kW) und `heizung.strom_heute` (kWh, inkl. Standby)
-- `heizung.cop` = Wärmeleistung ÷ Stromverbrauch, nur während die Heizung läuft (ab 0,1 kW), sonst leer
-- `heizung.cop_heute` = Wärmemenge heute ÷ Strom heute (ab 0,05 kWh)
+- `heater.electrical_power` (kW) und `heater.electricity_today` (kWh, inkl. Standby)
+- `heater.cop` = Wärmeleistung ÷ Stromverbrauch, nur während die Heizung läuft (ab 0,1 kW), sonst leer
+- `heater.cop_today` = Wärmemenge heute ÷ Strom heute (ab 0,05 kWh)
 - Im Pool-Display hinter der Wärmemenge: im Betrieb der aktuelle COP, sonst der COP des Tages
 - Die Wärmeleistung beruht auf der eingetragenen Fördermenge – der COP ist eine gute Schätzung, keine geeichte Messung
 
@@ -123,7 +123,7 @@ Ist als Art der Heizung „Wärmepumpe“ gewählt, lässt sich ein beliebiger i
 
 Für die Elektrolyse nutzt die Violet dieselben Felder wie für Flüssigchlor, aber mit anderer Bedeutung (Auskunft PoolDigital): Die Tagesmenge ist erzeugtes Chlor in **g**, der „Kanister“-Inhalt sind die **Reststunden der Zelle**, der Kanisterwechsel ist der **Zellenwechsel**.
 
-- Datenpunkte unter `dosierung.elektrolyse`: `erzeugt_heute` (g), `zelle_reststunden` (h), `zellenwechsel` (Datum)
+- Datenpunkte unter `dosing.electrolysis`: `produced_today` (g), `cell_remaining_hours` (h), `cell_change` (Datum)
 - Optional (Reiter „Funktionen“, sichtbar bei Elektrolyse): Lebensdauer der Zelle in Stunden eintragen – derselbe Wert wie in der Violet. Dann kommen `zelle_verschleiss` (%) und `zelle_warnung` (ab der Warnschwelle) hinzu
 - Der Zellenwechsel wird in der Violet wie ein Kanisterwechsel quittiert – an die Violet wird nichts geschrieben
 - Bitte melden, wenn die Werte anders aussehen – an der Anlage des Autors läuft Flüssigchlor
@@ -135,11 +135,11 @@ Der Adapter liest die Meldungen einmal pro Minute über `GET /getNotifications?A
 
 | Datenpunkt | Bedeutung |
 |---|---|
-| `meldungen.aktiv` | `true`, wenn eine neue, noch nicht quittierte Meldung vorliegt – ideal für ein Signalbild in der Visualisierung |
-| `meldungen.anzahl` | Anzahl neuer Meldungen |
-| `meldungen.text`, `.zeit`, `.typ` | letzte Meldung |
-| `meldungen.liste` | die letzten 20 Meldungen als JSON |
-| `meldungen.quittieren` | Taster: in ioBroker quittieren |
+| `messages.active` | `true`, wenn eine neue, noch nicht quittierte Meldung vorliegt – ideal für ein Signalbild in der Visualisierung |
+| `messages.count` | Anzahl neuer Meldungen |
+| `messages.text`, `.time`, `.type` | letzte Meldung |
+| `messages.list` | die letzten 20 Meldungen als JSON |
+| `messages.acknowledge` | Taster: in ioBroker quittieren |
 
 Das Quittieren wirkt nur in ioBroker – Meldungen, die auf der Violet bestätigt werden müssen, werden weiterhin dort bestätigt.
 Im Pool-Display erscheint eine neue Meldung als blinkender gelber Punkt in der Fußzeile; ein Klick öffnet die Violet in einem neuen Fenster und quittiert die Meldung in ioBroker.
@@ -153,7 +153,7 @@ Wird vom Adapter selbst ausgeliefert (eingebauter Webserver, keine weiteren Adap
 - Pumpenzeile mit Drehzahlstufen (aktive Stufe grün) und PV-Anzeige (nur wenn PV-Überschuss genutzt wird und aktiv ist)
 - Lichtzeile mit DMX-Szenen (falls genutzt)
 - Button „Relais“ in der Kopfzeile: zeigt statt der Temperaturen die Schalter der Relais-Erweiterungen (nach 2 Minuten ohne Bedienung zurück)
-- Schalter nur, wenn „Schalten erlauben“ aktiv ist; die Schnittstelle nimmt nur die freigegebenen `schalten`-Datenpunkte an (Dosierung nie)
+- Schalter nur, wenn „Schalten erlauben“ aktiv ist; die Schnittstelle nimmt nur die freigegebenen `switch`-Datenpunkte an (Dosierung nie)
 - Schnittstelle: `GET /api/data` (Werte), `GET /api/set?id=…&value=…` (Schalten), `GET /api/ack` (Meldungen quittieren)
 - **Nur im Heimnetz verwenden**, nicht ins Internet freigeben (kein Login)
 - Vorschau ohne Adapter: `www/index.html` lokal mit `?demo=1` öffnen (Optionen: `&lang=en`, `&font=arial`, `&msg=1`, `&ohne=heizung,solar,pv,dmx,relais`)
@@ -163,6 +163,28 @@ Wird vom Adapter selbst ausgeliefert (eingebauter Webserver, keine weiteren Adap
 Den Adapter im ioBroker-Admin unter **Adapter** installieren.
 
 Nach einem Update die Instanz neu starten.
+
+## Update auf 0.8.0 (englische IDs)
+
+Bis Version 0.7.x hatten die Datenpunkte deutsche IDs. Seit 0.8.0 sind alle IDs englisch (Vorgabe des ioBroker-Reviews). Der Adapter zieht vorhandene Datenpunkte beim ersten Start nach dem Update automatisch um (Wert und History-Einstellungen bleiben erhalten, ältere History-Daten bleiben unter der alten ID gespeichert). Skripte, VIS-Ansichten und andere Adapter, die diese Datenpunkte nutzen, müssen einmalig angepasst werden.
+
+| bis 0.7.x | ab 0.8.0 |
+|---|---|
+| `wasser.*` | `water.*` (`chlor` → `chlorine`, `eingefroren` → `frozen`) |
+| `temperatur.sensorN` | `temperatures.sensorN` |
+| `pumpe.*` | `pump.*` (`stufe` → `level`, `drehzahl_soll` → `speed_setpoint`, `umwaelzung_heute` → `circulated_today`) |
+| `dosierung.chlor`, `.elektrolyse`, `.flockung` | `dosing.chlorine`, `.electrolysis`, `.flocculant` |
+| `heizung.*`, `nachspeisung.*`, `rueckspuelung.*` | `heater.*`, `refill.*`, `backwash.*` |
+| `licht.*`, `abdeckung.*`, `dmx.szeneN` | `light.*`, `cover.*`, `dmx.sceneN` |
+| `relais.extX_Y` | `relays.extX_Y` |
+| `meldungen.*` | `messages.*` (`aktiv` → `active`, `quittieren` → `acknowledge`) |
+| `eingaenge.eingangN`, `analog.impulsN` | `inputs.inputN`, `analog.pulseN` |
+| `diagnose.*` | `diagnostics.*` |
+| `….schalten` | `….switch` |
+| `….aktiv`, `….laufzeit_heute`, `….letzter_start`, `….letztes_ende` | `….active`, `….runtime_today`, `….last_on`, `….last_off` |
+| `….tagesmenge`, `….kanister_rest`, `….reichweite`, `….sperren` | `….dosed_today`, `….canister_remaining`, `….range`, `….locks` |
+
+Die vollständige Liste steht in [lib/idmap.js](../../lib/idmap.js).
 
 ## Häufige Fragen
 

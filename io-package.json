@@ -1,20 +1,20 @@
 {
   "common": {
     "name": "violet",
-    "version": "0.7.2",
+    "version": "0.8.0",
     "news": {
-      "0.7.2": {
-        "en": "New data point pumpe.foerderleistung (m³/h): calculated flow rate of the running pump level; pool display shows it in the pump row, a flow sensor input that only delivers 0 is no longer shown",
-        "de": "Neuer Datenpunkt pumpe.foerderleistung (m³/h): berechnete Förderleistung der laufenden Pumpenstufe; das Pool-Display zeigt sie in der Pumpenzeile, ein Durchflusseingang, der nur 0 liefert, wird nicht mehr angezeigt",
-        "ru": "Новая точка данных pumpe.foerderleistung (м³/ч): расчётная производительность текущей ступени насоса; дисплей бассейна показывает её в строке насоса, вход расходомера, выдающий только 0, больше не отображается",
-        "pt": "Novo ponto de dados pumpe.foerderleistung (m³/h): caudal calculado do nível da bomba em funcionamento; o ecrã da piscina mostra-o na linha da bomba, uma entrada de caudal que só fornece 0 deixa de ser mostrada",
-        "nl": "Nieuw datapunt pumpe.foerderleistung (m³/h): berekend debiet van de lopende pompstand; het zwembaddisplay toont het in de pomprij, een debietingang die alleen 0 levert wordt niet meer getoond",
-        "fr": "Nouveau point de données pumpe.foerderleistung (m³/h) : débit calculé du niveau de pompe en cours ; l'affichage piscine l'indique dans la ligne de la pompe, une entrée de débit qui ne fournit que 0 n'est plus affichée",
-        "it": "Nuovo punto dati pumpe.foerderleistung (m³/h): portata calcolata del livello pompa in funzione; il display piscina la mostra nella riga della pompa, un ingresso di portata che fornisce solo 0 non viene più mostrato",
-        "es": "Nuevo punto de datos pumpe.foerderleistung (m³/h): caudal calculado del nivel de bomba en marcha; la pantalla de la piscina lo muestra en la fila de la bomba, una entrada de caudal que solo da 0 ya no se muestra",
-        "pl": "Nowy punkt danych pumpe.foerderleistung (m³/h): obliczona wydajność bieżącego stopnia pompy; wyświetlacz basenu pokazuje ją w wierszu pompy, wejście przepływu dające tylko 0 nie jest już pokazywane",
-        "uk": "Нова точка даних pumpe.foerderleistung (м³/год): розрахункова продуктивність поточної ступені насоса; дисплей басейну показує її в рядку насоса, вхід витратоміра, що дає лише 0, більше не відображається",
-        "zh-cn": "新数据点 pumpe.foerderleistung（m³/h）：当前水泵档位的计算流量；泳池显示屏在水泵行中显示，只输出 0 的流量输入不再显示"
+      "0.8.0": {
+        "en": "BREAKING: all object IDs are now English (e.g. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – existing data points are moved automatically on the first start (last value and history settings are kept), please adapt scripts and visualizations; foreign states only taken over when acknowledged; new data point pump.flow_rate (calculated flow rate)",
+        "de": "ACHTUNG: alle Objekt-IDs sind jetzt englisch (z. B. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – vorhandene Datenpunkte werden beim ersten Start automatisch umgezogen (letzter Wert und History-Einstellungen bleiben erhalten), bitte Skripte und Visualisierungen anpassen; fremde Datenpunkte werden nur noch bestätigt (ack) übernommen; neuer Datenpunkt pump.flow_rate (berechnete Förderleistung)",
+        "ru": "ВНИМАНИЕ: все идентификаторы объектов теперь на английском (напр. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – существующие точки данных переносятся автоматически при первом запуске (последнее значение и настройки истории сохраняются), адаптируйте скрипты и визуализации; чужие состояния принимаются только подтверждёнными (ack); новая точка данных pump.flow_rate (расчётная производительность)",
+        "pt": "ATENÇÃO: todos os IDs de objetos estão agora em inglês (p. ex. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – os pontos de dados existentes são migrados automaticamente no primeiro arranque (último valor e definições de histórico mantêm-se), adapte scripts e visualizações; estados externos só são aceites quando confirmados (ack); novo ponto de dados pump.flow_rate (caudal calculado)",
+        "nl": "LET OP: alle object-ID's zijn nu Engels (bv. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – bestaande datapunten worden bij de eerste start automatisch verplaatst (laatste waarde en historie-instellingen blijven behouden), pas scripts en visualisaties aan; vreemde states worden alleen nog bevestigd (ack) overgenomen; nieuw datapunt pump.flow_rate (berekend debiet)",
+        "fr": "ATTENTION : tous les ID d'objets sont désormais en anglais (p. ex. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – les points de données existants sont migrés automatiquement au premier démarrage (dernière valeur et réglages d'historique conservés), adaptez scripts et visualisations ; les états externes ne sont repris que confirmés (ack) ; nouveau point de données pump.flow_rate (débit calculé)",
+        "it": "ATTENZIONE: tutti gli ID degli oggetti sono ora in inglese (es. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – i punti dati esistenti vengono spostati automaticamente al primo avvio (ultimo valore e impostazioni della cronologia restano), adattare script e visualizzazioni; gli stati esterni vengono accettati solo se confermati (ack); nuovo punto dati pump.flow_rate (portata calcolata)",
+        "es": "ATENCIÓN: todos los ID de objetos están ahora en inglés (p. ej. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – los puntos de datos existentes se migran automáticamente en el primer inicio (se conservan el último valor y los ajustes de historial), adapte scripts y visualizaciones; los estados externos solo se aceptan confirmados (ack); nuevo punto de datos pump.flow_rate (caudal calculado)",
+        "pl": "UWAGA: wszystkie identyfikatory obiektów są teraz po angielsku (np. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – istniejące punkty danych są przenoszone automatycznie przy pierwszym uruchomieniu (ostatnia wartość i ustawienia historii zostają zachowane), dostosuj skrypty i wizualizacje; obce stany są przejmowane tylko po potwierdzeniu (ack); nowy punkt danych pump.flow_rate (obliczona wydajność)",
+        "uk": "УВАГА: усі ідентифікатори об'єктів тепер англійською (напр. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch) – наявні точки даних переносяться автоматично під час першого запуску (останнє значення та налаштування історії зберігаються), адаптуйте скрипти та візуалізації; чужі стани приймаються лише підтвердженими (ack); нова точка даних pump.flow_rate (розрахункова продуктивність)",
+        "zh-cn": "注意：所有对象 ID 现在均为英文（例如 wasser.chlor → water.chlorine、pumpe.schalten → pump.switch）– 首次启动时现有数据点会自动迁移（保留最后的值和历史记录设置），请调整脚本和可视化；外部状态仅在确认（ack）后才被采用；新数据点 pump.flow_rate（计算流量）"
       },
       "0.7.1": {
         "en": "Data point names in all 11 ioBroker languages; data points \"schalten\" now use the valid role \"text\" (no change in values); obsolete data point info.cellState is removed; pool display: relay rows beyond the other columns are shown side by side in a full-width row (no more empty cells, display stays compact)",
@@ -93,19 +93,6 @@
         "pl": "Poprawka: wartości wody pozostawały zamrożone ok. 2 godziny po uruchomieniu pompy (strefa czasowa w PUMP_LAST_ON)",
         "uk": "Виправлено: показники води залишалися замороженими ~2 години після запуску насоса (часовий пояс у PUMP_LAST_ON)",
         "zh-cn": "修复：水泵启动后水质值约 2 小时保持冻结（PUMP_LAST_ON 中的时区）"
-      },
-      "0.6.7": {
-        "en": "Code formatted to ioBroker standard (ESLint/Prettier), automatic tests on GitHub",
-        "de": "Code nach ioBroker-Standard formatiert (ESLint/Prettier), automatische Tests auf GitHub",
-        "ru": "Код отформатирован по стандарту ioBroker (ESLint/Prettier), автоматические тесты на GitHub",
-        "pt": "Código formatado segundo o padrão ioBroker (ESLint/Prettier), testes automáticos no GitHub",
-        "nl": "Code geformatteerd volgens ioBroker-standaard (ESLint/Prettier), automatische tests op GitHub",
-        "fr": "Code formaté selon le standard ioBroker (ESLint/Prettier), tests automatiques sur GitHub",
-        "it": "Codice formattato secondo lo standard ioBroker (ESLint/Prettier), test automatici su GitHub",
-        "es": "Código formateado según el estándar ioBroker (ESLint/Prettier), pruebas automáticas en GitHub",
-        "pl": "Kod sformatowany wg standardu ioBroker (ESLint/Prettier), automatyczne testy na GitHub",
-        "uk": "Код відформатовано за стандартом ioBroker (ESLint/Prettier), автоматичні тести на GitHub",
-        "zh-cn": "代码按 ioBroker 标准格式化（ESLint/Prettier），GitHub 上自动测试"
       }
     },
     "titleLang": {

@@ -26,6 +26,7 @@ const { mapVioletConfig, configChanges, fetchVioletConfig } = require('./lib/vio
 const { VolumeCounter, flowConfig, currentFlow } = require('./lib/volume');
 const { HeatCounter, heatConfig } = require('./lib/heat');
 const { names, pick } = require('./lib/i18n');
+const { toEnglishId } = require('./lib/idmap');
 const ioPackage = require('./io-package.json');
 
 const NOTIFY_INTERVAL = 60 * 1000; // Meldungen höchstens einmal pro Minute abfragen
@@ -181,7 +182,7 @@ class Violet extends utils.Adapter {
         this.controls = this.config.allow_switching ? buildControls(this.config) : [];
         if (this.config.use_pump && this.config.use_pump_rpm && this.config.allow_switching) {
             this.controls.push({
-                id: 'pumpe.drehzahl_soll',
+                id: 'pump.speed_setpoint',
                 name: 'Filterpumpe – Drehzahl beim Einschalten',
                 type: 'number',
                 role: 'level',
@@ -200,6 +201,7 @@ class Violet extends utils.Adapter {
                 : 'Switching from ioBroker is disabled – read-only mode',
         );
 
+        await this.migrateIds();
         await this.cleanup();
 
         for (const c of this.controls) {
@@ -209,25 +211,25 @@ class Violet extends utils.Adapter {
             await this.prepareObject(m);
         }
         if (this.controls.some(c => c.speed)) {
-            const cur = await this.getStateAsync('pumpe.drehzahl_soll');
+            const cur = await this.getStateAsync('pump.speed_setpoint');
             if (!cur || cur.val === null) {
-                await this.setStateAsync('pumpe.drehzahl_soll', 2, true);
+                await this.setStateAsync('pump.speed_setpoint', 2, true);
             }
-            this.cache['pumpe.drehzahl_soll'] = cur && cur.val !== null ? cur.val : 2;
+            this.cache['pump.speed_setpoint'] = cur && cur.val !== null ? cur.val : 2;
         }
         if (this.controls.length) {
-            this.subscribeStates('*.schalten');
-            this.subscribeStates('pumpe.drehzahl_soll');
+            this.subscribeStates('*.switch');
+            this.subscribeStates('pump.speed_setpoint');
         }
         if (this.msgDefs.length) {
-            const acked = await this.getStateAsync('meldungen.quittiert');
+            const acked = await this.getStateAsync('messages.acknowledged');
             this.msg.acked = (acked && acked.val) || '';
-            this.subscribeStates('meldungen.quittieren');
+            this.subscribeStates('messages.acknowledge');
         }
 
         // Wassertemperatur bei Fühler in der Verrohrung: letzter plausibler Wert
         if (this.config.temp1_pump_only && this.config.use_temp) {
-            const st = await this.getStateAsync('temperatur.sensor1_pool');
+            const st = await this.getStateAsync('temperatures.sensor1_pool');
             this.t1 = { value: st && typeof st.val === 'number' ? st.val : null };
         }
 
@@ -235,9 +237,9 @@ class Violet extends utils.Adapter {
         if (this.config.water_freeze && this.config.use_water) {
             this.wfreeze = {};
             for (const [k, id] of [
-                ['pH_value', 'wasser.ph'],
-                ['orp_value', 'wasser.redox'],
-                ['pot_value', 'wasser.chlor'],
+                ['pH_value', 'water.ph'],
+                ['orp_value', 'water.redox'],
+                ['pot_value', 'water.chlorine'],
             ]) {
                 const st = await this.getStateAsync(id);
                 this.wfreeze[k] = st && typeof st.val === 'number' ? st.val : null;
@@ -255,12 +257,12 @@ class Violet extends utils.Adapter {
                 const name =
                     String(this.config[`vrel${n}_name`] || '').trim() ||
                     `${this.t('Virtuelles Relais', 'Virtual relay')} ${n}`;
-                this.vrel.push({ id: `vrelais.${n}`, n, name, oid });
+                this.vrel.push({ id: `virtual_relays.${n}`, n, name, oid });
                 try {
                     const st = await this.getForeignStateAsync(oid);
-                    this.cache[`vrelais.${n}`] = !!(st && st.val);
+                    this.cache[`virtual_relays.${n}`] = !!(st && st.val);
                 } catch {
-                    this.cache[`vrelais.${n}`] = false;
+                    this.cache[`virtual_relays.${n}`] = false;
                 }
                 this.subscribeForeignStates(oid);
             }
@@ -279,6 +281,48 @@ class Violet extends utils.Adapter {
 
         this.log.info(`Polling ${this.baseUrl} every ${this.interval / 1000} s`);
         await this.poll();
+    }
+
+    /**
+     * Bis 0.7.x hatten die Datenpunkte deutsche IDs (z. B. wasser.chlor), seit 0.8.0 englische (water.chlorine).
+     * Beim ersten Start nach dem Update: neuen Datenpunkt mit gleichem common (inkl. custom = History-Einstellungen)
+     * anlegen, letzten Wert übernehmen, alten Datenpunkt löschen. Alte Kanäle entfernt danach cleanup().
+     */
+    async migrateIds() {
+        const objs = await this.getAdapterObjectsAsync();
+        const prefix = `${this.namespace}.`;
+        const old = Object.keys(objs).filter(fullId => {
+            const id = fullId.substring(prefix.length);
+            return objs[fullId].type === 'state' && !id.startsWith('info.') && toEnglishId(id) !== id;
+        });
+        if (!old.length) {
+            return;
+        }
+        this.log.info(`Moving ${old.length} data points to the new English IDs (since 0.8.0) …`);
+        let moved = 0;
+        for (const fullId of old) {
+            const id = fullId.substring(prefix.length);
+            const newId = toEnglishId(id);
+            try {
+                if (!objs[`${prefix}${newId}`]) {
+                    const o = objs[fullId];
+                    await this.setObjectAsync(newId, { type: 'state', common: o.common, native: o.native || {} });
+                    const st = await this.getStateAsync(id);
+                    if (st && st.val !== null && st.val !== undefined) {
+                        await this.setStateAsync(newId, { val: st.val, ack: true, ts: st.ts, q: st.q || 0 });
+                    }
+                }
+                await this.delObjectAsync(id);
+                moved++;
+            } catch (err) {
+                this.log.warn(`Could not move ${id} to ${newId}: ${err.message}`);
+            }
+        }
+        this.log.warn(
+            `${moved} data points were renamed to English IDs (e.g. wasser.chlor → water.chlorine). ` +
+                'Please adapt your scripts and visualizations. History settings were taken over; ' +
+                'older history data remains stored under the old IDs.',
+        );
     }
 
     /** Entfernt alles, was laut Konfiguration nicht mehr gebraucht wird */
@@ -548,7 +592,7 @@ class Violet extends utils.Adapter {
         if (!this.msg.acked && newest) {
             // erster Start: vorhandene (alte) Meldungen nicht als neu melden
             this.msg.acked = newest.sig;
-            await this.setStateAsync('meldungen.quittiert', newest.sig, true);
+            await this.setStateAsync('messages.acknowledged', newest.sig, true);
         }
         let count = 0;
         if (newest && newest.sig !== this.msg.acked) {
@@ -587,12 +631,12 @@ class Violet extends utils.Adapter {
         this.msg.active = count > 0;
         this.msg.count = count;
         const vals = {
-            'meldungen.aktiv': count > 0,
-            'meldungen.anzahl': count,
-            'meldungen.text': newest ? newest.text : '',
-            'meldungen.zeit': newest ? `${newest.date} ${newest.time}`.trim() : '',
-            'meldungen.typ': newest ? newest.type : '',
-            'meldungen.liste': JSON.stringify(
+            'messages.active': count > 0,
+            'messages.count': count,
+            'messages.text': newest ? newest.text : '',
+            'messages.time': newest ? `${newest.date} ${newest.time}`.trim() : '',
+            'messages.type': newest ? newest.type : '',
+            'messages.list': JSON.stringify(
                 this.msg.entries.slice(0, 20).map(({ date, time, type, text }) => ({ date, time, type, text })),
             ),
         };
@@ -625,7 +669,7 @@ class Violet extends utils.Adapter {
             return;
         }
         this.msg.acked = newest.sig;
-        await this.setStateAsync('meldungen.quittiert', newest.sig, true);
+        await this.setStateAsync('messages.acknowledged', newest.sig, true);
         await this.writeMessageStates(0);
         this.log.info(`Violet messages acknowledged in ioBroker (${source})`);
     }
@@ -650,7 +694,7 @@ class Violet extends utils.Adapter {
             ranges: {
                 ph: [num(c.range_ph_min), num(c.range_ph_max)],
                 redox: [num(c.range_redox_min), num(c.range_redox_max)],
-                chlor: [num(c.range_cl_min), num(c.range_cl_max)],
+                chlorine: [num(c.range_cl_min), num(c.range_cl_max)],
             },
             rows: [1, 2, 3, 4]
                 .map(n => ({ sensor: Number(c[`disp_row${n}`]) || 0, sub: Number(c[`disp_row${n}_sub`]) || 0 }))
@@ -681,7 +725,7 @@ class Violet extends utils.Adapter {
             }
             for (let r = 1; r <= 8; r++) {
                 const own = String(c[`ext${e}_${r}_name`] || '').trim();
-                features.relays.push({ id: `relais.ext${e}_${r}`, name: own || `EXT${e}.${r}`, named: !!own });
+                features.relays.push({ id: `relays.ext${e}_${r}`, name: own || `EXT${e}.${r}`, named: !!own });
             }
         }
         this.features = features;
@@ -730,12 +774,12 @@ class Violet extends utils.Adapter {
 
     /** Kanalname für Relais/Unterordner, die nicht in der festen Liste stehen */
     channelName(ch) {
-        const m = ch.match(/^relais\.ext(\d)_(\d)$/);
+        const m = ch.match(/^relays\.ext(\d)_(\d)$/);
         if (m) {
             const own = String(this.config[`ext${m[1]}_${m[2]}_name`] || '').trim();
             return own ? `${own} (EXT${m[1]}.${m[2]})` : `Relais EXT${m[1]}.${m[2]}`;
         }
-        const d = ch.match(/^dmx\.szene(\d+)$/);
+        const d = ch.match(/^dmx\.scene(\d+)$/);
         if (d) {
             return dmxLabel(this.config, Number(d[1]));
         }
@@ -915,6 +959,10 @@ class Violet extends utils.Adapter {
             return;
         }
         if (!fullId.startsWith(`${this.namespace}.`)) {
+            // fremde Datenpunkte: nur bestätigte Werte (ack=true) übernehmen, keine Befehle anderer Adapter
+            if (!state.ack) {
+                return;
+            }
             if (this.hpPower && this.hpPower.oid === fullId) {
                 this.hpPower.val = parseFloat(state.val);
             }
@@ -931,7 +979,7 @@ class Violet extends utils.Adapter {
         }
         const id = fullId.substring(this.namespace.length + 1);
 
-        if (id === 'meldungen.quittieren') {
+        if (id === 'messages.acknowledge') {
             if (state.val) {
                 await this.acknowledgeMessages('data point');
             }
@@ -955,7 +1003,7 @@ class Violet extends utils.Adapter {
             // läuft die Pumpe gerade manuell, neue Drehzahl sofort übernehmen
             const mode = modeFromStatus(this.lastData && this.lastData.PUMP);
             if (mode === 'ON') {
-                await this.queueCommand('PUMP', 'ON', this.switchDuration, speed, 'pumpe.schalten');
+                await this.queueCommand('PUMP', 'ON', this.switchDuration, speed, 'pump.switch');
             }
             return;
         }
@@ -969,7 +1017,7 @@ class Violet extends utils.Adapter {
 
         let value = 0;
         if (c.func === 'PUMP' && action === 'ON' && this.config.use_pump_rpm) {
-            const s = await this.getStateAsync('pumpe.drehzahl_soll');
+            const s = await this.getStateAsync('pump.speed_setpoint');
             value = s && [1, 2, 3].includes(s.val) ? s.val : 2;
         }
         const duration = action === 'AUTO' ? 0 : this.switchDuration;
