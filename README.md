@@ -114,7 +114,7 @@ In the tab "Connection" the adapter can read defaults from the Violet: names of 
 For electrolysis the Violet uses the same fields as for liquid chlorine, but with a different meaning (information from PoolDigital): the daily amount is chlorine produced in **g**, the "canister" content is the **remaining hours of the cell**, the canister change is the **cell change**.
 
 - Data points under `dosing.electrolysis`: `produced_today` (g), `cell_remaining_hours` (h), `cell_change` (date)
-- Optional (tab "Functions", visible with electrolysis): enter the cell lifetime in hours – the same value as in the Violet. Then `zelle_verschleiss` (%) and `zelle_warnung` (from the warning threshold) are added
+- Optional (tab "Functions", visible with electrolysis): enter the cell lifetime in hours – the same value as in the Violet. Then `cell_wear` (%) and `cell_warning` (from the warning threshold) are added
 - The cell change is confirmed in the Violet like a canister change – nothing is written to the Violet
 - Please report if your values look different – the author's pool uses liquid chlorine
 
