@@ -95,6 +95,62 @@
         "zh-cn": "修复：水泵启动后水质值约 2 小时保持冻结（PUMP_LAST_ON 中的时区）"
       }
     },
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<0.8.0",
+            "newVersion>=0.8.0"
+          ]
+        },
+        "title": {
+          "en": "Version 0.8.0: all data point IDs change",
+          "de": "Version 0.8.0: alle Datenpunkt-IDs ändern sich",
+          "ru": "Версия 0.8.0: все идентификаторы точек данных меняются",
+          "pt": "Versão 0.8.0: todos os IDs dos pontos de dados mudam",
+          "nl": "Versie 0.8.0: alle datapunt-ID's wijzigen",
+          "fr": "Version 0.8.0 : tous les ID des points de données changent",
+          "it": "Versione 0.8.0: cambiano tutti gli ID dei punti dati",
+          "es": "Versión 0.8.0: cambian todos los ID de los puntos de datos",
+          "pl": "Wersja 0.8.0: zmieniają się wszystkie identyfikatory punktów danych",
+          "uk": "Версія 0.8.0: змінюються всі ідентифікатори точок даних",
+          "zh-cn": "版本 0.8.0：所有数据点 ID 都会更改"
+        },
+        "text": {
+          "en": "All data point IDs are now English (e.g. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Existing data points are moved automatically on the first start (values and history settings are kept). VIS views, scripts, Blockly and other adapters that use these data points must be adapted – in most VIS projects nearly every widget is affected. Please export your VIS project and back up your scripts before updating.",
+          "de": "Alle Datenpunkt-IDs sind jetzt englisch (z. B. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Vorhandene Datenpunkte werden beim ersten Start automatisch umgezogen (Werte und History-Einstellungen bleiben erhalten). VIS-Ansichten, Skripte, Blockly und andere Adapter, die diese Datenpunkte nutzen, müssen angepasst werden – in den meisten VIS-Projekten betrifft das fast jedes Widget. Bitte vor dem Update das VIS-Projekt exportieren und die Skripte sichern.",
+          "ru": "Все идентификаторы точек данных теперь на английском (напр. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Существующие точки данных переносятся автоматически при первом запуске (значения и настройки истории сохраняются). VIS, скрипты, Blockly и другие адаптеры, использующие эти точки данных, нужно адаптировать – в большинстве проектов VIS это касается почти всех виджетов. Перед обновлением экспортируйте проект VIS и сохраните скрипты.",
+          "pt": "Todos os IDs dos pontos de dados estão agora em inglês (p. ex. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Os pontos de dados existentes são migrados automaticamente no primeiro arranque (valores e definições de histórico mantêm-se). Vistas VIS, scripts, Blockly e outros adaptadores que usam estes pontos de dados têm de ser adaptados – na maioria dos projetos VIS isto afeta quase todos os widgets. Exporte o projeto VIS e faça cópia dos scripts antes de atualizar.",
+          "nl": "Alle datapunt-ID's zijn nu Engels (bv. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Bestaande datapunten worden bij de eerste start automatisch verplaatst (waarden en historie-instellingen blijven behouden). VIS-weergaven, scripts, Blockly en andere adapters die deze datapunten gebruiken moeten worden aangepast – in de meeste VIS-projecten betreft dit bijna elke widget. Exporteer vóór de update het VIS-project en maak een back-up van de scripts.",
+          "fr": "Tous les ID des points de données sont désormais en anglais (p. ex. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Les points de données existants sont migrés automatiquement au premier démarrage (valeurs et réglages d'historique conservés). Les vues VIS, scripts, Blockly et autres adaptateurs qui utilisent ces points de données doivent être adaptés – dans la plupart des projets VIS, presque tous les widgets sont concernés. Exportez le projet VIS et sauvegardez les scripts avant la mise à jour.",
+          "it": "Tutti gli ID dei punti dati sono ora in inglese (es. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). I punti dati esistenti vengono spostati automaticamente al primo avvio (valori e impostazioni della cronologia restano). Viste VIS, script, Blockly e altri adattatori che usano questi punti dati devono essere adattati – nella maggior parte dei progetti VIS ciò riguarda quasi ogni widget. Prima dell'aggiornamento esportare il progetto VIS e salvare gli script.",
+          "es": "Todos los ID de los puntos de datos están ahora en inglés (p. ej. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Los puntos de datos existentes se migran automáticamente en el primer inicio (se conservan los valores y los ajustes de historial). Las vistas VIS, scripts, Blockly y otros adaptadores que usan estos puntos de datos deben adaptarse – en la mayoría de los proyectos VIS afecta a casi todos los widgets. Exporte el proyecto VIS y guarde los scripts antes de actualizar.",
+          "pl": "Wszystkie identyfikatory punktów danych są teraz po angielsku (np. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Istniejące punkty danych są przenoszone automatycznie przy pierwszym uruchomieniu (wartości i ustawienia historii zostają zachowane). Widoki VIS, skrypty, Blockly i inne adaptery korzystające z tych punktów danych trzeba dostosować – w większości projektów VIS dotyczy to prawie każdego widżetu. Przed aktualizacją wyeksportuj projekt VIS i zabezpiecz skrypty.",
+          "uk": "Усі ідентифікатори точок даних тепер англійською (напр. wasser.chlor → water.chlorine, pumpe.schalten → pump.switch). Наявні точки даних переносяться автоматично під час першого запуску (значення та налаштування історії зберігаються). VIS, скрипти, Blockly та інші адаптери, що використовують ці точки даних, потрібно адаптувати – у більшості проєктів VIS це стосується майже кожного віджета. Перед оновленням експортуйте проєкт VIS і збережіть скрипти.",
+          "zh-cn": "所有数据点 ID 现在均为英文（例如 wasser.chlor → water.chlorine、pumpe.schalten → pump.switch）。首次启动时现有数据点会自动迁移（保留数值和历史记录设置）。使用这些数据点的 VIS 视图、脚本、Blockly 和其他适配器必须调整 – 在大多数 VIS 项目中几乎每个小部件都会受到影响。更新前请导出 VIS 项目并备份脚本。"
+        },
+        "link": "https://github.com/AlPi-BRV/ioBroker.violet#upgrade-to-080-english-ids",
+        "linkText": {
+          "en": "Upgrade guide",
+          "de": "Anleitung zur Umstellung",
+          "ru": "Инструкция по переходу",
+          "pt": "Guia de atualização",
+          "nl": "Handleiding voor de overstap",
+          "fr": "Guide de migration",
+          "it": "Guida alla migrazione",
+          "es": "Guía de actualización",
+          "pl": "Instrukcja przejścia",
+          "uk": "Інструкція з переходу",
+          "zh-cn": "升级指南"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ],
     "titleLang": {
       "en": "Violet pool control",
       "de": "Violet Poolsteuerung",

@@ -11,6 +11,9 @@ Adapter for the **Violet pool controller** by PoolDigital (incl. dosing module a
 
 🇩🇪 **[Deutsche Anleitung](docs/de/README.md)**
 
+> [!WARNING]
+> **Updating from 0.7.x or older to 0.8.0: all data point IDs have changed** (German → English, e.g. `wasser.chlor` → `water.chlorine`, `pumpe.schalten` → `pump.switch`). The adapter moves your existing data points automatically (values and history settings are kept), but **VIS views, scripts, Blockly and other adapters that use these data points must be changed** – in most VIS projects this affects nearly every widget. Please read [Upgrade to 0.8.0](#upgrade-to-080-english-ids) **before** updating and make a backup (e.g. export your VIS project).
+
 ## Features
 
 - Reads all values of the Violet cyclically (`http://<IP>/getReadings?ALL`) and maps them to a fixed structure
@@ -172,6 +175,13 @@ Up to version 0.7.x the data points had German IDs. Since 0.8.0 all IDs are Engl
 | `….tagesmenge`, `….kanister_rest`, `….reichweite`, `….sperren` | `….dosed_today`, `….canister_remaining`, `….range`, `….locks` |
 
 The complete list is in [lib/idmap.js](lib/idmap.js).
+
+**Tips for the switch-over**
+
+- **Before** the update: export your VIS project (VIS editor: project export; or a BackItUp backup) and back up scripts – then nothing is lost.
+- In the exported VIS file you can replace the IDs with the table above (search for `violet.0.`), then import it again. Replace the longer IDs first (e.g. `dosierung.chlor.tagesmenge` before `dosierung.chlor`).
+- The log of the instance lists how many data points were moved. Scripts with old IDs only show warnings like "state … not found" – search for `violet.0.` in the scripts adapter.
+- If you do not want to change anything yet: stay on 0.7.x until you have time for the switch-over.
 
 ## FAQ
 

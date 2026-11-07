@@ -11,6 +11,9 @@ Adapter für die **Violet-Poolsteuerung** von PoolDigital (inkl. Dosiermodul und
 
 🇬🇧 [English README](../../README.md) · Änderungen: [Changelog](../../README.md#changelog)
 
+> [!WARNING]
+> **Update von 0.7.x oder älter auf 0.8.0: alle Datenpunkt-IDs haben sich geändert** (deutsch → englisch, z. B. `wasser.chlor` → `water.chlorine`, `pumpe.schalten` → `pump.switch`). Der Adapter zieht vorhandene Datenpunkte automatisch um (Werte und History-Einstellungen bleiben erhalten), aber **VIS-Ansichten, Skripte, Blockly und andere Adapter, die diese Datenpunkte nutzen, müssen angepasst werden** – in den meisten VIS-Projekten betrifft das fast jedes Widget. Bitte **vor** dem Update [Update auf 0.8.0](#update-auf-080-englische-ids) lesen und eine Sicherung machen (z. B. VIS-Projekt exportieren).
+
 ## Funktionen
 
 - Liest zyklisch alle Werte der Violet (`http://<IP>/getReadings?ALL`) und übersetzt sie in eine feste Struktur
@@ -185,6 +188,13 @@ Bis Version 0.7.x hatten die Datenpunkte deutsche IDs. Seit 0.8.0 sind alle IDs 
 | `….tagesmenge`, `….kanister_rest`, `….reichweite`, `….sperren` | `….dosed_today`, `….canister_remaining`, `….range`, `….locks` |
 
 Die vollständige Liste steht in [lib/idmap.js](../../lib/idmap.js).
+
+**Tipps für die Umstellung**
+
+- **Vor** dem Update: VIS-Projekt exportieren (im VIS-Editor: Projekt-Export; oder Sicherung mit BackItUp) und Skripte sichern – dann geht nichts verloren.
+- In der exportierten VIS-Datei lassen sich die IDs mit der Tabelle oben ersetzen (nach `violet.0.` suchen) und die Datei wieder importieren. Längere IDs zuerst ersetzen (z. B. `dosierung.chlor.tagesmenge` vor `dosierung.chlor`).
+- Im Log der Instanz steht, wie viele Datenpunkte umgezogen wurden. Skripte mit alten IDs melden nur Warnungen wie „state … not found“ – im Skript-Adapter nach `violet.0.` suchen.
+- Wer jetzt nichts umbauen möchte: bei 0.7.x bleiben, bis Zeit für die Umstellung ist.
 
 ## Häufige Fragen
 
