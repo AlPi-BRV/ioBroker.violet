@@ -127,7 +127,7 @@ Ist als Art der Heizung „Wärmepumpe“ gewählt, lässt sich ein beliebiger i
 Für die Elektrolyse nutzt die Violet dieselben Felder wie für Flüssigchlor, aber mit anderer Bedeutung (Auskunft PoolDigital): Die Tagesmenge ist erzeugtes Chlor in **g**, der „Kanister“-Inhalt sind die **Reststunden der Zelle**, der Kanisterwechsel ist der **Zellenwechsel**.
 
 - Datenpunkte unter `dosing.electrolysis`: `produced_today` (g), `cell_remaining_hours` (h), `cell_change` (Datum)
-- Optional (Reiter „Funktionen“, sichtbar bei Elektrolyse): Lebensdauer der Zelle in Stunden eintragen – derselbe Wert wie in der Violet. Dann kommen `zelle_verschleiss` (%) und `zelle_warnung` (ab der Warnschwelle) hinzu
+- Optional (Reiter „Funktionen“, sichtbar bei Elektrolyse): Lebensdauer der Zelle in Stunden eintragen – derselbe Wert wie in der Violet. Dann kommen `cell_wear` (%) und `cell_warning` (ab der Warnschwelle) hinzu
 - Der Zellenwechsel wird in der Violet wie ein Kanisterwechsel quittiert – an die Violet wird nichts geschrieben
 - Bitte melden, wenn die Werte anders aussehen – an der Anlage des Autors läuft Flüssigchlor
 
