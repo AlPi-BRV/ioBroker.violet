@@ -425,19 +425,28 @@ class Violet extends utils.Adapter {
                 await this.pollMessages(data);
             }
         } catch (err) {
+            if (this.unloading) {
+                return; // Instanz wird beendet (z. B. Update) – Datenbank evtl. schon geschlossen
+            }
             this.failCount++;
             const msg = err.name === 'TimeoutError' ? `timeout after ${this.timeout / 1000} s` : err.message;
             if (this.failCount === 1 || this.failCount % 30 === 0) {
                 this.log.warn(`Request to ${this.baseUrl} failed (${this.failCount}x): ${msg}`);
             }
-            await this.setStateChangedAsync('info.connection', false, true);
+            await this.setStateChangedAsync('info.connection', false, true).catch(() => {});
         }
 
         this.polling = false;
+        if (this.unloading) {
+            return;
+        }
         if (this.pollTimer) {
             this.clearTimeout(this.pollTimer);
         }
-        this.pollTimer = this.setTimeout(() => this.poll(), this.interval);
+        this.pollTimer = this.setTimeout(
+            () => this.poll().catch(err => this.log.debug(`Poll aborted: ${err.message}`)),
+            this.interval,
+        );
     }
 
     async processData(data) {
@@ -1058,7 +1067,7 @@ class Violet extends utils.Adapter {
         if (this.pollTimer) {
             this.clearTimeout(this.pollTimer);
         }
-        this.pollTimer = this.setTimeout(() => this.poll(), 1500);
+        this.pollTimer = this.setTimeout(() => this.poll().catch(() => {}), 1500);
     }
 
     /* ------------------------------------------------------------------
@@ -1144,6 +1153,7 @@ class Violet extends utils.Adapter {
     }
 
     onUnload(callback) {
+        this.unloading = true;
         try {
             if (this.server) {
                 this.server.close();
