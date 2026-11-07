@@ -262,7 +262,7 @@ const TXT = {
     backwash: 'Rückspülung', refill: 'Nachspeisung', dmx: 'DMX',
     heatpump: 'Wärmepumpe', eheater: 'E-Heizung', cell: 'Zelle', cellLeft: 'Zelle noch {h} h', gToday: 'g heute',
     today: 'heute', mlToday: 'ml heute', scene: 'Szene', sceneOff: 'Szene aus', sceneChoose: 'Szene wählen …',
-    chlorine: 'Chlor', floc: 'Flockung', fw: 'Violet Firmware', uptime: 'Uptime',
+    chlorine: 'Chlor', floc: 'Flockung', flowRate: 'Förderleistung', fw: 'Violet Firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo-Daten', stale: 'Violet zurzeit nicht erreichbar – letzte Werte',
     msg: 'Meldung der Violet', msgs: 'Meldungen der Violet', msgHint: 'Klicken öffnet die Violet in einem neuen Fenster',
     confirmPumpOff: 'Filterpumpe wirklich manuell AUSschalten?',
@@ -281,7 +281,7 @@ const TXT = {
     backwash: 'Backwash', refill: 'Refill', dmx: 'DMX',
     heatpump: 'Heat pump', eheater: 'E-heater', cell: 'Cell', cellLeft: 'Cell {h} h left', gToday: 'g today',
     today: 'today', mlToday: 'ml today', scene: 'Scene', sceneOff: 'Scene off', sceneChoose: 'Choose scene …',
-    chlorine: 'Chlorine', floc: 'Flocculant', fw: 'Violet firmware', uptime: 'Uptime',
+    chlorine: 'Chlorine', floc: 'Flocculant', flowRate: 'Flow rate', fw: 'Violet firmware', uptime: 'Uptime',
     live: 'Live', demo: 'Demo data', stale: 'Violet currently not reachable – last values',
     msg: 'Violet message', msgs: 'Violet messages', msgHint: 'Click to open the Violet in a new window',
     confirmPumpOff: 'Really switch the filter pump OFF manually?',
@@ -301,18 +301,25 @@ const STATUS_TXT = () => ({ 0: t('off'), 1: t('on'), 2: t('blocked'), 3: t('on')
 const STAGES = { 1: 'ECO', 2: 'Normal', 3: 'Boost' };
 // mögliche Funktionen in der Relais-Spalte (erscheinen nur, wenn vorhanden)
 const FUNCS = [
-  { key: 'pumpe', label: 'pump' },
+  { key: 'pump', label: 'pump' },
   { key: 'solar', label: 'solar' },
-  { key: 'heizung', label: 'heater' },
-  { key: 'licht', label: 'light' },
+  { key: 'heater', label: 'heater' },
+  { key: 'light', label: 'light' },
   { key: 'eco', label: 'eco' },
-  { key: 'rueckspuelung', label: 'backwash' },
-  { key: 'nachspeisung', label: 'refill' },
+  { key: 'backwash', label: 'backwash' },
+  { key: 'refill', label: 'refill' },
 ];
 const FLOW_UNITS = /cm\/s/i;
 /* Förderleistung (Durchflusssensor in m³/h): gehört zur Pumpe, steht in deren Zeile statt bei den Wasserwerten */
 const PUMP_FLOW_UNITS = /m(³|3)\s*\/\s*h/i;
-const pumpFlow = () => F.analog.find((a) => PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
+/* Vorrang: echter Sensor, solange er etwas liefert; sonst die vom Adapter berechnete Förderleistung.
+   Ein Eingang, der nur 0 liefert (kein Sensor angeschlossen), verschwindet, sobald der berechnete Wert da ist. */
+const pumpFlow = () => {
+  const s = F.analog.find((a) => PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
+  if (s && Number(V[s.id]) > 0) return s;
+  if (has('pump.flow_rate')) return { id: 'pump.flow_rate', name: t('flowRate'), unit: 'm³/h' };
+  return s;
+};
 
 /* ---------- Demo-Daten (Werte deiner Anlage vom 09.10.2026) ---------- */
 const DEMO_TEMPS = { 1: 'Wassertemperatur', 2: 'Außentemperatur', 3: 'Absorbertemperatur', 4: 'Absorber-Rücklauf', 7: 'Pool Rücklauf', 8: 'Heizung Vorlauf', 9: 'Heizung Rücklauf', 11: 'Schwimmbad' };
@@ -320,42 +327,41 @@ const DEMO = {
   'info.features': JSON.stringify({
     lang: LANG, font: params.get('font') || 'verdana', violetUrl: 'http://violet.local', switching: true, pumpRpm: true, pv: true, dmx: true, dmxNames: ['Pool weiß', 'Pool rot', 'Pool grün', 'Pool blau', 'Terrasse', '', 'Garten'],
     temps: Object.entries(DEMO_TEMPS).map(([n, name]) => ({ n: Number(n), name })),
-    ranges: { ph: [7.0, 7.4], redox: [650, 800], chlor: [0.3, 0.6] }, t1Pool: true,
-    vrelays: [{ id: 'vrelais.1', name: 'Teichpumpe' }, { id: 'vrelais.2', name: 'Gartenbrunnen' }],
-    relays: [1, 2, 3, 4, 5, 6, 7, 8].map((r) => ({ id: `relais.ext1_${r}`, name: { 6: 'Gartenlicht', 8: 'Teichpumpe' }[r] || `EXT1.${r}`, named: r === 6 || r === 8 })),
+    ranges: { ph: [7.0, 7.4], redox: [650, 800], chlorine: [0.3, 0.6] }, t1Pool: true,
+    vrelays: [{ id: 'virtual_relays.1', name: 'Teichpumpe' }, { id: 'virtual_relays.2', name: 'Gartenbrunnen' }],
+    relays: [1, 2, 3, 4, 5, 6, 7, 8].map((r) => ({ id: `relays.ext1_${r}`, name: { 6: 'Gartenlicht', 8: 'Teichpumpe' }[r] || `EXT1.${r}`, named: r === 6 || r === 8 })),
     analog: [
       { id: 'analog.adc1', name: 'Filterdruck', unit: 'bar' },
       { id: 'analog.adc5', name: 'Luftfeuchte', unit: '%rF' },
-      { id: 'analog.impuls1', name: 'Anströmung', unit: 'cm/s' },
-      { id: 'analog.impuls2', name: 'Förderleistung', unit: 'm³/h' },
+      { id: 'analog.pulse1', name: 'Anströmung', unit: 'cm/s' },
     ],
     messages: { enabled: true, active: params.get('msg') === '1', count: 1, text: 'Elektroden-Kalibrierung überfällig', time: '10.10.2026 09:12:00', type: 'REMINDER' },
   }),
-  'wasser.ph': 7.22, 'wasser.ph_min': 7.19, 'wasser.ph_max': 7.29,
-  'wasser.redox': 885.2, 'wasser.redox_min': 824.9, 'wasser.redox_max': 898.7,
-  'wasser.chlor': 0.19, 'wasser.chlor_min': 0.14, 'wasser.chlor_max': 0.36,
-  'dosierung.ph_minus.tagesmenge': 8, 'dosierung.ph_minus.status': 0, 'dosierung.chlor.tagesmenge': 9, 'dosierung.chlor.status': 0,
-  'temperatur.sensor1': 21.1, 'temperatur.sensor1_min': 20.1, 'temperatur.sensor1_max': 21.3,
-  'temperatur.sensor2': 12.0, 'temperatur.sensor2_min': 10.0, 'temperatur.sensor2_max': 12.0,
-  'temperatur.sensor3': 12.3, 'temperatur.sensor3_min': 8.4, 'temperatur.sensor3_max': 16.2,
-  'temperatur.sensor4': 22.4, 'temperatur.sensor7': 21.1, 'temperatur.sensor7_min': 19.3, 'temperatur.sensor7_max': 21.2,
-  'temperatur.sensor8': 31.9, 'temperatur.sensor9': 29.5, 'temperatur.sensor11': 21.7,
-  'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.impuls1': 0.0, 'analog.impuls2': 7.4,
-  'pumpe.status': 1, 'pumpe.aktiv': true, 'pumpe.schalten': 'AUTO', 'pumpe.laufzeit_heute': '06h 49m 17s', 'dosierung.flockung.tagesmenge': 36, 'temperatur.sensor1_pool': 20.9, 'temperatur.sensor1_eingefroren': true, 'vrelais.1': true, 'vrelais.2': false, 'pumpe.umwaelzung_heute': 31.6, 'pumpe.stufe': 2, 'pumpe.drehzahl_soll': 2,
-  'pv.ueberschuss': 1,
-  'solar.status': 1, 'solar.aktiv': true, 'solar.schalten': 'AUTO', 'solar.laufzeit_heute': '03h 12m 40s', 'solar.leistung': 4.21, 'solar.energie_heute': 11.6,
-  'heizung.status': 6, 'heizung.aktiv': false, 'heizung.schalten': 'OFF', 'heizung.laufzeit_heute': '00h 41m 05s', 'heizung.leistung': 0, 'heizung.energie_heute': 5.3,
-  'licht.status': 0, 'licht.aktiv': false, 'licht.schalten': 'AUTO',
-  'system.firmware': '1.2.5', 'system.laufzeit': '09d 16h 25m', 'system.cpu_temperatur': 53.2,
+  'water.ph': 7.22, 'water.ph_min': 7.19, 'water.ph_max': 7.29,
+  'water.redox': 885.2, 'water.redox_min': 824.9, 'water.redox_max': 898.7,
+  'water.chlorine': 0.19, 'water.chlorine_min': 0.14, 'water.chlorine_max': 0.36,
+  'dosing.ph_minus.dosed_today': 8, 'dosing.ph_minus.status': 0, 'dosing.chlorine.dosed_today': 9, 'dosing.chlorine.status': 0,
+  'temperatures.sensor1': 21.1, 'temperatures.sensor1_min': 20.1, 'temperatures.sensor1_max': 21.3,
+  'temperatures.sensor2': 12.0, 'temperatures.sensor2_min': 10.0, 'temperatures.sensor2_max': 12.0,
+  'temperatures.sensor3': 12.3, 'temperatures.sensor3_min': 8.4, 'temperatures.sensor3_max': 16.2,
+  'temperatures.sensor4': 22.4, 'temperatures.sensor7': 21.1, 'temperatures.sensor7_min': 19.3, 'temperatures.sensor7_max': 21.2,
+  'temperatures.sensor8': 31.9, 'temperatures.sensor9': 29.5, 'temperatures.sensor11': 21.7,
+  'analog.adc5': 63.0, 'analog.adc1': 0.0, 'analog.pulse1': 0.0, 'analog.pulse2': 7.4,
+  'pump.status': 1, 'pump.active': true, 'pump.switch': 'AUTO', 'pump.runtime_today': '06h 49m 17s', 'dosing.flocculant.dosed_today': 36, 'temperatures.sensor1_pool': 20.9, 'temperatures.sensor1_frozen': true, 'virtual_relays.1': true, 'virtual_relays.2': false, 'pump.circulated_today': 31.6, 'pump.flow_rate': 6, 'pump.level': 2, 'pump.speed_setpoint': 2,
+  'pv.surplus': 1,
+  'solar.status': 1, 'solar.active': true, 'solar.switch': 'AUTO', 'solar.runtime_today': '03h 12m 40s', 'solar.power': 4.21, 'solar.energy_today': 11.6,
+  'heater.status': 6, 'heater.active': false, 'heater.switch': 'OFF', 'heater.runtime_today': '00h 41m 05s', 'heater.power': 0, 'heater.energy_today': 5.3,
+  'light.status': 0, 'light.active': false, 'light.switch': 'AUTO',
+  'system.firmware': '1.2.5', 'system.uptime': '09d 16h 25m', 'system.cpu_temperature': 53.2,
 };
-for (let s = 1; s <= 12; s++) { DEMO[`dmx.szene${s}.status`] = s === 3 ? 4 : 0; DEMO[`dmx.szene${s}.aktiv`] = s === 3; DEMO[`dmx.szene${s}.schalten`] = s === 3 ? 'ON' : 'AUTO'; }
-for (let r = 1; r <= 8; r++) { DEMO[`relais.ext1_${r}.status`] = r === 6 ? 4 : 6; DEMO[`relais.ext1_${r}.aktiv`] = r === 6; DEMO[`relais.ext1_${r}.schalten`] = r === 6 ? 'ON' : 'OFF'; }
-// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heizung,solar,pv,dmx,relais   &alle=1   &msg=1   &elo=1 (Elektrolyse statt Flüssigchlor)   &wp=1 (Wärmepumpe)
+for (let s = 1; s <= 12; s++) { DEMO[`dmx.scene${s}.status`] = s === 3 ? 4 : 0; DEMO[`dmx.scene${s}.active`] = s === 3; DEMO[`dmx.scene${s}.switch`] = s === 3 ? 'ON' : 'AUTO'; }
+for (let r = 1; r <= 8; r++) { DEMO[`relays.ext1_${r}.status`] = r === 6 ? 4 : 6; DEMO[`relays.ext1_${r}.active`] = r === 6; DEMO[`relays.ext1_${r}.switch`] = r === 6 ? 'ON' : 'OFF'; }
+// Demo-Varianten zum Ausprobieren: ?demo=1&ohne=heater,solar,pv,dmx,relays   &alle=1   &msg=1   &elo=1 (Elektrolyse statt Flüssigchlor)   &wp=1 (Wärmepumpe)
 if (params.get('elo') === '1') {
-  for (const id of Object.keys(DEMO)) if (id.startsWith('dosierung.chlor.')) delete DEMO[id];
+  for (const id of Object.keys(DEMO)) if (id.startsWith('dosing.chlorine.')) delete DEMO[id];
   Object.assign(DEMO, {
-    'dosierung.elektrolyse.status': 1, 'dosierung.elektrolyse.erzeugt_heute': 52,
-    'dosierung.elektrolyse.zelle_reststunden': 370, 'dosierung.elektrolyse.zelle_verschleiss': 92.6, 'dosierung.elektrolyse.zelle_warnung': true,
+    'dosing.electrolysis.status': 1, 'dosing.electrolysis.produced_today': 52,
+    'dosing.electrolysis.cell_remaining_hours': 370, 'dosing.electrolysis.cell_wear': 92.6, 'dosing.electrolysis.cell_warning': true,
   });
 }
 if (params.get('wp') === '1') {
@@ -364,14 +370,14 @@ if (params.get('wp') === '1') {
   f.cop = true;
   DEMO['info.features'] = JSON.stringify(f);
   Object.assign(DEMO, {
-    'heizung.status': 1, 'heizung.aktiv': true, 'heizung.schalten': 'AUTO', 'heizung.leistung': 6.4,
-    'heizung.strom_leistung': 1.52, 'heizung.strom_heute': 1.4, 'heizung.cop': 4.2, 'heizung.cop_heute': 3.8,
+    'heater.status': 1, 'heater.active': true, 'heater.switch': 'AUTO', 'heater.power': 6.4,
+    'heater.electrical_power': 1.52, 'heater.electricity_today': 1.4, 'heater.cop': 4.2, 'heater.cop_today': 3.8,
   });
 }
 // &alle=1: zusätzlich ECO, Rückspülung und Nachspeisung (mehr Relais-Zeilen als Temperaturen/Wasserwerte)
 if (params.get('alle') === '1') {
-  for (const k of ['eco', 'rueckspuelung', 'nachspeisung']) {
-    Object.assign(DEMO, { [`${k}.status`]: 0, [`${k}.aktiv`]: false, [`${k}.schalten`]: 'AUTO', [`${k}.laufzeit_heute`]: '00h 00m 00s' });
+  for (const k of ['eco', 'backwash', 'refill']) {
+    Object.assign(DEMO, { [`${k}.status`]: 0, [`${k}.active`]: false, [`${k}.switch`]: 'AUTO', [`${k}.runtime_today`]: '00h 00m 00s' });
   }
 }
 if (params.get('ohne')) {
@@ -380,7 +386,7 @@ if (params.get('ohne')) {
     for (const id of Object.keys(DEMO)) if (id.startsWith(k + '.')) delete DEMO[id];
     if (k === 'pv') f.pv = false;
     if (k === 'dmx') f.dmx = false;
-    if (k === 'relais') f.relays = [];
+    if (k === 'relays') f.relays = [];
   }
   DEMO['info.features'] = JSON.stringify(f);
 }
@@ -404,7 +410,7 @@ function fmt(v, d = 1) {
 
 /* ---------- was ist vorhanden? ---------- */
 const tempName = (n) => (F.temps.find((x) => x.n === n) || {}).name || `${LANG === 'de' ? 'Temperatur' : 'Temperature'} ${n}`;
-const tempOk = (n) => n && has(`temperatur.sensor${n}`) && (!F.temps.length || F.temps.some((x) => x.n === n));
+const tempOk = (n) => n && has(`temperatures.sensor${n}`) && (!F.temps.length || F.temps.some((x) => x.n === n));
 
 function tempRows() {
   const conf = F.rows && F.rows.length ? F.rows : CONFIG.temps;
@@ -422,24 +428,24 @@ function tempRows() {
 
 function waterRows() {
   const rows = [];
-  if (has('wasser.ph')) rows.push('ph');
-  if (has('wasser.redox')) rows.push('redox');
-  if (has('wasser.chlor')) rows.push('chlor');
-  else if (has('dosierung.flockung.tagesmenge')) rows.push('floc');
+  if (has('water.ph')) rows.push('ph');
+  if (has('water.redox')) rows.push('redox');
+  if (has('water.chlorine')) rows.push('chlorine');
+  else if (has('dosing.flocculant.dosed_today')) rows.push('floc');
   const an = F.analog.filter((a) => !FLOW_UNITS.test(a.unit) && !PUMP_FLOW_UNITS.test(a.unit) && has(a.id));
   for (let i = 0; i < an.length; i += 2) rows.push({ main: an[i], note: an[i + 1] });
   return rows;
 }
 
-const dmxOn = () => F.dmx && has('dmx.szene1.status');
+const dmxOn = () => F.dmx && has('dmx.scene1.status');
 /* Name einer DMX-Szene: eigener Name aus der Konfiguration oder „Szene n“ */
 const sceneName = (n) => (F.dmxNames && F.dmxNames[n - 1]) || `${t('scene')} ${n}`;
 
 function relayRows() {
   const rows = [];
   for (const f of FUNCS) {
-    if (f.key === 'licht') {
-      if (has('licht.status') || dmxOn()) rows.push({ key: 'licht', label: f.label, light: has('licht.status'), dmx: dmxOn() });
+    if (f.key === 'light') {
+      if (has('light.status') || dmxOn()) rows.push({ key: 'light', label: f.label, light: has('light.status'), dmx: dmxOn() });
       continue;
     }
     if (has(`${f.key}.status`)) rows.push({ key: f.key, label: f.label });
@@ -508,8 +514,8 @@ function build() {
   $('botFlow').style.visibility = flow ? '' : 'hidden';
   $('botFlow').dataset.id = flow ? flow.id : '';
   $('botFlow').dataset.name = flow ? flow.name : '';
-  $('botPh').style.visibility = has('wasser.ph') ? '' : 'hidden';
-  $('botRdx').style.visibility = has('wasser.redox') ? '' : 'hidden';
+  $('botPh').style.visibility = has('water.ph') ? '' : 'hidden';
+  $('botRdx').style.visibility = has('water.redox') ? '' : 'hidden';
   alignLabels();
   setTimeout(fit, 0);
 }
@@ -528,8 +534,8 @@ function waterCell(w, cls) {
   if (w === 'redox') return `<div class="${cls}"><div class="lbl"><span class="main">RedOx:</span></div>
     <div class="val"><span class="big" id="rdx">–</span><span class="unit">mV</span><span class="mm" id="rdxmm"></span><span class="note" id="cldos"></span></div>
     <span class="badge" id="clmode">–</span></div>`;
-  const floc = has('dosierung.flockung.tagesmenge');
-  if (w === 'chlor') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span>${floc ? `<span class="sub">${t('floc')}:</span>` : ''}</div>
+  const floc = has('dosing.flocculant.dosed_today');
+  if (w === 'chlorine') return `<div class="${cls}"><div class="lbl"><span class="main">${t('chlorine')}:</span>${floc ? `<span class="sub">${t('floc')}:</span>` : ''}</div>
     <div class="val"><span class="big" id="cl">–</span><span class="unit">mg/l</span>${floc ? '<span class="vsub" id="floc"></span>' : '<span class="mm" id="clmm"></span>'}</div></div>`;
   if (w === 'floc') return `<div class="${cls}"><div class="lbl"><span class="main">${t('floc')}:</span></div>
     <div class="val"><span class="big" id="flocBig">–</span><span class="unit">ml</span><span class="vsub">${t('today')}</span></div></div>`;
@@ -542,10 +548,10 @@ const onOffSeg = (k) => `<div class="seg small" data-key="${k}" data-virtual="1"
 
 /* Wert eines Temperaturfühlers; Sensor 1 bei Fühler in der Verrohrung: eingefrorener Poolwert mit * */
 function tempText(n, d, unit = '°') {
-  if (Number(n) === 1 && F.t1Pool && has('temperatur.sensor1_pool')) {
-    return `${fmt(V['temperatur.sensor1_pool'], d)}${unit}${V['temperatur.sensor1_eingefroren'] ? '<span class="star">*</span>' : ''}`;
+  if (Number(n) === 1 && F.t1Pool && has('temperatures.sensor1_pool')) {
+    return `${fmt(V['temperatures.sensor1_pool'], d)}${unit}${V['temperatures.sensor1_frozen'] ? '<span class="star">*</span>' : ''}`;
   }
-  return `${fmt(V[`temperatur.sensor${n}`], d)}${unit}`;
+  return `${fmt(V[`temperatures.sensor${n}`], d)}${unit}`;
 }
 
 /* Optimalbereich aus der Konfiguration: außerhalb → rot */
@@ -553,7 +559,7 @@ function rangeMark(elId, valId, key) {
   const e = $(elId), r = F.ranges[key];
   if (!e) return;
   // ohne Anströmung (Pumpe aus / Werte eingefroren) keine Bewertung
-  if (V['wasser.eingefroren'] === true || V['pumpe.aktiv'] === false) { e.classList.remove('bad'); return; }
+  if (V['water.frozen'] === true || V['pump.active'] === false) { e.classList.remove('bad'); return; }
   const v = Number(V[valId]);
   const lo = r && r[0] !== null && r[0] !== undefined ? r[0] : null;
   const hi = r && r[1] !== null && r[1] !== undefined ? r[1] : null;
@@ -568,30 +574,30 @@ const heaterLabel = () => (F.heaterType === 'heatpump' ? 'heatpump' : F.heaterTy
 
 /* Wärmeleistung / Wärmemenge heute (und COP) in einer zweiten Zeile unter der Laufzeit von Absorber und Heizung */
 function heatText(k) {
-  if (!has(`${k}.energie_heute`)) return '';
-  const p = V[`${k}.leistung`];
-  const now = V[`${k}.aktiv`] === true && typeof p === 'number' && p > 0 ? `${fmt(p, 1)} kW · ` : '';
+  if (!has(`${k}.energy_today`)) return '';
+  const p = V[`${k}.power`];
+  const now = V[`${k}.active`] === true && typeof p === 'number' && p > 0 ? `${fmt(p, 1)} kW · ` : '';
   // Wärmepumpe mit Strommessung: COP jetzt (läuft) bzw. COP heute (steht)
   let cop = '';
-  if (k === 'heizung' && F.cop) {
-    const c = now ? V['heizung.cop'] : V['heizung.cop_heute'];
+  if (k === 'heater' && F.cop) {
+    const c = now ? V['heater.cop'] : V['heater.cop_today'];
     if (typeof c === 'number' && c > 0) cop = ` · COP ${fmt(c, 1)}`;
   }
   // eigene Zeile unter der Laufzeit, sonst wird die Beschriftung zu breit und verschiebt die Zeile
-  return `\n${now}${fmt(V[`${k}.energie_heute`], 1)} kWh${cop}`;
+  return `\n${now}${fmt(V[`${k}.energy_today`], 1)} kWh${cop}`;
 }
 
 function relayCell(x, cls) {
   const k = x.key, id = kid(k);
   const state = `<div class="state"><span class="lamp" id="${id}lamp"></span><span id="${id}txt">–</span></div>`;
-  if (k === 'pumpe') {
-    const stage = F.pumpRpm || has('pumpe.stufe') ? `<div class="line"><div class="seg" data-speed="1">
+  if (k === 'pump') {
+    const stage = F.pumpRpm || has('pump.level') ? `<div class="line"><div class="seg" data-speed="1">
       <button data-v="1" class="lvl">ECO</button><button data-v="2" class="lvl">Normal</button><button data-v="3" class="lvl">Boost</button></div></div>` : '';
     return `<div class="${cls} relay">
       <div class="lbl"><span class="main">${t('pump')}:</span><span class="sub" id="${id}rt"></span></div>${state}
       <div class="ctrl"><div class="line">${modeSeg(k)}<span class="pv" id="pvBadge" hidden>PV</span></div>${stage}</div></div>`;
   }
-  if (k === 'licht') {
+  if (k === 'light') {
     const opts = [`<option value="">${t('sceneChoose')}</option>`, `<option value="off">${t('sceneOff')}</option>`]
       .concat([...Array(12).keys()].map((i) => `<option value="${i + 1}">${esc(sceneName(i + 1))}</option>`)).join('');
     const dmx = x.dmx ? `<div class="line"><select class="dmx" id="dmxSel">${opts}</select></div>` : '';
@@ -601,7 +607,7 @@ function relayCell(x, cls) {
       <div class="ctrl">${x.light ? `<div class="line">${modeSeg(k)}</div>` : ''}${dmx}</div></div>`;
   }
   return `<div class="${cls} relay">
-    <div class="lbl"><span class="main">${t(k === 'heizung' ? heaterLabel() : x.label)}:</span><span class="sub" id="${id}rt"></span></div>${state}
+    <div class="lbl"><span class="main">${t(k === 'heater' ? heaterLabel() : x.label)}:</span><span class="sub" id="${id}rt"></span></div>${state}
     <div class="ctrl">${modeSeg(k)}</div></div>`;
 }
 
@@ -621,10 +627,10 @@ function render() {
 
   if (!relayView) {
     T.forEach((x, r) => {
-      const id = `temperatur.sensor${x.sensor}`;
+      const id = `temperatures.sensor${x.sensor}`;
       setHtml(`t${r}`, has(id) ? tempText(x.sensor, 2) : '–');
       setHtml(`tmm${r}`, has(`${id}_min`) ? `<span class="lo">${fmt(V[`${id}_min`], 2)}°</span><span class="hi">${fmt(V[`${id}_max`], 2)}°</span>` : '');
-      const sub = x.sub ? `temperatur.sensor${x.sub}` : null;
+      const sub = x.sub ? `temperatures.sensor${x.sub}` : null;
       setHtml(`tsub${r}`, sub && has(sub) ? `${esc(tempName(x.sub))}: ${tempText(x.sub, 1, ' °C')}` : '');
     });
   } else {
@@ -637,35 +643,35 @@ function render() {
       }
       const code = Number(V[`${r.id}.status`]);
       const lamp = $(`${kid(r.id)}lamp`);
-      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${r.id}.aktiv`] === true ? ' on' : '');
-      markSeg(document.querySelector(`.seg[data-key="${r.id}"]`), V[`${r.id}.schalten`] ?? modeFromCode(code), has(`${r.id}.schalten`));
+      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${r.id}.active`] === true ? ' on' : '');
+      markSeg(document.querySelector(`.seg[data-key="${r.id}"]`), V[`${r.id}.switch`] ?? modeFromCode(code), has(`${r.id}.switch`));
     }
   }
 
-  const star = V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : '';
-  setHtml('ph', fmt(V['wasser.ph'], 2) + star); setHtml('phmm', mm('wasser.ph', 2));
-  rangeMark('ph', 'wasser.ph', 'ph'); rangeMark('rdx', 'wasser.redox', 'redox'); rangeMark('cl', 'wasser.chlor', 'chlor');
-  rangeMark('botPh', 'wasser.ph', 'ph'); rangeMark('botRdx', 'wasser.redox', 'redox');
-  if (has('dosierung.flockung.tagesmenge')) {
-    setText('floc', `${fmt(V['dosierung.flockung.tagesmenge'], 0)} ml`);
-    setText('flocBig', fmt(V['dosierung.flockung.tagesmenge'], 0));
+  const star = V['water.frozen'] === true ? '<span class="star">*</span>' : '';
+  setHtml('ph', fmt(V['water.ph'], 2) + star); setHtml('phmm', mm('water.ph', 2));
+  rangeMark('ph', 'water.ph', 'ph'); rangeMark('rdx', 'water.redox', 'redox'); rangeMark('cl', 'water.chlorine', 'chlorine');
+  rangeMark('botPh', 'water.ph', 'ph'); rangeMark('botRdx', 'water.redox', 'redox');
+  if (has('dosing.flocculant.dosed_today')) {
+    setText('floc', `${fmt(V['dosing.flocculant.dosed_today'], 0)} ml`);
+    setText('flocBig', fmt(V['dosing.flocculant.dosed_today'], 0));
   }
-  setText('phdos', has('dosierung.ph_minus.tagesmenge') ? `pH-: ${fmt(V['dosierung.ph_minus.tagesmenge'], 0)} ${t('mlToday')}` : '');
-  dosBadge('phmode', 'dosierung.ph_minus.status');
-  setHtml('rdx', fmt(V['wasser.redox'], 1) + star); setHtml('rdxmm', mm('wasser.redox', 1));
-  if (has('dosierung.elektrolyse.status') && !has('dosierung.chlor.status')) {
+  setText('phdos', has('dosing.ph_minus.dosed_today') ? `pH-: ${fmt(V['dosing.ph_minus.dosed_today'], 0)} ${t('mlToday')}` : '');
+  dosBadge('phmode', 'dosing.ph_minus.status');
+  setHtml('rdx', fmt(V['water.redox'], 1) + star); setHtml('rdxmm', mm('water.redox', 1));
+  if (has('dosing.electrolysis.status') && !has('dosing.chlorine.status')) {
     // Elektrolyse: erzeugtes Chlor heute und Verschleiß der Zelle statt Kanister-ml
     const parts = [];
-    if (has('dosierung.elektrolyse.erzeugt_heute')) parts.push(`ELO: ${fmt(V['dosierung.elektrolyse.erzeugt_heute'], 0)} ${t('gToday')}`);
-    if (has('dosierung.elektrolyse.zelle_verschleiss')) parts.push(`${t('cell')} ${fmt(V['dosierung.elektrolyse.zelle_verschleiss'], 0)} %${V['dosierung.elektrolyse.zelle_warnung'] === true ? ' ⚠' : ''}`);
-    else if (has('dosierung.elektrolyse.zelle_reststunden')) parts.push(t('cellLeft').replace('{h}', fmt(V['dosierung.elektrolyse.zelle_reststunden'], 0)));
+    if (has('dosing.electrolysis.produced_today')) parts.push(`ELO: ${fmt(V['dosing.electrolysis.produced_today'], 0)} ${t('gToday')}`);
+    if (has('dosing.electrolysis.cell_wear')) parts.push(`${t('cell')} ${fmt(V['dosing.electrolysis.cell_wear'], 0)} %${V['dosing.electrolysis.cell_warning'] === true ? ' ⚠' : ''}`);
+    else if (has('dosing.electrolysis.cell_remaining_hours')) parts.push(t('cellLeft').replace('{h}', fmt(V['dosing.electrolysis.cell_remaining_hours'], 0)));
     setText('cldos', parts.join(' · '));
-    dosBadge('clmode', 'dosierung.elektrolyse.status');
+    dosBadge('clmode', 'dosing.electrolysis.status');
   } else {
-    setText('cldos', has('dosierung.chlor.tagesmenge') ? `Cl: ${fmt(V['dosierung.chlor.tagesmenge'], 0)} ${t('mlToday')}` : '');
-    dosBadge('clmode', 'dosierung.chlor.status');
+    setText('cldos', has('dosing.chlorine.dosed_today') ? `Cl: ${fmt(V['dosing.chlorine.dosed_today'], 0)} ${t('mlToday')}` : '');
+    dosBadge('clmode', 'dosing.chlorine.status');
   }
-  setHtml('cl', fmt(V['wasser.chlor'], 2) + star); setHtml('clmm', mm('wasser.chlor', 2));
+  setHtml('cl', fmt(V['water.chlorine'], 2) + star); setHtml('clmm', mm('water.chlorine', 2));
   document.querySelectorAll('[data-an]').forEach((e) => (e.textContent = fmt(V[e.dataset.an], Number(e.dataset.d))));
   document.querySelectorAll('[data-note]').forEach((e) => {
     const d = /bar/i.test(e.dataset.unit) ? 2 : 1;
@@ -674,38 +680,38 @@ function render() {
 
   for (const x of R) {
     const k = x.key, id = kid(k);
-    if (k !== 'licht' || x.light) {
+    if (k !== 'light' || x.light) {
       const code = Number(V[`${k}.status`]);
       const lamp = $(`${id}lamp`);
-      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${k}.aktiv`] === true ? ' on' : '');
+      if (lamp) lamp.className = 'lamp' + (code === 2 || code === 5 ? ' wait' : V[`${k}.active`] === true ? ' on' : '');
       setText(`${id}txt`, STATUS_TXT()[code] || '–');
       const tx = $(`${id}txt`); if (tx) tx.classList.toggle('long', code === 2 || code === 5);
-      const rt = V[`${k}.laufzeit_heute`];
-      let vol = k === 'pumpe' && typeof V['pumpe.umwaelzung_heute'] === 'number' ? ` (${fmt(V['pumpe.umwaelzung_heute'], 1)} m³)` : heatText(k);
-      const pf = k === 'pumpe' ? pumpFlow() : null;
+      const rt = V[`${k}.runtime_today`];
+      let vol = k === 'pump' && typeof V['pump.circulated_today'] === 'number' ? ` (${fmt(V['pump.circulated_today'], 1)} m³)` : heatText(k);
+      const pf = k === 'pump' ? pumpFlow() : null;
       if (pf && typeof V[pf.id] === 'number') vol += `\n${pf.name}: ${fmt(V[pf.id], 1)} ${pf.unit}`; // zweite Zeile unter der Laufzeit
       setText(`${id}rt`, rt ? `${String(rt).replace(/ \d+s$/, '')}${vol}` : '');
-      markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.schalten`] ?? modeFromCode(code), has(`${k}.schalten`));
+      markSeg(document.querySelector(`.seg[data-key="${k}"]`), V[`${k}.switch`] ?? modeFromCode(code), has(`${k}.switch`));
     }
-    if (k === 'pumpe') {
-      const running = V['pumpe.aktiv'] === true;
-      const stage = Number(V['pumpe.stufe']);
+    if (k === 'pump') {
+      const running = V['pump.active'] === true;
+      const stage = Number(V['pump.level']);
       const segS = document.querySelector('.seg[data-speed]');
       if (segS) {
-        const sel = running && STAGES[stage] ? stage : has('pumpe.drehzahl_soll') ? V['pumpe.drehzahl_soll'] : '';
-        markSeg(segS, String(sel), true, !has('pumpe.drehzahl_soll'));
+        const sel = running && STAGES[stage] ? stage : has('pump.speed_setpoint') ? V['pump.speed_setpoint'] : '';
+        markSeg(segS, String(sel), true, !has('pump.speed_setpoint'));
         segS.querySelectorAll('button').forEach((b) => b.classList.toggle('run', running && Number(b.dataset.v) === stage));
       }
       const pv = $('pvBadge');
-      if (pv) pv.hidden = !(F.pv && has('pv.ueberschuss') && Number(V['pv.ueberschuss']) > 0);
+      if (pv) pv.hidden = !(F.pv && has('pv.surplus') && Number(V['pv.surplus']) > 0);
     }
-    if (k === 'licht' && x.dmx) {
+    if (k === 'light' && x.dmx) {
       const sel = $('dmxSel');
       if (sel && document.activeElement !== sel) {
         let active = '';
-        for (let s = 1; s <= 12; s++) if (V[`dmx.szene${s}.aktiv`] === true) { active = String(s); break; }
+        for (let s = 1; s <= 12; s++) if (V[`dmx.scene${s}.active`] === true) { active = String(s); break; }
         sel.value = active;
-        sel.disabled = !has('dmx.szene1.schalten');
+        sel.disabled = !has('dmx.scene1.switch');
       }
     }
   }
@@ -713,13 +719,13 @@ function render() {
   const hw = $('hero').dataset.w, ha = $('hero').dataset.a;
   if (hw) $('heroWater').innerHTML = tempText(hw, 2);
   if (ha) $('heroAir').innerHTML = tempText(ha, 2);
-  $('botPh').innerHTML = `pH: ${fmt(V['wasser.ph'], 2)}${V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : ''}`;
-  $('botRdx').innerHTML = `RedOx: ${fmt(V['wasser.redox'], 1)}${V['wasser.eingefroren'] === true ? '<span class="star">*</span>' : ''}`;
+  $('botPh').innerHTML = `pH: ${fmt(V['water.ph'], 2)}${V['water.frozen'] === true ? '<span class="star">*</span>' : ''}`;
+  $('botRdx').innerHTML = `RedOx: ${fmt(V['water.redox'], 1)}${V['water.frozen'] === true ? '<span class="star">*</span>' : ''}`;
   const fl = $('botFlow');
   if (fl.dataset.id) fl.textContent = `${fl.dataset.name}: ${fmt(V[fl.dataset.id], 2)} cm/s`;
   $('fw').textContent = `${t('fw')}: ${V['system.firmware'] ?? '–'}`;
-  $('up').textContent = `${t('uptime')}: ${V['system.laufzeit'] ?? '–'}`;
-  $('cpu').textContent = `CPU: ${fmt(V['system.cpu_temperatur'], 1)} °C`;
+  $('up').textContent = `${t('uptime')}: ${V['system.uptime'] ?? '–'}`;
+  $('cpu').textContent = `CPU: ${fmt(V['system.cpu_temperature'], 1)} °C`;
   alignLabels();
 }
 
@@ -766,12 +772,12 @@ function touchRelayView() {
 async function send(id, value, okMsg) {
   if (demo) {
     await new Promise((r) => setTimeout(r, 500));
-    const base = id.replace(/\.(schalten|drehzahl_soll)$/, '');
-    if (id === 'pumpe.drehzahl_soll') { V[id] = Number(value); V['pumpe.stufe'] = Number(value); }
+    const base = id.replace(/\.(switch|speed_setpoint)$/, '');
+    if (id === 'pump.speed_setpoint') { V[id] = Number(value); V['pump.level'] = Number(value); }
     else {
       V[id] = value;
       V[`${base}.status`] = value === 'ON' ? 4 : value === 'OFF' ? 6 : 1;
-      V[`${base}.aktiv`] = value !== 'OFF';
+      V[`${base}.active`] = value !== 'OFF';
     }
     toast(t('demoSim'));
     return;
@@ -790,10 +796,10 @@ async function onSegClick(ev) {
   const seg = btn.parentElement;
   const isSpeed = !!seg.dataset.speed;
   const key = isSpeed ? 'speed' : seg.dataset.key;
-  const id = isSpeed ? 'pumpe.drehzahl_soll' : seg.dataset.virtual ? key : `${key}.schalten`;
+  const id = isSpeed ? 'pump.speed_setpoint' : seg.dataset.virtual ? key : `${key}.switch`;
   const value = btn.dataset.v;
 
-  if (key === 'pumpe' && value === 'OFF' && !confirm(t('confirmPumpOff'))) return;
+  if (key === 'pump' && value === 'OFF' && !confirm(t('confirmPumpOff'))) return;
 
   pending[key] = value;
   render();
@@ -809,13 +815,13 @@ async function onSegClick(ev) {
 async function onDmxChange(ev) {
   const v = ev.target.value;
   let active = 0;
-  for (let s = 1; s <= 12; s++) if (V[`dmx.szene${s}.aktiv`] === true) { active = s; break; }
+  for (let s = 1; s <= 12; s++) if (V[`dmx.scene${s}.active`] === true) { active = s; break; }
   try {
-    if (v === 'off') { if (active) await send(`dmx.szene${active}.schalten`, 'OFF', `${t('sceneOff')}`); }
+    if (v === 'off') { if (active) await send(`dmx.scene${active}.switch`, 'OFF', `${t('sceneOff')}`); }
     else if (v) {
-      if (active && String(active) !== v) await send(`dmx.szene${active}.schalten`, 'OFF', '');
-      await send(`dmx.szene${v}.schalten`, 'ON', sceneName(v));
-      for (let s = 1; s <= 12; s++) if (demo) V[`dmx.szene${s}.aktiv`] = String(s) === v;
+      if (active && String(active) !== v) await send(`dmx.scene${active}.switch`, 'OFF', '');
+      await send(`dmx.scene${v}.switch`, 'ON', sceneName(v));
+      for (let s = 1; s <= 12; s++) if (demo) V[`dmx.scene${s}.active`] = String(s) === v;
     }
   } catch (e) {
     toast(`${t('failed')}: ${e.message}`);

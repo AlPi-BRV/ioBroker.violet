@@ -913,6 +913,18 @@
             "uk": "Перекачано води сьогодні",
             "zh-cn": "今日循环水量"
         },
+        "Förderleistung (berechnet)": {
+            "en": "Flow rate (calculated)",
+            "ru": "Производительность (расчётная)",
+            "pt": "Caudal (calculado)",
+            "nl": "Debiet (berekend)",
+            "fr": "Débit (calculé)",
+            "it": "Portata (calcolata)",
+            "es": "Caudal (calculado)",
+            "pl": "Wydajność (obliczona)",
+            "uk": "Продуктивність (розрахункова)",
+            "zh-cn": "流量（计算值）"
+        },
         "Trockenlaufschutz ausgelöst": {
             "en": "Dry-run protection triggered",
             "ru": "Сработала защита от сухого хода",

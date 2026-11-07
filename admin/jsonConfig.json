@@ -677,7 +677,7 @@
           "md": 4,
           "lg": 3,
           "xl": 3,
-          "tooltip": "Data point meldungen.aktiv and notice in the pool display; acknowledging only affects ioBroker"
+          "tooltip": "Data point messages.active and notice in the pool display; acknowledging only affects ioBroker"
         }
       }
     },
@@ -1035,7 +1035,7 @@
           "lg": 12,
           "xl": 12,
           "newLine": true,
-          "tooltip": "Sensor in the pump piping: with the pump off the value is frozen (data point temperatur.sensor1_pool), marked with * in the pool display"
+          "tooltip": "Sensor in the pump piping: with the pump off the value is frozen (data point temperatures.sensor1_pool), marked with * in the pool display"
         }
       }
     },
@@ -1463,7 +1463,7 @@
       "items": {
         "hpump": {
           "type": "staticText",
-          "text": "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pumpe.umwaelzung_heute, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.",
+          "text": "Enter the delivery rate of the pump in m³/h. The adapter then calculates the water volume circulated today from the runtimes of the Violet (data point pump.circulated_today, in the pool display behind the runtime). If the absorber or heating reduces the flow, enter the lower value there – empty = same as alone. If both run at the same time, the lower value applies.",
           "newLine": true,
           "xs": 12,
           "sm": 12,
