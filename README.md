@@ -4,6 +4,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.violet.svg)](https://www.npmjs.com/package/iobroker.violet)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.violet.svg)](https://www.npmjs.com/package/iobroker.violet)
+[![Number of Installations](https://iobroker.live/badges/violet-installed.svg)](https://www.iobroker.net/#en/adapters)
 [![Test and Release](https://github.com/AlPi-BRV/ioBroker.violet/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/AlPi-BRV/ioBroker.violet/actions/workflows/test-and-release.yml)
 [![License](https://img.shields.io/github/license/AlPi-BRV/ioBroker.violet)](LICENSE)
 
