@@ -6,6 +6,7 @@ updates:
       interval: cron
       cronjob: "17 4 * * 3"
     target-branch: dev
+    versioning-strategy: increase
     open-pull-requests-limit: 15
     cooldown:
       default-days: 7
